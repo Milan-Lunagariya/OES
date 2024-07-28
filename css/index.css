@@ -1,0 +1,233 @@
+
+:root{
+    --global_width : 80%;
+    --top_color : aliceblue;
+    --center_color : white;
+    --bottom_color : blue;
+}
+
+body {
+    background-color: var(--top_color);
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+header.header_container {  
+    height: 130px;
+    width: 100%;
+    background: var(--center_color);
+    outline: 1px solid black;
+}
+
+.fixed_nav {
+    background-color: var(--center_color);
+    width: var(--global_width);
+    padding: 1em;
+    display: flow-root;
+    margin: auto;
+}
+
+.left {
+    WIDTH: 25%;
+    float: left;
+    height: 100%;
+}
+
+.logo {
+    height: 60px;
+    float: left;
+    overflow: hidden;
+    margin: auto;
+    width: auto;
+    padding: 5px;
+}
+
+img.image {
+    height: 100%;
+    /* border-radius: 100%; */
+    filter: drop-shadow(2px 2px 2px black);
+    float: left;
+} 
+
+.center {
+    width: 50%;
+    height: 100%;
+    float: left;
+}
+
+.searchbar {
+    width: 100%;
+    float: left;
+    height: 100%;
+    margin: auto;
+}
+
+input.nav_search {
+    padding: 0.5em;
+    width: 100%;
+    float: left;
+    height: 100%;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+
+.right {
+    float: right;
+    width: 25%;
+    height: 100%;
+}
+
+/* .login_button,
+.cart_button {
+    padding: 3px 15px;
+    float: right;
+} */
+
+i.fa-solid.fa-cart-shopping.button.cart_icon {
+    font-size: 2em;
+    cursor: pointer;
+}
+.icon {
+    /* background: red; */
+    float: right;
+    margin: 0px 10px;
+    padding: 5px;
+    font-size: larger;
+}
+
+.menu_header { 
+    width: 100%;
+    background: var(--top_color);
+    margin: auto;
+    height: fit-content;
+    float: left;
+}
+.menu_header ul {
+    width: 80%;
+    margin: auto
+}
+.menu_header li {
+    float: left;
+    margin: 0em 0.5rem; 
+    padding: 5px 10px;
+    border-radius: 10px;
+    list-style: none;
+    cursor: pointer;
+}
+.menu_header li a:hover{
+    background: lightblue;
+}
+.menu_header li:hover {
+    background: lightblue;
+    color: blue;
+    box-shadow: 0px 0px 3px inset blue;
+    text-decoration: underline;
+}
+.menu_header ul a { 
+    text-decoration: none;
+}
+.menu_tablets_open_button {
+    border: 1px solid black;
+    border-radius: 7px;
+    padding: 0px 10px;
+    width: fit-content;
+    float: left;
+    margin: 5px 0px;
+    display: none;
+    cursor: pointer;
+}
+.menu_tablets {
+    background: lightblue;
+    width: 80vw;
+    height: 100Vh;
+    position: fixed;
+    display: none;
+    z-index: 1;
+}
+.close_button {
+    border: 1px solid black;
+    border-radius: 59px;
+    height: 30px;
+    width: 30px;
+    text-align: center;
+    float: right;
+    margin: 10px;
+    font-weight: 900;
+    cursor: pointer;
+    font-family: sans-serif;
+}
+.menu_tablets_container {
+    float: left; 
+    width: 100%;
+}
+.login_and_register_container {
+    background: white;
+    padding: 3px;
+    float: left;
+    width: 80%; 
+}
+.login_and_register_container {
+    background: white;
+    padding: 3px;
+    float: left;
+}
+.register, .login {
+    FLOAT: left;
+    margin: 5px;
+}
+.close_button_container{
+    width: 20%;
+    float: right;
+
+}
+.menu_tablets_container .main_container{
+    border: 2px;
+    padding: 10px;
+}
+.menu_tablets_container .main_container {
+    border: 2px;
+    padding: 10px;
+    float: left;
+    background: aliceblue;
+    width: 100%;
+}
+.main_container .menu_header{
+    border: 2px;
+    padding: 10px;
+    float: left;
+    background: aliceblue;
+    width: 100%;
+}
+.main_container .menu_header ul {
+    width: 100%;
+    margin: auto;
+    float: left;
+    margin: 0px;
+    padding: 0px;
+}
+.main_container  .menu_header li {
+    float: left;
+    margin: 0px;
+    border-radius: 10px;
+    list-style: none;
+    cursor: pointer;
+    padding: 10px;
+    background: aliceblue;
+    text-align: center;
+    width: 50%;
+}
+
+.menu_parent_category_container {
+    padding: 10px;
+    background: aliceblue;
+    float: left;
+    width: 100%;
+}
+.menu_parent_category_container .separate_container {
+    background-color: lightsteelblue;
+    padding: 10px;
+    float: left;
+    width: 100px;
+    margin: 0px 10px;
+}
