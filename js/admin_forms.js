@@ -41,28 +41,32 @@ $(document).ready(function(){
     $('#categoryform').on('submit', function(){ 
 
         var categoryname, parentcategory;
-        categoryname = field_validataion('#categoryname'); 
-        parentcategory = field_validataion('#parentcategory'); 
+        categoryname =  field_validataion('#categoryname');  
+        parentcategory =  field_validataion('#parentcategory');  
 
 
         const url = '../core/models/modelcategory.php';
         const callback = function(data){
-            if(data == 'success'){ 
+            
+            var data = JSON.parse( data );
+            if(data.success == 1 || data.success == true || data.success == '1'){ 
                 var message = $('.category_form_message').fadeIn().html("Add category successfully");
                 $('.category_form_message').removeClass('message_error');
-                show_message_popup(message,2000);
+                show_message_popup(message, 2000);
                 $('#categoryform')[0].reset();  
+                $('#parentcategory').append(data.parentCategoryOption)
             }else{
+                $('.category_form_message').addClass('message_error'); 
+                var message = $('.message_error').fadeIn().html("Error: "+ data.error);
+                show_message_popup(message, 5000);
                 alert('Somthing Went Wrong !');
-                $('.category_form_message').addClass('  message_error');
-                $('.message_error').fadeIn().html("data: "+ data);
             }
         }; 
         var extra_data = {
             'action': 'add'
         };
-        console.log( ' categoryname : ' + categoryname +  ' parentcategory : ' + parentcategory ); 
-        if( categoryname == true && parentcategory == true ){
+        console.log( ' categoryname : ' + categoryname ); 
+        if( categoryname == true && parentcategory == true){
             ajax_form_submitor( url, callback, this, extra_data ); 
         } 
         return false; 

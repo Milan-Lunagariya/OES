@@ -1,5 +1,6 @@
 :root{
     --black : #000000a8;
+    --red : rgb(235 68 68);
 }
 
 .form_container {
@@ -48,11 +49,12 @@ input[type=submit]{
     display: none;
 }
 .formerror {
-    color: red;
+    color: var(--red);
     margin: 0em 0.2em;
 }
 .message_error{
-    color: red;
+    color: var(--red);
     background-color: #fff0f0;
     border: 1px solid black;
+    border: 1px solid var(--red);
 }

@@ -1,5 +1,7 @@
 
 console.log(' Hello,common.js entred ');
+window.black = '#000000a8';
+window.red = 'rgb(235 68 68)';
 
 function show_message_popup( message = $('.give_with_selector').fadeIn().html('Data: '), show_delay_time = 2000 ){ 
     message.css('transform', 'scale(0.5)');
@@ -17,10 +19,10 @@ function field_validataion(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', requir
 
     var error = ''; 
     var required_msg = 'Required this field.';
-    var invalid_msg = 'Invalid Value(Special char not allow).';
-    /* var id = '#'+id; */
+    var invalid_msg = 'Invalid Value(Special char not allow).'; 
     var value = $(id).val(); 
     var flag = true; 
+    var focus = false;
 
     if( value == undefined ){
         $(id).next('.formerror').fadeOut().fadeIn().text('Somthing went wrong !');
@@ -29,30 +31,35 @@ function field_validataion(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', requir
     
     if( regexp != '' ){
         if( !regexp.test(value) ){
-            message = (typeof message == 'string' && message.trim() == '') ? invalid_msg : message;
-            $(id).focus();
+            message = (typeof message == 'string' && message.trim() == '') ? invalid_msg : message; 
             flag = false;
+            focus = true;
         }
     }
     if( required == true || required == 1 ){
-        if(typeof value == 'string' && value.trim() == ''){
-            $(id).focus();
+        if(typeof value == 'string' && value.trim() == ''){ 
             message = required_msg;
             flag = false;
+            focus = true;
         }else{
             regexp = /^[A-Za-z0-9\s]{1,}$/;
             if( !regexp.test(value) ){
-                message = invalid_msg;
-                $(id).focus();
+                message = invalid_msg; 
                 flag = false;
+                focus = true;
             } 
         }
     } 
 
     error = message;
-    console.log( 'Field validation..' + regexp + " flag is " + flag + "Id " + id +" Value is " + value );
+    if( focus == true ) {
+        $(id).focus().css('border','1px solid ' + window.red);
+    }else{
+        
+        $(id).css('border','1px solid '+ window.black);
+    }
     $(id).next('.formerror').fadeOut().fadeIn().text(error);
-   /*  $(id).next('.formerror').text(error); */
+    console.log( 'Field validation..' + regexp + " flag is " + flag + "Id " + id +" Value is " + value );
 
     return (flag);  
 }

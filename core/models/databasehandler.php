@@ -93,9 +93,34 @@ class DatabaseHandler {
         }
     }
 
-    public function select($query) {
+ /*    public function select($query) {
         try {
             $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch(PDOException $exception) {
+            echo "Fetch error: " . $exception->getMessage();
+        }
+    } */
+    public function select($table = '', $select_column = '', $where_clause = array(), $operator = '',  $groupby = '', $orderby = '', $limit = '' ) {
+        try {
+
+            $column = implode(',', array_keys($where_clause));
+ 
+            $where =    ( count( $where_clause ) > 0 ) ? "WHERE"   : '';
+            $operator = ( count( $where_clause ) < 2 ) ? $operator : '';
+
+            $condition = '';
+            foreach( $where_clause as $column => $value ){
+                $condition .= ' '.$column .' = '.' :'. $column . ' '.$operator.' ';
+            }
+
+            $query = "SELECT $select_column FROM $table $where $condition $groupby $orderby $limit";
+            $stmt = $this->conn->prepare($query);
+
+            foreach( $where_clause as $column => $value ){
+                $stmt->bindParam( ":$column", $value );
+            }
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch(PDOException $exception) {
@@ -104,7 +129,7 @@ class DatabaseHandler {
     }
 
     public function __destruct() {
-        $this->conn = null;  // Close connection
+        $this->conn = null;  
     }
 }
 
