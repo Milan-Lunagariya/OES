@@ -1,7 +1,7 @@
 <?php
 
-global $addcategories, $formcreator, $india_timezone;
-  $india_timezone = date_default_timezone_set( 'Asia/Kolkata' );
+global $addcategories, $formcreator, $india_timezone, $commonhelper, $media_categories_path;
+ /*  $india_timezone = date_default_timezone_set( 'Asia/Kolkata' ); */
 
   function elc_require( $filename = "" ){
     if( !empty( $filename ) ){
@@ -15,9 +15,10 @@ global $addcategories, $formcreator, $india_timezone;
   require_once( "../core/models/databasehandler.php" );
   require_once("../core/helpers/formhelper.php");
   require_once("../core/classes/class.formcreator.php");
-  require_once('../core/view/adminview/categories.php'); 
-
-
+  require_once('../core/view/adminview/categories.php');  
+  
+  $media_categories_path = "../media/categories";
+  
 ?>
 
 <!DOCTYPE html>

@@ -24,3 +24,24 @@
       </div>
     </div> 
 </header>
+
+
+/*   if(isset($_FILES['categoryimage']['name']) && !empty($_FILES['categoryimage']['name']) ) {
+            $imageName  = $_FILES['categoryimage']['name'];
+            $imageName_withTime  = time().'_'.$_FILES['categoryimage']['name'];
+            $imageTempName       = $_FILES['categoryimage']['tmp_name'];
+            $imageSize           = $_FILES['categoryimage']['size']; 
+            $imageExtension      = trim(pathinfo($_FILES['categoryimage']['name'], PATHINFO_EXTENSION));
+
+            if( $imageSize <= ( 5 * 1024 * 1024 )  ){ 
+                if( in_array(strtolower($imageExtension), ['jpeg', 'png', 'jpg']) ){ 
+                    $imageDestination = 'media/categories/'.$imageName_withTime;
+                    if(move_uploaded_file($imageTempName, $imageDestination)){
+                        $is_imageValid = true;
+                    } else{ $error .= "$br Move uploaded filed time error"; }
+
+                } else{ $error .= "$br File is Invalid: $imageExtension not allowed"; }
+
+            } else{ $error .= "$br Please ensure the file size is 5 MB or less."; }
+        } 
+        $imageName_withTime =  ( $is_imageValid == true ) ? $imageName_withTime : '';  */

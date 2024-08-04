@@ -3,10 +3,11 @@
 global $DatabaseHandler, $formhelper;
 
 class formhelper
-{ 
+{
     public $category_form_attr = array(
         'id'         => 'categoryform',
-        'method'     => 'POST'
+        'method'     => 'POST',
+        'enctype'    => 'multipart/form-data'
     );
 
     public $category_name_attr = array(
@@ -15,33 +16,32 @@ class formhelper
         'name'         =>  "categoryname",
         'class'        =>  "form-control validate_field",
         'placeholder'  =>  "Category Name",
-        'value'        =>  "",
+        'title'        =>  "Enter Category Name",
         'id'           =>  "Test the id"
     );
     public $submit_attr = array(
         'type'         =>  "submit",
         'class'        =>  "btn btn-info",
         'value'        =>  "Add",
-        'id'           =>  "category_form_submit",
+        'name'           =>  "category_form_submit",
     );
 
-    public $category_image = array(
+    public $category_image_attr = array(
         'type'         =>  "file",
         'label'        =>  "Category image",
         'name'         =>  "categoryimage",
-        'class'        =>  "form-control validate_field",
-        'value'        =>  "",
-        'id'           =>  "Test the id"
+        'class'        =>  "", 
+        'title'        =>  "Select Category Image",
     );
 
     public function parent_category_attr()
-    { 
+    {
         global $DatabaseHandler;
         $query = $DatabaseHandler->select('categories', '*');
         $parent_category_options = array();
 
         $parent_category_options['please_select'] = '<option name="" value="" > Select Parent category </option>';
-        $parent_category_options[0] = '<option name="parentid" value="0" > Parent Category </option>';
+        $parent_category_options[0] = '<option name="parentid" value="0" > New Parent category </option>';
 
         foreach ($query as $keyValue) {
 
@@ -49,17 +49,18 @@ class formhelper
             $name = $keyValue['name'];
             $parent_category_options[$id] = "<option name='parentid' value='{$id}' > {$name} </option>";
         }
- 
+
         $parent_category_attr = array(
             'type'         =>   "select",
             'label'         =>   "Parent Category",
             'id'           =>   "parentcategory",
+            'title'        =>  "Select Parent Category",
             'class'           =>   "field form-control form-select parentcategory validate_field",
             'name'         =>   "parentcategory",
             'options'   =>   $parent_category_options // I want use function then show error is :
         );
 
-        return $parent_category_attr;    
+        return $parent_category_attr;
     }
 }
 

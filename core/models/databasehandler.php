@@ -25,15 +25,20 @@ class DatabaseHandler {
     }
     public function insert($table = "", $data = array()) {
         try {
-           
-            global $india_timezone;
-            if( function_exists('india_timezone') ) india_timezone();
+            global $commonhelper;
+
             if (empty($table)) {
                 throw new InvalidArgumentException('Table name cannot be empty.');
             }
-            if( function_exists( 'stripslashes_deep' ) ) 
-                stripslashes_deep($data); 
 
+
+            if( isset($commonhelper) && method_exists( $commonhelper, 'india_timezone' ) ) {
+                india_timezone(); 
+            }
+
+            if( isset($commonhelper) && method_exists( $commonhelper, 'stripslashes_deep' ) ) {
+                stripslashes_deep($data); 
+            } 
 
             $data['createdat'] = date( 'd-F-Y , H:i:s' );
 
@@ -65,15 +70,22 @@ class DatabaseHandler {
 
     public function update($table = "", $data = array(), $condition = "") {
         try {
-            india_timezone();
+            global $commonhelper;
             if (empty($table)) {
                 throw new InvalidArgumentException('Table name cannot be empty.');
             }
 
             if (empty($condition)) {
                 throw new InvalidArgumentException('Update condition cannot be empty.');
+            } 
+
+            if( isset($commonhelper) && method_exists( $commonhelper, 'india_timezone' ) ) {
+                india_timezone(); 
             }
-            $data = stripslashes_deep($data); // Assuming stripslashes_deep is defined
+
+            if( isset($commonhelper) && method_exists( $commonhelper, 'stripslashes_deep' ) ) {
+                stripslashes_deep($data); 
+            }
 
             $data['updatedat'] = date( 'd m y , H:i:s' );
 

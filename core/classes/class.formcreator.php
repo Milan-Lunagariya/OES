@@ -37,44 +37,45 @@ class formcreator
 
 	function field_create($field_attr = array())
 	{
+		global $commonhelper;
 		$content = '';
 
-		if (count($field_attr) == 0)
+		if ( count($field_attr) < 1 )
 			return;
 
 
 		$content .= '<div class="field_container">';
 		switch ($field_attr['type']) {
  
-			case 'text':
-			case 'file':
+			case 'text': 
 			case 'submit':
+			case 'file':
 			case 'email':
-				$field_attr = stripslashes_deep($field_attr);
-				$field_attr['name']  = isset($field_attr['name']) ? trim($field_attr['name']) : '';
+				/* $field_attr = $commonhelper->stripslashes_deep($field_attr); */
+				/* Note : Here, your id key not use because id=name, Id should be ones not multiples. so only use id=name  */
 
 				if (isset($field_attr['label'])) {
 					$field_attr['label'] =  trim($field_attr['label']);
 					$content .= '<label for="' . $field_attr['name'] . '"> ' . $field_attr['label'] . ' </label> ';
 				}
-
-				$content .= '<input id="' . $field_attr['name'] . '" ';
+				
+				$field_attr['name']  = ( ( isset($field_attr['name']) ) && ( gettype($field_attr['name']) == 'string' ) ) ? trim($field_attr['name']) : ''; 
+				 
+				$content .= ( $field_attr['type'] == 'submit' ) ? "<button id='".$field_attr['name']."'" : "<input id='".$field_attr['name']."'";
 				foreach ($field_attr as $key => $value) {
 
-					if (in_array($key, ['id', 'options', 'label'])) {
+					if (in_array($key, ['id', 'label'])) {
 						continue;
 					}
-
+					 
 					$key = (gettype($key) == 'string') ? trim($key) : $key;
 					$value = (gettype($value) == 'string') ? trim($value) : $value;
-
-					if ($key == 'name') {
-						$content .= ' id="' . $field_attr['name'] . '  ' . $value . '  "';
-					}
+ 
 					$content .= '  ' . $key . '= "' . $value . '"   ';
 				}
 
-				$content .= '/>';
+				$content .= ( $field_attr['type'] == 'submit' ) ? '> '. $field_attr['value'] .' </button>' : '/>';
+				/* $content .= '/>'; */
 				break;
 
 			case 'select':
@@ -106,9 +107,8 @@ class formcreator
 
 				$content .= '</select>';
 				break;
-
 			default:
-				$content .= $field_attr['type'] .    ' is not founded';
+				$content .= 'Field is missing';
 				break;
 		}
 		$content .= '<div class="formerror"></div>';
