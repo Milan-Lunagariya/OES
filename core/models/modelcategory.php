@@ -34,18 +34,18 @@ if (isset($_REQUEST['action'])) {
                 $image_result =  $commonhelper->file_validation('categoryimage', $_SERVER['DOCUMENT_ROOT']."/project/media/categories/");
                 
                 if (in_array($image_result['success'], [true, 'true', 1])) {
-                    $image = isset($image_result['message']) ? trim($image_result['message']) : '';
+                    $image = isset($image_result['message']) ? array(trim($image_result['message'])) : '';
                     $data = array(
                         'name' => $name,
                         'parentid' => $parentid,
-                        'images' => $image,
+                        'images' => json_encode( $image , true),
                     );
                     
                     $insert = $DatabaseHandler->insert('categories', $data);
                     if ($insert) {
                         $search = $DatabaseHandler->select("categories", '*', $where_clause);
-                        $message['success'] = true;
-                        $message['test'] = $search;
+                        $message['success'] = true; 
+                        
                         if (isset($search[0]['categoryid'])) {
                             $message['parentCategoryOption'] = "<option name='parentid' value='{$search[0]['categoryid']}'> {$search[0]['name']} </option>";
                         }

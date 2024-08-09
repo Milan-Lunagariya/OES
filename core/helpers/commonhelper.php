@@ -6,7 +6,7 @@ class commonhelper
     function oes_test(){
         echo " Congratulation now, You can use the commmonhelper class of var, method,etc.  ";
     }
-    function file_validation( $postedName = '', $fileDestination =  '../../media/categories/', $maxSize = (5 * 1024 * 1024), $allowExt = array('jpeg', 'png', 'jpg'),  ){
+    function file_validation( $postedName = '', $fileDestination =  '../../media/categories/', $maxSize = (5 * 1024 * 1024), $allowExt = array('jpeg', 'png', 'jpg', 'gif'),  ){
         $result = array();
         $result['success'] = false;
         $result['message'] = ''; 
@@ -35,7 +35,19 @@ class commonhelper
          
         return ($result);
     } 
- 
+    
+    function stripslashes_deep($value = array())
+    {
+        $value = (is_array($value)) ?
+            array_map([$this, 'stripslashes_deep'], $value) :
+            stripslashes($value);
+        return $value;
+    }
+    
+    function india_timezone()
+    {
+        date_default_timezone_set('Asia/Kolkata');
+    }
 }
 
 $commonhelper = new commonhelper();
@@ -43,16 +55,3 @@ $commonhelper = new commonhelper();
 
 
 
-
-function stripslashes_deep($value = array())
-{
-    $value = (is_array($value)) ?
-        array_map('stripslashes_deep', $value) :
-        stripslashes($value);
-    return $value;
-}
-
-function india_timezone()
-{
-    date_default_timezone_set('Asia/Kolkata');
-}

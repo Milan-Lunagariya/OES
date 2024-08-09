@@ -33,11 +33,11 @@ class DatabaseHandler {
 
 
             if( isset($commonhelper) && method_exists( $commonhelper, 'india_timezone' ) ) {
-                india_timezone(); 
+                $commonhelper->india_timezone(); 
             }
 
             if( isset($commonhelper) && method_exists( $commonhelper, 'stripslashes_deep' ) ) {
-                stripslashes_deep($data); 
+                $commonhelper->stripslashes_deep($data); 
             } 
 
             $data['createdat'] = date( 'd-F-Y , H:i:s' );
@@ -80,11 +80,11 @@ class DatabaseHandler {
             } 
 
             if( isset($commonhelper) && method_exists( $commonhelper, 'india_timezone' ) ) {
-                india_timezone(); 
+                $commonhelper->india_timezone(); 
             }
 
             if( isset($commonhelper) && method_exists( $commonhelper, 'stripslashes_deep' ) ) {
-                stripslashes_deep($data); 
+                $commonhelper->stripslashes_deep($data); 
             }
 
             $data['updatedat'] = date( 'd m y , H:i:s' );
@@ -117,6 +117,10 @@ class DatabaseHandler {
     public function select($table = '', $select_column = '', $where_clause = array(), $operator = '',  $groupby = '', $orderby = '', $limit = '' ) {
         try {
 
+            if(!is_array($where_clause)){
+                throw new Exception( "By OES: Where clause must be array!" );
+            }
+            
             $column = implode(',', array_keys($where_clause));
  
             $where =    ( count( $where_clause ) > 0 ) ? "WHERE"   : '';
@@ -136,7 +140,7 @@ class DatabaseHandler {
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch(PDOException $exception) {
-            echo "Fetch error: " . $exception->getMessage();
+            echo "Fetch error: " . $exception->getMessage(); 
         }
     }
 

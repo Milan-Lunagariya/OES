@@ -31,6 +31,7 @@ class formhelper
         'label'        =>  "Category image",
         'name'         =>  "categoryimage",
         'class'        =>  "", 
+        'accept'        =>  "image/*",// Add setting Dynamic if enable then add  
         'title'        =>  "Select Category Image",
     );
 

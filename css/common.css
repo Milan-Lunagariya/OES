@@ -1,0 +1,70 @@
+:root{
+    --black : #000000a8;
+    /* --red : rgb(235 68 68); */
+    --blue: #007bff;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --pink: #e83e8c;
+    --red: #dc3545;
+    --orange: #fd7e14;
+    --yellow: #ffc107;
+    --green: #28a745;
+    --teal: #20c997;
+    --cyan: #17a2b8;
+    --white: #fff;
+    --gray: #6c757d;
+    --gray-dark: #343a40;
+    --primary: #007bff;
+    --secondary: #6c757d;
+    --success: #28a745;
+    --info: #17a2b8;
+    --warning: #ffc107;
+    --danger: #dc3545;  
+    --light: #f8f9fa;
+    --dark: #343a40;
+}
+.datatable {
+    background: var(--white);
+    width: fit-content;
+    margin: auto;
+    padding: 1em;
+    border-radius: 10px;
+    box-shadow: 0px 0px 4px black inset;
+} 
+.datatable th {
+    font-size: larger;
+    padding: 1em;
+    background: var(--blue);
+    color: var(--white);
+}
+.datatable td {
+    padding: 0.5em;
+    font-size: 18px;
+}
+.datatable table{
+    border: 1px solid var(--dark);
+}
+.datatable button.edit {
+    background: #a2e0a2;
+    color: black;
+}
+.datatable button.remove {
+    background: #ff93937a;
+    color: black;
+}
+.datatable button{
+    border: 2px;
+}
+.datatable button {
+    border: 1px solid black;
+    border-radius: 5px;
+}
+.image_parent {
+    width: 150px;
+    height: 110px;
+    margin: auto;
+    float: left;
+}
+.image_parent img{
+    margin: auto;
+}
