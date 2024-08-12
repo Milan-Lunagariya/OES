@@ -48,6 +48,23 @@ class commonhelper
     {
         date_default_timezone_set('Asia/Kolkata');
     }
+
+    function oes_required_file($filename = "")
+    {
+        if (!empty($filename)) {
+            if (file_exists($filename)) {
+            require_once($filename);
+            }
+        }
+    }
+
+    function oes_is_json( $data ){
+        // please before test
+        json_decode( $data, true );
+        $data =  (json_last_error() == JSON_ERROR_NONE) ? json_decode( $data, true ) : $data;
+        return ( $data ); 
+    }
+
 }
 
 $commonhelper = new commonhelper();

@@ -45,12 +45,12 @@
     border: 1px solid var(--dark);
 }
 .datatable button.edit {
-    background: #a2e0a2;
-    color: black;
+    background: #e1f6e1;
+    color: var(--green);
 }
 .datatable button.remove {
-    background: #ff93937a;
-    color: black;
+    background: #ffeded;
+    color: var(--red);
 }
 .datatable button{
     border: 2px;
@@ -58,6 +58,7 @@
 .datatable button {
     border: 1px solid black;
     border-radius: 5px;
+    font-weight: 600;
 }
 .image_parent {
     width: 150px;
@@ -67,4 +68,24 @@
 }
 .image_parent img{
     margin: auto;
+}
+.message_popup{
+    width: fit-content;
+    background-color: lightgreen;
+    padding: 10px;
+    position: fixed;
+    border-radius: 0px;
+    box-shadow: 0px 0px 5px greenyellow inset;
+    font-weight: 900;
+    color: var(--black);
+    border: 1px solid green;
+    right: 5%;
+    display: none;
+}
+.message_error{
+    color: var(--red);
+    background-color: #fff0f0;
+    border: 1px solid black;
+    border: 1px solid var(--red);
+    font-weight: 700;
 }

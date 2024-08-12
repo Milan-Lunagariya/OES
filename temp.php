@@ -25,7 +25,7 @@
     </div> 
 </header>
 
-
+<?php 
 /*   if(isset($_FILES['categoryimage']['name']) && !empty($_FILES['categoryimage']['name']) ) {
             $imageName  = $_FILES['categoryimage']['name'];
             $imageName_withTime  = time().'_'.$_FILES['categoryimage']['name'];
@@ -45,3 +45,37 @@
             } else{ $error .= "$br Please ensure the file size is 5 MB or less."; }
         } 
         $imageName_withTime =  ( $is_imageValid == true ) ? $imageName_withTime : '';  */
+
+/* ----------------------------------------------------------------------------- */
+/* Data table of td for the view categories */ 
+$i = 0;
+foreach( $data as $key => $value ){  
+
+    if( in_array($value['parentid'],['0', 0]) ) {
+        $parent = "Parent (0)";  
+    } else{
+        $select = $databasehandler->select( 'categories', '*', array('categoryid' => $value['parentid']) );    
+        $parent = '';
+        foreach( $select as $k => $v ){
+            $parent = isset($v['name']) ? $v['name']."(".$v['categoryid'].')' : ''; 
+        }
+    } 
+    $image = json_decode( $value['images'], true );
+?>
+    <tr>  
+        <td><?php echo ( isset($value['categoryid']) && !empty($value['categoryid']) ) ? $value['categoryid']: '-'; ?></td>
+        <td><?php echo ( isset($value['images']) && !empty($value['images']) ) ? "<div class='image_parent'><img src='../media/categories/".$image[0]."' alt='Not Found' width='100'></div>": '-'; ?></td>
+        <td><?php echo ( isset($value['name']) && !empty($value['name']) ) ? $value['name']: '-'; ?></td>
+        <td><?php echo ( isset($parent) && !empty($parent) ) ? $parent : '-'; ?></td>
+        <td><?php echo ( isset($value['createdat']) && !empty($value['createdat']) ) ? $value['createdat']: '-'; ?></td>
+        <td><?php echo ( isset($value['updatedat']) && !empty($value['updatedat']) ) ? $value['updatedat']: '-'; ?></td>
+        <td>
+            <button class="edit"> Edit<!-- <i class="fa-solid fa-pen-to-square"></i> --> </button>
+            <button class="remove"> Remove<!-- <i class="fa-solid fa-trash"></i> --> </button>
+        </td>
+
+    </tr>                    
+<?php 
+$i++;
+}
+?>

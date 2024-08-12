@@ -3,44 +3,15 @@
 global $addcategories, $formcreator, $india_timezone, $commonhelper, $media_categories_path, $DatabaseHandler;
 /*  $india_timezone = date_default_timezone_set( 'Asia/Kolkata' ); */
 
-function elc_require($filename = "")
+
+function oes_required_file($filename = "")
 {
   if (!empty($filename)) {
     if (file_exists($filename)) {
       require_once($filename);
     }
   }
-}
- 
-
-if (!defined('PROJECT')) {
-  define('PROJECT', __DIR__ );
-}
-
-if(is_file("../core/helpers/commonhelper.php"));{
-  require_once("../core/helpers/commonhelper.php");
-}
-
-if(is_file("../core/models/databasehandler.php")){
-  require_once("../core/models/databasehandler.php");
-}
-
-if(is_file("../core/helpers/formhelper.php")){
-  require_once("../core/helpers/formhelper.php");
-}
-if(is_file("../core/classes/class.formcreator.php")){
-  require_once("../core/classes/class.formcreator.php");
-}
-
-if( is_file('../core/classes/class.formcreator.php') ){
-  require_once('../core/view/adminview/categories.php');   
-}  
-
-if( is_file('../core/models/datatable.php') ){
-  require_once('../core/models/datatable.php');   
-}  
-
-
+} 
 $media_categories_path = "../media/categories";
 
 ?>
@@ -960,22 +931,30 @@ $media_categories_path = "../media/categories";
 
       <!-- Main content -->
       <section class="content"> 
-
+      <?php 
+        oes_required_file('../core/helpers/commonhelper.php'); 
+        oes_required_file('../core/models/databasehandler.php'); 
+        oes_required_file('../core/models/datatable.php'); 
+        oes_required_file('../core/helpers/formhelper.php');
+        oes_required_file('../core/classes/class.formcreator.php'); 
+        oes_required_file('../core/view/adminview/categories.php'); 
+      ?>
         <?php if (isset($_REQUEST['page'])) { ?>
 
           <?php
+           
+          $error = '<h1>Somthing Went Wrong</h1>';
           if ($_REQUEST['page'] == 'dashboard') {
           }
 
           if ($_REQUEST['page'] == 'add_categories') {
-            echo (isset($addcategories) && !empty($addcategories)) ? $addcategories->formview("Add Category") : '<h1>File not found</h1>';
+            echo (isset($categories) && !empty($categories)) ? $categories->formview("Add Category") : $error;
           }
           
           if ($_REQUEST['page'] == 'manage_categories') {
-            echo (isset($datatable) && !empty($datatable)) ? $datatable->dataTableView() : '<h1>File not found</h1>';
-          }
-
-
+            echo (isset($categories) && !empty($categories)) ? $categories->managecategories() : $error;
+          } 
+          
           ?>
 
         <?php } ?>

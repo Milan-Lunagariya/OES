@@ -3,6 +3,11 @@ console.log(' Hello,common.js entred ');
 window.black = '#000000a8';
 window.red = 'rgb(235 68 68)';
 
+
+$(document).ready(function(){   
+
+});
+
 function show_message_popup( message = $('.give_with_selector').fadeIn().html('Data: '), show_delay_time = 2000 ){ 
     message.css('transform', 'scale(0.5)');
     setTimeout(function(){
@@ -15,12 +20,42 @@ function show_message_popup( message = $('.give_with_selector').fadeIn().html('D
     }, 500);
 }    
 
+function oes_test(){
+    console.log( 'call oes_test from the common.js' );
+}
+
+function ajax_form_submitor(url, callback , formdata_param, extra_data ){
+
+    if( formdata_param instanceof HTMLFormElement ){
+        var formdata = new FormData(formdata_param);
+    } else{
+        var formdata = new FormData();
+    }
+
+    if( extra_data != '' ){
+        $.each(extra_data, function(key, value){
+            formdata.append(key, value);
+        });
+    }
+    setTimeout(function(){
+        $.ajax({
+            type: 'post',
+            url: url,
+            data: formdata,
+            contentType: false,            
+            processData : false,
+            success: callback
+        })     
+    }, 2000)
+} 
+
 function field_validataion(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', required = true) {
 
     var error = ''; 
     var required_msg = 'Required this field.';
     var invalid_msg = 'Invalid Value(Special char not allow).'; 
     var value = $(id).val(); 
+    var type = $(id).attr('type'); 
     var flag = true; 
     var focus = false;
 
@@ -42,12 +77,27 @@ function field_validataion(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', requir
             flag = false;
             focus = true;
         }else{
-            regexp = /^[A-Za-z0-9\s]{1,}$/;
-            if( !regexp.test(value) ){
-                message = invalid_msg; 
-                flag = false;
-                focus = true;
-            } 
+            
+            if(  type == 'file' ) {
+                if (!value) {
+                    message = 'Please select a file';
+                    flag = false;
+                    focus = true;
+                }else{
+                    flag = true;
+                    focus = false;
+                    message = null;
+                }
+                
+            } else{
+                regexp =  /^[A-Za-z0-9\s]{1,}$/; 
+
+                if( !regexp.test(value) ){
+                    message = invalid_msg; 
+                    flag = false;
+                    focus = true;
+                } 
+            }
         }
     } 
 
@@ -63,13 +113,17 @@ function field_validataion(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', requir
 
     return (flag);  
 }
-$(document).ready(function(){   
-    
-    /* console.log(' Start cheking for validation... : ');
-    
-    $('.validate_field').on('blur', function(){ 
-        console.log( 'on blur' ); 
-        field_validataion('categoryname',  /^[A-Za-z\s]{2,}$/, 'Enter category name' ); 
-    }); */
 
-});
+function oes_remove_confirmation(){
+    return (confirm( 'Are you sure, You want to remove this record ?' ));
+}
+
+function oes_loader( selector = '', show = true, stop_html = 'Success' ){
+    if( show == true ){
+        $( selector ).prop( 'disabled', true );
+        $( selector ).html( '<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>' );
+    } else {
+        $( selector ).prop( 'disabled', false );
+        $( '.remove_category_'+id ).html( stop_html );
+    }
+}

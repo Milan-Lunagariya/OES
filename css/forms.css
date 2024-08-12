@@ -56,7 +56,7 @@ input[type=submit]{
     text-align: center;
     color: var(--black); 
 }
-.message_popup{
+/* .message_popup{
     width: fit-content;
     background-color: lightgreen;
     padding: 10px;
@@ -68,7 +68,7 @@ input[type=submit]{
     border: 1px solid green;
     right: 5%;
     display: none;
-}
+} */
 .formerror {
     color: var(--red);
     margin: 0em 0.2em;

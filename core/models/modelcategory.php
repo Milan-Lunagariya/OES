@@ -10,18 +10,17 @@ if (isset($_REQUEST['action'])) {
 
     $message = array();
     $br = "<br> - ";
-
-
     $error = $imageName_withTime = '';
-    $name = (isset($_POST['categoryname'])) ?  $_POST['categoryname'] : '';
-    $parentid = (isset($_POST['parentcategory'])) ?  ($_POST['parentcategory']) : 0;
+    $message['success'] = false;
+    $message['error'] = '';
 
     switch ($_REQUEST['action']) {
 
-        case 'add':
+        case 'add_category':
+            $name = (isset($_POST['categoryname'])) ?  $_POST['categoryname'] : '';
+            $parentid = (isset($_POST['parentcategory'])) ?  ($_POST['parentcategory']) : 0;
 
-            $message['parentCategoryOption'] = "";
-            $message['success'] = false;
+            $message['parentCategoryOption'] = ""; 
             $message = array();   
 
             $where_clause = array(
@@ -57,6 +56,26 @@ if (isset($_REQUEST['action'])) {
 
             $message['error'] = $error;
             print_r(json_encode($message));
+            break;
+        
+        case 'remove_category' :
+            $message['success'] = false;
+            $message['error'] = '';
+            $remove_id = (isset($_REQUEST['remove_id'])) ? $_REQUEST['remove_id'] : 0;
+            $message['remove_id'] = $remove_id; 
+            if( !in_array($remove_id, [0, '0', null, '']) && is_numeric($remove_id)  ){
+                $remove = $DatabaseHandler->delete( 'categories', array( 'categoryid' => $remove_id ) );
+                $message['remove_result'] = $remove; 
+                if( in_array( $remove, [true, 'true',1, '1'] )  ){
+                    $message['success'] = true;
+                } else{
+                    $message['error'] = 'Record can not removed, try again!';
+                }
+            } else{
+                $message['error'] = 'Record can not removed, try again!';
+            }
+
+            print_r( json_encode( $message ) );
             break;
     }
 }

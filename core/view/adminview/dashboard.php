@@ -498,6 +498,7 @@
                         <i class="fas fa-times"></i>
                       </button>
                     </div>
+                    
                   </div>
                   <div class="card-body">
                     <canvas class="chart" id="line-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>

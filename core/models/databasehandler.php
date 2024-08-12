@@ -103,17 +103,43 @@ class DatabaseHandler {
         } catch(PDOException $exception) {
             echo "Update error: " . $exception->getMessage();
         }
+    } 
+
+    public function delete( $table_name, $where_clause = array(), $operator = '' ){
+        try {
+            global $commonhelper;
+
+            $column = implode(',', array_keys($where_clause));
+ 
+            $where =    ( count( $where_clause ) > 0 ) ? "WHERE"   : '';
+            $operator = ( count( $where_clause ) < 2 ) ? $operator : '';
+
+            $condition = '';
+            foreach( $where_clause as $column => $value ){
+                $condition .= ' '.$column .' = '.' :'. $column . ' '.$operator.' ';
+            }
+            
+            $query = "DELETE FROM $table_name $where $condition ";
+            $stmt = $this->conn->prepare( $query );
+            
+            foreach( $where_clause as $column => $value ){
+                $stmt->bindParam( ":$column", $value );
+            }
+
+            $res_bool = $stmt->execute();
+            if( $res_bool ) {
+                return true;
+            } else{
+                return false;
+            }
+
+
+
+        } catch(Exception $exception){
+            echo "Delete error: " . $exception->getMessage();
+        }
     }
 
- /*    public function select($query) {
-        try {
-            $stmt = $this->conn->prepare($query);
-            $stmt->execute();
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch(PDOException $exception) {
-            echo "Fetch error: " . $exception->getMessage();
-        }
-    } */
     public function select($table = '', $select_column = '', $where_clause = array(), $operator = '',  $groupby = '', $orderby = '', $limit = '' ) {
         try {
 
@@ -143,6 +169,7 @@ class DatabaseHandler {
             echo "Fetch error: " . $exception->getMessage(); 
         }
     }
+
 
     public function __destruct() {
         $this->conn = null;  

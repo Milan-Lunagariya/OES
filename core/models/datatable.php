@@ -1,65 +1,60 @@
 <?php
 
-global $databasehandler, $datatable;
-$databasehandler = new DatabaseHandler();
 
-
+global $databasehandler, $datatable, $commonhelper;
+if( class_exists('DatabaseHandler') ){
+    $databasehandler = new DatabaseHandler();
+}
+if( class_exists('commonhelper') ){
+    $commonhelper = new commonhelper();
+}
 
 class datatable
 {
     function __construct()
     {
     }
-    function dataTableView()
+    function dataTableView( $th = array(), $td = array(), $tr_td_class = '' )
     {
-        global $databasehandler;
+        global $databasehandler, $commonhelper;
         $data = $databasehandler->select( 'categories', '*');
         
 ?> 
         <div class="datatable" >
             <table border="2" align="center">
                 <tr>
-                    <th>ID</th>
-                    <th>Image</th>
-                    <th>Category Name</th>
-                    <th>Parent Categort</th>
-                    <th>Created at</th>
-                    <th>Updated at</th>
-                    <th>Action</th>
-                </tr>
-                
-                <?php
-                $i = 0;
-                foreach( $data as $key => $value ){  
+                    <?php 
+                        $th = isset( $th['th'] ) ? $th['th'] : array();
 
-                    if( in_array($value['parentid'],['0', 0]) ) {
-                        $parent = "Parent (0)";  
-                    } else{
-                        $select = $databasehandler->select( 'categories', '*', array('categoryid' => $value['parentid']) );    
-                        $parent = '';
-                        foreach( $select as $k => $v ){
-                            $parent = isset($v['name']) ? $v['name']."(".$v['categoryid'].')' : ''; 
+                        if( count($th) > 0 ){
+                            foreach( $th as $th_key => $th_value ){
+                                echo "<th>$th_value</th>";
+                            }
                         }
-                    } 
-                    $image = json_decode( $value['images'], true );
-                ?>
-                    <tr>  
-                        <td><?php echo ( isset($value['categoryid']) && !empty($value['categoryid']) ) ? $value['categoryid']: '-'; ?></td>
-                        <td><?php echo ( isset($value['images']) && !empty($value['images']) ) ? "<div class='image_parent'><img src='../media/categories/".$image[0]."' alt='Not Found' width='100'></div>": '-'; ?></td>
-                        <td><?php echo ( isset($value['name']) && !empty($value['name']) ) ? $value['name']: '-'; ?></td>
-                        <td><?php echo ( isset($parent) && !empty($parent) ) ? $parent : '-'; ?></td>
-                        <td><?php echo ( isset($value['createdat']) && !empty($value['createdat']) ) ? $value['createdat']: '-'; ?></td>
-                        <td><?php echo ( isset($value['updatedat']) && !empty($value['updatedat']) ) ? $value['updatedat']: '-'; ?></td>
-                        <td>
-                            <button class="edit"> Edit<!-- <i class="fa-solid fa-pen-to-square"></i> --> </button>
-                            <button class="remove"> Remove<!-- <i class="fa-solid fa-trash"></i> --> </button>
-                        </td>
-
-                    </tr>                    
+                    ?>
+                </tr>
+               
                 <?php 
-                $i++;
-                }?>
-
+                    if( count($td) > 0 ){
+                        foreach( $td as $td_key => $td_value ){
+                            echo "<tr class='$tr_td_class'>";
+                                foreach( $td_value as $td_meta_key => $td_meta_value ){                                 
+                                    if( is_string($td_meta_value) || is_numeric($td_meta_value) ){
+                                        echo  "<td>$td_meta_value</td>" ;
+                                    } else if( is_array( $td_meta_value ) ){ 
+                                        foreach( $td_meta_value as $meta_of_key => $meta_of_value ){    
+                                            echo  "<td>$meta_of_value</td>" ;
+                                        }
+                                    }
+                                }
+                            echo '</tr>';
+                        }
+                    } else{
+                        $colspan = count( $th );
+                        echo "<tr><td align='center' colspan='$colspan'>The record set is empty</td></tr>";
+                    }
+                ?>  
+              
             </table>
         </div>
 <?php

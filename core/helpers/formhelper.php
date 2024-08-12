@@ -30,7 +30,7 @@ class formhelper
         'type'         =>  "file",
         'label'        =>  "Category image",
         'name'         =>  "categoryimage",
-        'class'        =>  "", 
+        'class'        =>  "validate_field", 
         'accept'        =>  "image/*",// Add setting Dynamic if enable then add  
         'title'        =>  "Select Category Image",
     );
