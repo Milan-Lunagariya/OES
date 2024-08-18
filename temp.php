@@ -79,3 +79,22 @@ foreach( $data as $key => $value ){
 $i++;
 }
 ?>
+
+////////////
+--
+-- Dumping data for table `categories`
+--
+
+INSERT INTO `categories` (`name`, `parentid`, `createdat`) VALUES
+('Mobile', 0, CURRENT_TIMESTAMP),
+('iPhone 12', 32, CURRENT_TIMESTAMP),
+('iPhone 13', 32, CURRENT_TIMESTAMP),
+('IPhone 14', 32, CURRENT_TIMESTAMP),
+('Laptops', 0, CURRENT_TIMESTAMP),
+('HP', 36, CURRENT_TIMESTAMP),
+('Lenovo', 36, CURRENT_TIMESTAMP),
+('Mackbook', 36, CURRENT_TIMESTAMP),
+('Accessories', 0, CURRENT_TIMESTAMP),
+('Cable All in One', 40, CURRENT_TIMESTAMP),
+('Smart Speaker', 40, CURRENT_TIMESTAMP),
+('USB Cover', 40, CURRENT_TIMESTAMP);

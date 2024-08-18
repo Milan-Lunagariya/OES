@@ -121,9 +121,11 @@ function oes_remove_confirmation(){
 function oes_loader( selector = '', show = true, stop_html = 'Success' ){
     if( show == true ){
         $( selector ).prop( 'disabled', true );
+        $( selector ).css( 'cursor', 'progress' );
         $( selector ).html( '<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>' );
     } else {
+        $( selector ).css( 'cursor', 'pointer' );
         $( selector ).prop( 'disabled', false );
-        $( '.remove_category_'+id ).html( stop_html );
+        $( selector ).html( stop_html );
     }
 }

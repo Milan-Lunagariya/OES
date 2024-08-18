@@ -51,10 +51,8 @@ class commonhelper
 
     function oes_required_file($filename = "")
     {
-        if (!empty($filename)) {
-            if (file_exists($filename)) {
-            require_once($filename);
-            }
+        if ( !empty($filename) && file_exists($filename) ) { 
+            require_once($filename); 
         }
     }
 

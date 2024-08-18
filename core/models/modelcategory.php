@@ -2,9 +2,25 @@
 
 use function PHPSTORM_META\type;
 
-require_once 'databasehandler.php';
-require_once '../helpers/commonhelper.php'; 
-global  $DatabaseHandler, $commonhelper, $media_categories_path;
+/* require_once 'databasehandler.php';
+require_once '../helpers/commonhelper.php';  */
+
+if( file_exists( '../helpers/commonhelper.php' ) ){
+    require_once '../helpers/commonhelper.php'; 
+}  
+$commonhelper  = class_exists( "commonhelper" ) ? new commonhelper() : false;
+
+if( $commonhelper != false ){
+    $commonhelper->oes_required_file( 'databasehandler.php' );
+    $commonhelper->oes_required_file( '../helpers/commonhelsper.php' );
+    $commonhelper->oes_required_file( '../helpers/commonhelsper.php' );
+    $commonhelper->oes_required_file( '../view/adminview/categories.php' );
+} 
+
+global  $DatabaseHandler, $commonhelper, $media_categories_path, $categories;
+$formcreator = ( class_exists( 'formcreator' ) ) ? new formcreator() : false;
+$categories = ( class_exists( 'categories' ) ) ? new categories() : false; 
+$DatabaseHandler = ( class_exists( 'DatabaseHandler' ) ) ? new DatabaseHandler() : false; 
 
 if (isset($_REQUEST['action'])) {
 
@@ -59,9 +75,13 @@ if (isset($_REQUEST['action'])) {
             break;
         
         case 'remove_category' :
-            $message['success'] = false;
-            $message['error'] = '';
-            $remove_id = (isset($_REQUEST['remove_id'])) ? $_REQUEST['remove_id'] : 0;
+            $message = array(
+                'success' => false,
+                'editform_popup' => '',
+                'error' => '',
+                'message' => "Edit ID in PHP: $edit_id"
+            );  
+            $remove_id = (isset($_REQUEST['remove_id'])) ? intval($_REQUEST['remove_id']) : 0;
             $message['remove_id'] = $remove_id; 
             if( !in_array($remove_id, [0, '0', null, '']) && is_numeric($remove_id)  ){
                 $remove = $DatabaseHandler->delete( 'categories', array( 'categoryid' => $remove_id ) );
@@ -75,7 +95,23 @@ if (isset($_REQUEST['action'])) {
                 $message['error'] = 'Record can not removed, try again!';
             }
 
-            print_r( json_encode( $message ) );
+            echo json_encode( $message );
+            break;
+        
+        case 'edit_category' :
+            $edit_id = (isset($_REQUEST['edit_id'])) ? intval($_REQUEST['edit_id']) : 0;
+            $message['success'] = false;
+            $message['editform_popup'] = $message['error'] = $form_popup = '';
+            $message['message'] = 'Edit id in PHP :'. $edit_id;
+
+            $form_view = ($categories) ? $categories->formview( "Add Category" ) : "else";
+            $form_popup .= '
+            <div class="form_edit_popup">
+                '.$form_view.'
+            <div>';
+
+            $message['editform_popup'] = $form_popup;
+            echo json_encode($message);
             break;
     }
 }

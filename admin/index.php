@@ -1,8 +1,6 @@
 <?php
 
-global $addcategories, $formcreator, $india_timezone, $commonhelper, $media_categories_path, $DatabaseHandler;
-/*  $india_timezone = date_default_timezone_set( 'Asia/Kolkata' ); */
-
+global $addcategories, $formcreator, $india_timezone, $commonhelper, $media_categories_path, $DatabaseHandler;  
 
 function oes_required_file($filename = "")
 {
@@ -12,6 +10,7 @@ function oes_required_file($filename = "")
     }
   }
 } 
+
 $media_categories_path = "../media/categories";
 
 ?>
@@ -937,12 +936,20 @@ $media_categories_path = "../media/categories";
         oes_required_file('../core/models/datatable.php'); 
         oes_required_file('../core/helpers/formhelper.php');
         oes_required_file('../core/classes/class.formcreator.php'); 
-        oes_required_file('../core/view/adminview/categories.php'); 
-      ?>
-        <?php if (isset($_REQUEST['page'])) { ?>
+        oes_required_file('../core/view/adminview/categories.php');    
+        oes_required_file('../core/models/modelcategory.php');   
+  /*       
+        $commonhelper       = ( class_exists( 'commonhelper' ) ) ? new commonhelper() : false;
+        $databasehandler  = ( class_exists( 'databasehandler' ) ) ? new databasehandler() : false;
+        $datatable        = ( class_exists( 'datatable' ) ) ? new datatable() : false;
+        $formhelper       = ( class_exists( 'formhelper' ) ) ? new formhelper() : false;
+        $formcreator      = ( class_exists( 'formcreator' ) ) ? new formcreator() : false; 
+        $categories       = ( class_exists( 'categories' ) ) ? new categories() : false;
+         */
+        
 
-          <?php
-           
+        if (isset($_REQUEST['page'])) {  
+          
           $error = '<h1>Somthing Went Wrong</h1>';
           if ($_REQUEST['page'] == 'dashboard') {
           }
@@ -954,10 +961,9 @@ $media_categories_path = "../media/categories";
           if ($_REQUEST['page'] == 'manage_categories') {
             echo (isset($categories) && !empty($categories)) ? $categories->managecategories() : $error;
           } 
-          
-          ?>
-
-        <?php } ?>
+        
+        } 
+      ?>
 
 
       </section>
