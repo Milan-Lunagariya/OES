@@ -34,19 +34,44 @@ class categories
         echo 'You are entred the categories class of the categories.php file.';
     }
 
-    public function formview( $title = "Add Category" ){
-
+     
+    public function formview( $title = "Add Category", $field_axtraAttr = array() ){
+ 
         global $formcreator, $formhelper;
+        $formid = $categoryImage_value  = $categoryname_value = $parentcategory_value = $submitButtton_value = '';
         $content = '<h1 class="title"> '.$title.' </h1>';
 
         $content .= '<div class="category_form_message message_popup"> Message </div>';
 
-        if( method_exists( 'formcreator', 'field_create' ) && is_object( $formcreator )  ){ 
-            // $categories_name  = $formcreator->field_create( $formhelper->category_name_attr );   
-            $categories_name  = $formcreator->field_create( $formhelper->category_name_attr() );  
-            $parent_categories  = $formcreator->field_create( $formhelper->parent_category_attr() );  
-            $category_image  = $formcreator->field_create( $formhelper->category_image_attr );  
-            $submit           = $formcreator->field_create( $formhelper->submit_attr );  
+        if( method_exists( 'formcreator', 'field_create' ) && is_object( $formcreator ) ){  
+
+
+            if( count( $field_axtraAttr ) > 0) {
+                foreach( $field_axtraAttr as $attr ){
+
+                    $attr['name'] = isset($attr['name']) ? $attr['name'] : '';
+                    $attr['value'] = isset($attr['value']) ? $attr['value'] : '';
+
+
+                    if( $attr['name'] == 'category_formid' ){
+                        $formid = isset($attr['id']) ? $attr['id'] : '';
+                    } else if( $attr['name'] == 'categoryimage' ){
+                        $categoryImage_value = $attr['value'];
+                    } else if ( $attr['name'] == 'categoryname' ){
+                        $categoryname_value = $attr['value'];
+                    } else if ( $attr['name'] == 'parentcategory' ){
+                        $parentcategory_value = $attr['value'];
+                    } else if ( $attr['name'] == 'submitButtton' ){
+                        $submitButtton_value = $attr['value'];
+                    } 
+
+                }
+            }
+
+            $category_image  = $formcreator->field_create( $formhelper->category_image_attr( $categoryImage_value ) );  
+            $categories_name  = $formcreator->field_create( $formhelper->category_name_attr( $categoryname_value ) );  
+            $parent_categories  = $formcreator->field_create( $formhelper->parent_category_attr( $parentcategory_value ) );  
+            $submit           = $formcreator->field_create( $formhelper->submit_attr( $submitButtton_value ) );  
             
             $fields = array( 
                 $category_image,
@@ -54,7 +79,7 @@ class categories
                 $parent_categories,
                 $submit,
             );
-            $category_form = $formcreator->form_create( $fields, $formhelper->category_form_attr );    
+            $category_form = $formcreator->form_create( $fields, $formhelper->category_form_attr( $formid ) );    
             $content .= $category_form;  
         }
             

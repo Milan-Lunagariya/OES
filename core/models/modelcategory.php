@@ -36,7 +36,7 @@ if (isset($_REQUEST['action'])) {
 
     switch ($_REQUEST['action']) {
 
-        case 'add_category':
+        case 'add_categoryform':
             $name = (isset($_POST['categoryname'])) ?  $_POST['categoryname'] : '';
             $parentid = (isset($_POST['parentcategory'])) ?  ($_POST['parentcategory']) : 0;
 
@@ -103,7 +103,35 @@ if (isset($_REQUEST['action'])) {
         
         case 'edit_category' :
             echo $edit_id = (isset($_REQUEST['edit_id'])) ? intval($_REQUEST['edit_id']) : 0; 
-            echo $form_view = ( $categories ) ? $categories->formview( "Edit Category" ) : "categories file not in: ".__FILE__.' Line no '.__LINE__; 
+
+            $edit_categoryFieldData = array( 
+                array(
+                    'name' => 'category_formid',
+                    'id' => 'edit_categoryform',
+                ),
+                
+                array(
+                    'name' => 'categoryimage' , 
+                    'value' => 'demo.png' ,
+                ),
+                
+                array(
+                    'name' => 'categoryname' , 
+                    'value' => 'Dell', 
+                ),
+    
+                array(
+                    'name' => 'parentcategory' , 
+                    'value' => 'xaxdd', 
+                ),
+    
+                array(
+                    'name' => 'submitButtton',
+                    'value' => 'Edit'
+                )
+            );
+
+            echo $form_view = ( $categories ) ? $categories->formview( "Edit Category", $edit_categoryFieldData ) : "categories file not in: ".__FILE__.' Line no '.__LINE__; 
             break;
     }
 }
