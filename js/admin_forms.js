@@ -11,8 +11,7 @@ $(document).ready(function(){
         var categoryname, parentcategory;
         filefield =  field_validataion('#categoryimage');  
         categoryname =  field_validataion('#categoryname');  
-        parentcategory =  field_validataion('#parentcategory');  
-
+        parentcategory =  field_validataion('#parentcategory');   
 
         const url = '../core/models/modelcategory.php';
         const callback = function(data){ 
@@ -43,3 +42,6 @@ $(document).ready(function(){
     });
  
 }); 
+$( '#categoryname' ).on('click', function(){
+    alert('click the ...');
+})

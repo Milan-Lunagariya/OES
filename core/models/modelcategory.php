@@ -15,12 +15,16 @@ if( $commonhelper != false ){
     $commonhelper->oes_required_file( '../helpers/commonhelsper.php' );
     $commonhelper->oes_required_file( '../helpers/commonhelsper.php' );
     $commonhelper->oes_required_file( '../view/adminview/categories.php' );
+    $commonhelper->oes_required_file( '../classes/class.formcreator.php' ); 
+    $commonhelper->oes_required_file( '../helpers/formhelper.php' ); 
 } 
+/* require_once '../helpers/formhelper.php'; */
 
 global  $DatabaseHandler, $commonhelper, $media_categories_path, $categories;
 $formcreator = ( class_exists( 'formcreator' ) ) ? new formcreator() : false;
 $categories = ( class_exists( 'categories' ) ) ? new categories() : false; 
 $DatabaseHandler = ( class_exists( 'DatabaseHandler' ) ) ? new DatabaseHandler() : false; 
+$formhelper = ( class_exists( 'formhelper' ) ) ? new formhelper() : false; 
 
 if (isset($_REQUEST['action'])) {
 
@@ -78,8 +82,7 @@ if (isset($_REQUEST['action'])) {
             $message = array(
                 'success' => false,
                 'editform_popup' => '',
-                'error' => '',
-                'message' => "Edit ID in PHP: $edit_id"
+                'error' => '', 
             );  
             $remove_id = (isset($_REQUEST['remove_id'])) ? intval($_REQUEST['remove_id']) : 0;
             $message['remove_id'] = $remove_id; 
@@ -99,19 +102,8 @@ if (isset($_REQUEST['action'])) {
             break;
         
         case 'edit_category' :
-            $edit_id = (isset($_REQUEST['edit_id'])) ? intval($_REQUEST['edit_id']) : 0;
-            $message['success'] = false;
-            $message['editform_popup'] = $message['error'] = $form_popup = '';
-            $message['message'] = 'Edit id in PHP :'. $edit_id;
-
-            $form_view = ($categories) ? $categories->formview( "Add Category" ) : "else";
-            $form_popup .= '
-            <div class="form_edit_popup">
-                '.$form_view.'
-            <div>';
-
-            $message['editform_popup'] = $form_popup;
-            echo json_encode($message);
+            echo $edit_id = (isset($_REQUEST['edit_id'])) ? intval($_REQUEST['edit_id']) : 0; 
+            echo $form_view = ( $categories ) ? $categories->formview( "Edit Category" ) : "categories file not in: ".__FILE__.' Line no '.__LINE__; 
             break;
     }
 }

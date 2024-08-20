@@ -63,6 +63,10 @@ class commonhelper
         return ( $data ); 
     }
 
+    function oes_file_error(){
+        
+    }
+
 }
 
 $commonhelper = new commonhelper();

@@ -118,14 +118,27 @@ function oes_remove_confirmation(){
     return (confirm( 'Are you sure, You want to remove this record ?' ));
 }
 
-function oes_loader( selector = '', show = true, stop_html = 'Success' ){
-    if( show == true ){
+function oes_loader( selector = '', show = true, stop_html = 'Success', css_value = '', loader_size = '' ){
+
+    var selector_css = {};
+    loader_size = ( loader_size != '' ) ? loader_size : '25px';
+
+    if( show == true ){ 
+        selector_css['cursor'] = 'progress';
         $( selector ).prop( 'disabled', true );
-        $( selector ).css( 'cursor', 'progress' );
-        $( selector ).html( '<i class="fa fa-spinner fa-spin" style="font-size:24px"></i>' );
-    } else {
-        $( selector ).css( 'cursor', 'pointer' );
+        $( selector ).html( '<i class="fa fa-spinner fa-spin" style="font-size:'+loader_size+'"></i>' );
+    } else {         
+        selector_css['cursor'] = 'pointer';
         $( selector ).prop( 'disabled', false );
         $( selector ).html( stop_html );
     }
+
+    if( css_value != '' ) {
+        selector_css =  css_value;
+    }
+
+    $( selector ).css( selector_css );
 }
+$( '#categoryname' ).on('click', function(){
+    alert('click the ...');
+})

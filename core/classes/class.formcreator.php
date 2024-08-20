@@ -7,6 +7,10 @@ class formcreator
 	{
 	}
 
+	function oes_test(...$var){
+		echo " You are entered the class.formcreater.php in oes_test() ";
+	}
+
 	function form_create($fields = array(), $forms_attr = array())
 	{
 
@@ -40,7 +44,7 @@ class formcreator
 		global $commonhelper;
 		$content = '';
 
-		if ( count($field_attr) < 1 )
+		if ( is_array($field_attr) && count($field_attr) < 1 || ! is_array($field_attr) && $field_attr == '' )
 			return;
 
 

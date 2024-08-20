@@ -7,10 +7,23 @@ if( class_exists( 'datatable' ) ){
 if( file_exists( '../../classes/class.formcreator.php' ) ){
     require_once '../../classes/class.formcreator.php';
 }
+if( file_exists( '../../classes/class.formcreator.php' ) ){
+    require_once '../../helpers/formhelper.php';
+}
+if( file_exists( '../../models/databasehandler.php' ) ){
+    require_once '../../models/databasehandler.php';
+}
 $formhelper = ( class_exists( 'formhelper' ) ) ? new formhelper() : false; 
-$formcreator = ( class_exists( 'formcreator' ) ) ? new formcreator() : false;
+$formcreator = ( class_exists( 'formcreator' ) ) ? new formcreator() : false; 
+$categories = ( class_exists( 'categories' ) ) ? new categories() : false;  
+        
+        $commonhelper       = ( class_exists( 'commonhelper' ) ) ? new commonhelper() : false;
+        $databasehandler  = ( class_exists( 'databasehandler' ) ) ? new databasehandler() : false;
+        $datatable        = ( class_exists( 'datatable' ) ) ? new datatable() : false;
+        $formhelper       = ( class_exists( 'formhelper' ) ) ? new formhelper() : false;
+        $formcreator      = ( class_exists( 'formcreator' ) ) ? new formcreator() : false; 
+        $categories       = ( class_exists( 'categories' ) ) ? new categories() : false;
 
-$categories = ( class_exists( 'categories' ) ) ? new categories() : false; 
 class categories
 { 
     function __construct()
@@ -28,9 +41,9 @@ class categories
 
         $content .= '<div class="category_form_message message_popup"> Message </div>';
 
-        if( method_exists( 'formcreator', 'field_create' ) ){
-            $content .= 'Done Dona Done Method finded the field_create';
-            $categories_name  = $formcreator->field_create( $formhelper->category_name_attr );  
+        if( method_exists( 'formcreator', 'field_create' ) && is_object( $formcreator )  ){ 
+            // $categories_name  = $formcreator->field_create( $formhelper->category_name_attr );   
+            $categories_name  = $formcreator->field_create( $formhelper->category_name_attr() );  
             $parent_categories  = $formcreator->field_create( $formhelper->parent_category_attr() );  
             $category_image  = $formcreator->field_create( $formhelper->category_image_attr );  
             $submit           = $formcreator->field_create( $formhelper->submit_attr );  
@@ -49,11 +62,15 @@ class categories
     }
 
     public function managecategories(){
-        global $databasehandler, $datatable;
+        global $databasehandler, $datatable, $categories;
         $categoryid = 0;
         $table_data = array();
-
-        echo '<div class="manageCategories_form_popup"> manageCategories_form_popup </div>';            
+ 
+        echo ' 
+        <div class="editCategory_popup_container">
+            <button class="close_editCategory"> X </button>
+            <div class="manageCategories_form_popup"> Loading . . . </div>
+        </div>';            
         $table_header = array ( 'th' => array(
                 'Id', 'Image', 'Category Name', 'Parent Categorty', 'Created at', 'Updated at', 'Action' 
             )
@@ -90,6 +107,6 @@ class categories
         echo " <div><h1 align='center'> Manage Categories </h1><div> ";
         $datatable->dataTableView( $table_header, $table_data, "category_tr_$categoryid" );
     }
-}
+} 
 
 ?>

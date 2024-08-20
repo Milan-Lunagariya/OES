@@ -4,21 +4,24 @@ global $DatabaseHandler, $formhelper;
 
 class formhelper
 {
+    var $category_name_attr;
+    
     public $category_form_attr = array(
         'id'         => 'categoryform',
         'method'     => 'POST',
         'enctype'    => 'multipart/form-data'
     );
 
-    public $category_name_attr = array(
-        'type'         =>  "text",
-        'label'        =>  "Category Name",
-        'name'         =>  "categoryname",
-        'class'        =>  "form-control validate_field",
-        'placeholder'  =>  "Category Name",
-        'title'        =>  "Enter Category Name",
-        'id'           =>  "Test the id"
-    );
+    public function category_name_attr() {
+        return  array(
+            'type'         =>  "text",
+            'label'        =>  "Category Name",
+            'name'         =>  "categoryname",
+            'class'        =>  "form-control validate_field",
+            'placeholder'  =>  "Category Name",
+            'title'        =>  "Enter Category Name"
+        );
+    }
     public $submit_attr = array(
         'type'         =>  "submit",
         'class'        =>  "btn btn-info",

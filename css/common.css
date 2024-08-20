@@ -90,6 +90,7 @@
     font-weight: 700;
 }
 .form_edit_popup{
-    padding: 10em;
-    background-color: red;
+    padding: 1em;
+    background-color: white;
+    width: 700px;
 }

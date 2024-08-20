@@ -1,20 +1,3 @@
-<?php
-
-global $addcategories, $formcreator, $india_timezone, $commonhelper, $media_categories_path, $DatabaseHandler;  
-
-function oes_required_file($filename = "")
-{
-  if (!empty($filename)) {
-    if (file_exists($filename)) {
-      require_once($filename);
-    }
-  }
-} 
-
-$media_categories_path = "../media/categories";
-
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -931,21 +914,34 @@ $media_categories_path = "../media/categories";
       <!-- Main content -->
       <section class="content"> 
       <?php 
+      global $addcategories, $formcreator, $india_timezone, $commonhelper, $media_categories_path, $DatabaseHandler, $categorycontroller;  
+
+      function oes_required_file($filename = "")
+      {
+        if (!empty($filename)) {
+          if (file_exists($filename)) {
+            require_once($filename);
+          }
+        }
+      } 
+      
+      $media_categories_path = "../media/categories";
+      
         oes_required_file('../core/helpers/commonhelper.php'); 
         oes_required_file('../core/models/databasehandler.php'); 
         oes_required_file('../core/models/datatable.php'); 
         oes_required_file('../core/helpers/formhelper.php');
         oes_required_file('../core/classes/class.formcreator.php'); 
         oes_required_file('../core/view/adminview/categories.php');    
-        oes_required_file('../core/models/modelcategory.php');   
-  /*       
-        $commonhelper       = ( class_exists( 'commonhelper' ) ) ? new commonhelper() : false;
-        $databasehandler  = ( class_exists( 'databasehandler' ) ) ? new databasehandler() : false;
-        $datatable        = ( class_exists( 'datatable' ) ) ? new datatable() : false;
-        $formhelper       = ( class_exists( 'formhelper' ) ) ? new formhelper() : false;
-        $formcreator      = ( class_exists( 'formcreator' ) ) ? new formcreator() : false; 
-        $categories       = ( class_exists( 'categories' ) ) ? new categories() : false;
-         */
+        oes_required_file('../core/models/modelcategory.php');    
+        
+        $commonhelper        = ( class_exists( 'commonhelper' ) ) ? new commonhelper() : false;
+        $databasehandler     = ( class_exists( 'databasehandler' ) ) ? new databasehandler() : false;
+        $datatable           = ( class_exists( 'datatable' ) ) ? new datatable() : false;
+        $formhelper          = ( class_exists( 'formhelper' ) ) ? new formhelper() : false;
+        $formcreator         = ( class_exists( 'formcreator' ) ) ? new formcreator() : false; 
+        $categories          = ( class_exists( 'categories' ) ) ? new categories() : false; 
+        
         
 
         if (isset($_REQUEST['page'])) {  
@@ -958,7 +954,7 @@ $media_categories_path = "../media/categories";
             echo (isset($categories) && !empty($categories)) ? $categories->formview("Add Category") : $error;
           }
           
-          if ($_REQUEST['page'] == 'manage_categories') {
+          if ($_REQUEST['page'] == 'manage_categories') { 
             echo (isset($categories) && !empty($categories)) ? $categories->managecategories() : $error;
           } 
         
