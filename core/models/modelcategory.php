@@ -104,6 +104,9 @@ if (isset($_REQUEST['action'])) {
         case 'edit_category' :
             echo $edit_id = (isset($_REQUEST['edit_id'])) ? intval($_REQUEST['edit_id']) : 0; 
 
+            $db_data = $DatabaseHandler->select("categories", '*', array( 'categoryid' => $edit_id ));
+            $parentid = $db_data[0]['parentid'];
+            $db_data_for_parentid = $DatabaseHandler->select("categories", '*', array( 'categoryid' => $parentid )); 
             $edit_categoryFieldData = array( 
                 array(
                     'name' => 'category_formid',
@@ -117,12 +120,12 @@ if (isset($_REQUEST['action'])) {
                 
                 array(
                     'name' => 'categoryname' , 
-                    'value' => 'Dell', 
+                    'value' => (isset($db_data[0]['name']) ? $db_data[0]['name'] : ''), 
                 ),
     
                 array(
                     'name' => 'parentcategory' , 
-                    'value' => 'xaxdd', 
+                    'value' => (isset($db_data_for_parentid[0]['name'])) ? ($db_data_for_parentid[0]['name']) : '', 
                 ),
     
                 array(
