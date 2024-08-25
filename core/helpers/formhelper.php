@@ -67,17 +67,19 @@ class formhelper
         $query = $DatabaseHandler->select('categories', '*');
         $parent_category_options = array();
 
-        $parent_category_options['please_select'] = '<option name="" value="" > Select Parent category </option>';
-        $parent_category_options[0] = '<option name="parentid" value="0" > New Parent category </option>';
+        $selected = ( $value == 0 ) ? ' selected="selected" ' : '';
+        $parent_category_options['please_select'] = '<option name=""  value="" > Select Parent category </option>';
+        $parent_category_options[0] = '<option name="parentid"  '.$selected.' value="0" > New Parent category </option>';
 
 
         foreach ($query as $keyValue) {
              
             $id = isset( $keyValue['categoryid'] ) ? $keyValue['categoryid'] : '';
+            $parentid = isset( $keyValue['parentid'] ) ? $keyValue['parentid'] : '';
             $name = isset( $keyValue['name'] ) ? $keyValue['name'] : '';
             
-            $selected = '';
-            if( strtolower($value) == strtolower($name) ){
+            $selected = ''; 
+            if( strtolower((string)$value) == strtolower((string)$id) ){
                 $selected = ' selected="selected" ';
             }
 

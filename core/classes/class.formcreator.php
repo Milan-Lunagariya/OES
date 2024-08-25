@@ -50,18 +50,30 @@ class formcreator
 
 		$content .= '<div class="field_container">';
 		switch ($field_attr['type']) {
- 
+			
+			case 'text':
+			case 'hidden':
 			case 'text': 
 			case 'submit':
-			case 'file':
+			case 'file': 
 			case 'email':
 				/* $field_attr = $commonhelper->stripslashes_deep($field_attr); */
 				/* Note : Here, your id key not use because id=name, Id should be ones not multiples. so only use id=name  */
 
+				if(isset($field_attr['type']) && strtolower($field_attr['type']) == 'file'){
+					if( isset($field_attr['value']) && $field_attr['value'] != '' ){
+						$image_path = '../media/categories/'.$field_attr['value'];
+						echo "<div class='image_parent'>
+							<a href='$image_path' target='_blank' ><img src='".$image_path."' alt='Image Not Found' width='100'> </a>
+						</div>";
+					}
+				}
+				
 				if (isset($field_attr['label'])) {
 					$field_attr['label'] =  trim($field_attr['label']);
 					$content .= '<label for="' . $field_attr['name'] . '"> ' . $field_attr['label'] . ' </label> ';
 				}
+
 				
 				$field_attr['name']  = ( ( isset($field_attr['name']) ) && ( gettype($field_attr['name']) == 'string' ) ) ? trim($field_attr['name']) : ''; 
 				 
@@ -78,8 +90,7 @@ class formcreator
 					$content .= '  ' . $key . '= "' . $value . '"   ';
 				}
 
-				$content .= ( $field_attr['type'] == 'submit' ) ? '> '. $field_attr['value'] .' </button>' : '/>';
-				/* $content .= '/>'; */
+				$content .= ( $field_attr['type'] == 'submit' ) ? '> '. $field_attr['value'] .' </button>' : '/>'; 
 				break;
 
 			case 'select':
@@ -119,10 +130,7 @@ class formcreator
 		$content .= '</div>';
 		return $content;
 	}
-
-	function selectpicker()
-	{
-	}
+ 
 }
 
 $formcreator =  new formcreator();

@@ -37,8 +37,8 @@ if (isset($_REQUEST['action'])) {
     switch ($_REQUEST['action']) {
 
         case 'add_categoryform':
-            $name = (isset($_POST['categoryname'])) ?  $_POST['categoryname'] : '';
-            $parentid = (isset($_POST['parentcategory'])) ?  ($_POST['parentcategory']) : 0;
+            $name = (isset($_POST['categoryname'])) ?  trim($_POST['categoryname']) : '';
+            $parentid = (isset($_POST['parentcategory'])) ?  trim($_POST['parentcategory']) : 0;
 
             $message['parentCategoryOption'] = ""; 
             $message = array();   
@@ -101,12 +101,15 @@ if (isset($_REQUEST['action'])) {
             echo json_encode( $message );
             break;
         
-        case 'edit_category' :
+        case 'edit_category_form' :
             echo $edit_id = (isset($_REQUEST['edit_id'])) ? intval($_REQUEST['edit_id']) : 0; 
 
             $db_data = $DatabaseHandler->select("categories", '*', array( 'categoryid' => $edit_id ));
             $parentid = $db_data[0]['parentid'];
             $db_data_for_parentid = $DatabaseHandler->select("categories", '*', array( 'categoryid' => $parentid )); 
+
+            $images = (isset($db_data[0]['images']) ? json_decode($db_data[0]['images'], true) : '');
+            
             $edit_categoryFieldData = array( 
                 array(
                     'name' => 'category_formid',
@@ -115,7 +118,7 @@ if (isset($_REQUEST['action'])) {
                 
                 array(
                     'name' => 'categoryimage' , 
-                    'value' => 'demo.png' ,
+                    'value' => $images[0],
                 ),
                 
                 array(
@@ -125,16 +128,34 @@ if (isset($_REQUEST['action'])) {
     
                 array(
                     'name' => 'parentcategory' , 
-                    'value' => (isset($db_data_for_parentid[0]['name'])) ? ($db_data_for_parentid[0]['name']) : '', 
+                    'value' => (isset($db_data_for_parentid[0]['categoryid'])) ? ($db_data_for_parentid[0]['categoryid']) : 0, 
                 ),
-    
+
+                array(
+                    'action' => 'create_field',
+                    'name' => 'categoryid',
+                    'type' => 'hidden',
+                    'value' => $edit_id,
+                ), 
+
                 array(
                     'name' => 'submitButtton',
                     'value' => 'Edit'
                 )
             );
-
             echo $form_view = ( $categories ) ? $categories->formview( "Edit Category", $edit_categoryFieldData ) : "categories file not in: ".__FILE__.' Line no '.__LINE__; 
+            break;
+
+        case 'edit_category': 
+            $message = array(
+                'success' => true,
+                'error' => '',
+                'message' => ''
+            );
+
+            echo $id = ( isset( $_REQUEST['categoryid'] ) ) ? intval($_REQUEST['categoryid']) : 'else';
+            $message['id'] = $id;
+            /* echo ( json_encode($message) ); */
             break;
     }
 }

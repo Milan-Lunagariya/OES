@@ -61,13 +61,21 @@
     font-weight: 600;
 }
 .image_parent {
-    width: 150px;
+    /* width: 150px;
     height: 110px;
     margin: auto;
+    float: left; */
     float: left;
+    width: 100px;
+    background: white;
+    height: 100px;
+    overflow: hidden;
 }
 .image_parent img{
-    margin: auto;
+   /*  margin: auto; */
+    float: left;
+    max-width: 100%;
+    max-height: 100%;
 }
 .message_popup{
     width: fit-content;
@@ -93,4 +101,8 @@
     padding: 1em;
     background-color: white;
     width: 700px;
+}
+
+.close_editCategory:hover{
+    outline: 1px solid black; 
 }

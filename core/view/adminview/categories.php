@@ -49,8 +49,9 @@ class categories
             if( count( $field_axtraAttr ) > 0) {
                 foreach( $field_axtraAttr as $attr ){
 
-                    $attr['name'] = isset($attr['name']) ? $attr['name'] : '';
-                    $attr['value'] = isset($attr['value']) ? $attr['value'] : '';
+                    $attr['name'] = isset($attr['name']) ? $attr['name'] : false;
+                    $attr['value'] = isset($attr['value']) ? $attr['value'] : false;
+                    $attr['action'] = isset($attr['action']) ? $attr['action'] : false;
 
 
                     if( $attr['name'] == 'category_formid' ){
@@ -63,7 +64,13 @@ class categories
                         $parentcategory_value = $attr['value'];
                     } else if ( $attr['name'] == 'submitButtton' ){
                         $submitButtton_value = $attr['value'];
-                    } 
+                    } else if( $attr['action'] == 'create_field' ){
+                        $field_attr = array();
+                        foreach( $attr as $field_name => $field_value ){
+                            $field_attr[$field_name] = $field_value; 
+                        }
+                        $new_create_field  = $formcreator->field_create( $field_attr );              
+                    }
 
                 }
             }
@@ -74,6 +81,7 @@ class categories
             $submit           = $formcreator->field_create( $formhelper->submit_attr( $submitButtton_value ) );  
             
             $fields = array( 
+                $new_create_field,
                 $category_image,
                 $categories_name,
                 $parent_categories,
@@ -114,12 +122,13 @@ class categories
                 }
             } 
             $image = json_decode( $value['images'], true );
+            $image_path = "../media/categories/".$image[0];
 
 
             $categoryid = ( isset($value['categoryid']) && !empty($value['categoryid']) ) ? $value['categoryid']: '-'; 
-            $images = ( isset($value['images']) && !empty($value['images']) ) ? "<div class='image_parent'><img src='../media/categories/".$image[0]."' alt='Not Found' width='100'></div>": '-'; 
+            $images = ( isset($value['images']) && !empty($value['images']) ) ? "<div class='image_parent'><a href='$image_path' target='_blank' ><img src='$image_path' alt='Not Found' width='100'></a></div>": '-'; 
             $name = ( isset($value['name']) && !empty($value['name']) ) ? $value['name']: '-'; 
-            $parent = ( isset($parent) && !empty($parent) ) ? $parent : '-'; 
+            $parent = ( isset($parent) && !empty($parent) ) ? $parent : 'Parent (0)'; 
             $createdat  = ( isset($value['createdat']) && !empty($value['createdat']) ) ? $value['createdat']: '-'; 
             $updatedat = ( isset($value['updatedat']) && !empty($value['updatedat']) ) ? $value['updatedat']: '-'; 
             $action .= "<button id='$categoryid' class='edit edit_category_$categoryid'> Edit<!-- <i class='fa-solid fa-pen-to-square'></i> --> </button> &nbsp; ";

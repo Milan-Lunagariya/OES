@@ -45,22 +45,20 @@ $( document ).on( 'click', '[class*="edit_category_"]', function(){
     $( '.editCategory_popup_container' ).fadeIn();
     $( '.close_editCategory' ).hide();
 
-    var id = $(this).attr('id'); 
-    console.log( 'Edit id: ' + id );
+    var id = $(this).attr('id');  
 
     var class_edit = '.edit_category_'+id;
     var manageCategories_message = '.manageCategories_message';
 
     const url = '../core/models/modelcategory.php'; 
 
-    const callback = function(data){    
-
+    const callback = function(data){     
         oes_loader( '.manageCategories_form_popup', false, '', {'cursor': 'auto'} );
         $( '.close_editCategory' ).fadeIn();
         $( '.manageCategories_form_popup' ).fadeIn('slow').html( data );  
     };  
     var send_dataOnPHP = {
-        'action': 'edit_category',
+        'action': 'edit_category_form',
         'edit_id' : id
     };
     if( id != null || id != '' ){ 

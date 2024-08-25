@@ -61,10 +61,11 @@ foreach( $data as $key => $value ){
         }
     } 
     $image = json_decode( $value['images'], true );
+    $image_path = "../media/categories/.$image[0]";
 ?>
     <tr>  
         <td><?php echo ( isset($value['categoryid']) && !empty($value['categoryid']) ) ? $value['categoryid']: '-'; ?></td>
-        <td><?php echo ( isset($value['images']) && !empty($value['images']) ) ? "<div class='image_parent'><img src='../media/categories/".$image[0]."' alt='Not Found' width='100'></div>": '-'; ?></td>
+        <td><?php echo ( isset($value['images']) && !empty($value['images']) ) ? "<div class='image_parent'><a href='$image_path' ><img src='$image_path' alt='Not Found' width='100'></a></div>": '-'; ?></td>
         <td><?php echo ( isset($value['name']) && !empty($value['name']) ) ? $value['name']: '-'; ?></td>
         <td><?php echo ( isset($parent) && !empty($parent) ) ? $parent : '-'; ?></td>
         <td><?php echo ( isset($value['createdat']) && !empty($value['createdat']) ) ? $value['createdat']: '-'; ?></td>
