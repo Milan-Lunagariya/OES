@@ -49,6 +49,10 @@ class commonhelper
         date_default_timezone_set('Asia/Kolkata');
     }
 
+    function oes_get_timestamp(){
+        return ( date( 'd-F-Y , H:i:s' ) );
+    }
+
     function oes_required_file($filename = "")
     {
         if ( !empty($filename) && file_exists($filename) ) { 

@@ -22,6 +22,7 @@
     --danger: #dc3545;  
     --light: #f8f9fa;
     --dark: #343a40;
+    --success_bg: #c1ffd0;
 }
 .datatable {
     background: var(--white);
@@ -29,7 +30,7 @@
     margin: auto;
     padding: 1em;
     border-radius: 10px;
-    box-shadow: 0px 0px 4px black inset;
+    box-shadow: 0px 0px 4px var(--black) inset;
 } 
 .datatable th {
     font-size: larger;
@@ -45,18 +46,18 @@
     border: 1px solid var(--dark);
 }
 .datatable button.edit {
-    background: #e1f6e1;
+    background: var(--white);
     color: var(--green);
 }
 .datatable button.remove {
-    background: #ffeded;
+    background: var(--white);
     color: var(--red);
 }
 .datatable button{
     border: 2px;
 }
 .datatable button {
-    border: 1px solid black;
+    border: 1px solid var(--black);
     border-radius: 5px;
     font-weight: 600;
 }
@@ -67,7 +68,7 @@
     float: left; */
     float: left;
     width: 100px;
-    background: white;
+    background: var(--white);
     height: 100px;
     overflow: hidden;
 }
@@ -79,30 +80,30 @@
 }
 .message_popup{
     width: fit-content;
-    background-color: lightgreen;
+    background-color: var(--success_bg);
     padding: 10px;
     position: fixed;
     border-radius: 0px;
-    box-shadow: 0px 0px 5px greenyellow inset;
+    box-shadow: 0px 0px 5px var(--success) inset;
     font-weight: 900;
-    color: var(--black);
-    border: 1px solid green;
+    color: var(--green);
+    border: 1px solid var(--green);
     right: 5%;
     display: none;
 }
 .message_error{
     color: var(--red);
-    background-color: #fff0f0;
-    border: 1px solid black;
+    background-color: var( --light );
+    border: 1px solid var( --black );
     border: 1px solid var(--red);
     font-weight: 700;
 }
 .form_edit_popup{
     padding: 1em;
-    background-color: white;
+    background-color: var(--white);
     width: 700px;
 }
 
 .close_editCategory:hover{
-    outline: 1px solid black; 
+    outline: 1px solid var(--red); 
 }

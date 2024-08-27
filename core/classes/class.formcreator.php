@@ -25,15 +25,19 @@ class formcreator
 		$submit_button = (!empty($submit_button)) ? stripslashes($submit_button) : 'Submit';
 
 		$content .= '<div class="form_container">';
-		$content .= '<form ';
-		foreach ($forms_attr as $attr => $value) {
-			$content .=  ' ' . $attr . '="' . $value . '"  ';
-		}
-		$content .= ' >';
-		foreach ($fields as $field) {
-			$content .= $field;
-		}
-		$content .= '</form>';
+			$content .= '<form ';
+			foreach ($forms_attr as $attr => $value) {
+				$content .=  ' ' . $attr . '="' . $value . '"  ';
+			}
+			$content .= ' >';
+
+				foreach ($fields as $field) {
+					if( isset($field) && ! in_array( trim( $field ), [ '' , false] ) ){
+						$content .= $field;
+					}
+				}
+			
+			$content .= '</form>';
 		$content .= '</div>';
 
 		return $content;

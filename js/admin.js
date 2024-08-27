@@ -58,7 +58,7 @@ $( document ).on( 'click', '[class*="edit_category_"]', function(){
         $( '.manageCategories_form_popup' ).fadeIn('slow').html( data );  
     };  
     var send_dataOnPHP = {
-        'action': 'edit_category_form',
+        'action': 'edit_categoryform',
         'edit_id' : id
     };
     if( id != null || id != '' ){ 

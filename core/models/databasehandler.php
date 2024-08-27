@@ -40,7 +40,7 @@ class DatabaseHandler {
                 $commonhelper->stripslashes_deep($data); 
             } 
 
-            $data['createdat'] = date( 'd-F-Y , H:i:s' );
+            $data['createdat'] = $commonhelper->oes_get_timestamp();
 
             $columns = implode(',', array_keys($data));
             $placeholders = ':' . implode(', :', array_keys($data));
@@ -68,14 +68,14 @@ class DatabaseHandler {
         }
     }
 
-    public function update($table = "", $data = array(), $condition = "") {
+    public function update( $table = "", $data = array(), $where_clause = array(), $operator = '',  $groupby = '', $orderby = '', $limit = '' ) {
         try {
             global $commonhelper;
             if (empty($table)) {
                 throw new InvalidArgumentException('Table name cannot be empty.');
             }
 
-            if (empty($condition)) {
+            if (empty( $where_clause ) || ( is_array( $where_clause )  && count( $where_clause ) < 1 ) ) {
                 throw new InvalidArgumentException('Update condition cannot be empty.');
             } 
 
@@ -87,11 +87,17 @@ class DatabaseHandler {
                 $commonhelper->stripslashes_deep($data); 
             }
 
-            $data['updatedat'] = date( 'd m y , H:i:s' );
+            /* $data['updatedat'] = $commonhelper->oes_get_timestamp(); */
+            $condition = '';
 
-            $setClause = implode(', ', array_map(fn($key) => "$key = :$key", array_keys($data)));
-
-            $query = "UPDATE $table SET $setClause WHERE $condition";
+            $setClause = implode(', ', array_map(fn($key) => "$key = :$key", array_keys( $data ) ) );
+            $operator = ( is_array( $where_clause ) && count( $where_clause ) < 2 ) ? $operator : '';
+            
+            foreach( $where_clause as $column => $value ){
+                $condition .= ' '.$column .' = '.' :'. $column . ' '.$operator.' ';
+            }
+        
+            $query = "UPDATE $table SET $setClause WHERE $condition $groupby $orderby $limit";
             $stmt = $this->conn->prepare($query);
 
             foreach ($data as $column => &$value) {
@@ -99,7 +105,17 @@ class DatabaseHandler {
                 $stmt->bindParam(":$column", $value);
             }
 
+            foreach( $where_clause as $column => $value ){
+                $stmt->bindParam( ":$column", $value );
+            }
+
             $stmt->execute();
+
+            if( $stmt ){
+                return true;
+            } else {
+                return false;
+            }
         } catch(PDOException $exception) {
             echo "Update error: " . $exception->getMessage();
         }
@@ -131,9 +147,7 @@ class DatabaseHandler {
                 return true;
             } else{
                 return false;
-            }
-
-
+            } 
 
         } catch(Exception $exception){
             echo "Delete error: " . $exception->getMessage();
@@ -148,9 +162,8 @@ class DatabaseHandler {
             }
             
             $column = implode(',', array_keys($where_clause));
- 
-            $where =    ( count( $where_clause ) > 0 ) ? "WHERE"   : '';
-            $operator = ( count( $where_clause ) < 2 ) ? $operator : '';
+            $where =    ( is_array( $where_clause ) && count( $where_clause ) > 0 ) ? "WHERE"   : '';
+            $operator = ( is_array( $where_clause ) && count( $where_clause ) < 2 ) ? $operator : '';
 
             $condition = '';
             foreach( $where_clause as $column => $value ){
@@ -164,6 +177,7 @@ class DatabaseHandler {
                 $stmt->bindParam( ":$column", $value );
             }
             $stmt->execute();
+
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch(PDOException $exception) {
             echo "Fetch error: " . $exception->getMessage(); 

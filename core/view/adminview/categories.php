@@ -38,7 +38,7 @@ class categories
     public function formview( $title = "Add Category", $field_axtraAttr = array() ){
  
         global $formcreator, $formhelper;
-        $formid = $categoryImage_value  = $categoryname_value = $parentcategory_value = $submitButtton_value = '';
+        $new_create_field = $formid = $categoryImage_value  = $categoryname_value = $parentcategory_value = $submitButtton_value = false;
         $content = '<h1 class="title"> '.$title.' </h1>';
 
         $content .= '<div class="category_form_message message_popup"> Message </div>';
@@ -121,12 +121,13 @@ class categories
                     $parent = isset($v['name']) ? $v['name']."(".$v['categoryid'].')' : ''; 
                 }
             } 
-            $image = json_decode( $value['images'], true );
-            $image_path = "../media/categories/".$image[0];
+            $categoryimages = ( isset( $value['images'] ) && $value['images'] != '' ) ? json_decode( $value['images'], true ) : array();
+            $categoryimage = ( is_array($categoryimages) && count($categoryimages) > 0 ) ? trim( $categoryimages[0] ) : '';
+            $image_path = ( $categoryimage != '' ) ? "../media/categories/".$categoryimage :  '';
 
 
             $categoryid = ( isset($value['categoryid']) && !empty($value['categoryid']) ) ? $value['categoryid']: '-'; 
-            $images = ( isset($value['images']) && !empty($value['images']) ) ? "<div class='image_parent'><a href='$image_path' target='_blank' ><img src='$image_path' alt='Not Found' width='100'></a></div>": '-'; 
+            $images = ( ! empty($image_path) ) ? "<div class='image_parent'><a href='$image_path' target='_blank' ><img src='$image_path' alt='Not Found' width='100'></a></div>": '-'; 
             $name = ( isset($value['name']) && !empty($value['name']) ) ? $value['name']: '-'; 
             $parent = ( isset($parent) && !empty($parent) ) ? $parent : 'Parent (0)'; 
             $createdat  = ( isset($value['createdat']) && !empty($value['createdat']) ) ? $value['createdat']: '-'; 
