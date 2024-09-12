@@ -9,10 +9,14 @@ class commonhelper
     function file_validation( $postedName = '', $fileDestination =  '../../media/categories/', $maxSize = (5 * 1024 * 1024), $allowExt = array('jpeg', 'png', 'jpg', 'gif'),  ){
         $result = array();
         $result['success'] = false;
-        $result['message'] = ''; 
+        $result['message'] = '';
+        $result['image'] = '';
+        $result['is_upload'] = false;
+        
         $br = '<br> - '; 
-
+        
         if(isset($_FILES[$postedName]['name']) && !empty($_FILES[$postedName]['name']) ) {
+            $result['is_upload'] = true;
             $fileName  = $_FILES[$postedName]['name'];
             $fileName_withTime  = time().'_'.$fileName;
             $fileTempName       = $_FILES[$postedName]['tmp_name'];
@@ -24,7 +28,7 @@ class commonhelper
                     $fileDestination = $fileDestination.$fileName_withTime;
                     if(move_uploaded_file($fileTempName, $fileDestination)){ 
                         $result['success'] = true;
-                        $result['message'] .= $fileName_withTime;
+                        $result['image']    = trim($fileName_withTime);
                     } else{ $result['message'] = "$br Move uploaded filed time error"; }
 
                 } else{ $result['message'] .= "$br Please ensure the file size is 5 MB or less."; }
@@ -46,10 +50,11 @@ class commonhelper
     
     function india_timezone()
     {
-        date_default_timezone_set('Asia/Kolkata');
+        return date_default_timezone_set('Asia/Kolkata');
     }
 
     function oes_get_timestamp(){
+        date_default_timezone_set('Asia/Kolkata');
         return ( date( 'd-F-Y , H:i:s' ) );
     }
 

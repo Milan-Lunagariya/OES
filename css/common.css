@@ -105,5 +105,5 @@
 }
 
 .close_editCategory:hover{
-    outline: 1px solid var(--red); 
+    background-color: var(--dark);
 }

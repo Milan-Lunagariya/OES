@@ -1,3 +1,63 @@
+<!-- Select function -->
+<?php
+function selectData($table_name, $data = '*', $where_clause = '', $params = [], $groupby = '', $orderby = '', $limit = '') {
+    try {
+        // Database connection (adjust DSN, username, and password as per your setup)
+        $dsn = 'mysql:host=your_host;dbname=your_db;charset=utf8mb4';
+        $username = 'your_username';
+        $password = 'your_password';
+        $pdo = new PDO($dsn, $username, $password);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        // Build base query
+        $query = "SELECT $data FROM $table_name";
+
+        // Add where clause if provided
+        if (!empty($where_clause)) {
+            $query .= " WHERE $where_clause";
+        }
+
+        // Add group by clause if provided
+        if (!empty($groupby)) {
+            $query .= " GROUP BY $groupby";
+        }
+
+        // Add order by clause if provided
+        if (!empty($orderby)) {
+            $query .= " ORDER BY $orderby";
+        }
+
+        // Add limit if provided
+        if (!empty($limit)) {
+            $query .= " LIMIT $limit";
+        }
+
+        // Prepare and execute the query
+        $stmt = $pdo->prepare($query);
+        $stmt->execute($params); 
+
+        // Fetch data
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $result;
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
+    }
+}
+/* -------------- */
+// Where clause with placeholders
+$where_clause = "name = ? AND category_id <> ?";
+
+// Parameters to bind to placeholders (for 'test' and 102)
+$params = ['test', 102];
+
+// Call the selectData function
+/* $result = selectData('categories', '*', $where_clause, $params); */
+
+// Output the result 
+
+
+?>
 <!-- Header -->
 <header class="header_container"> 
     <div class="fixed_nav">
@@ -99,3 +159,4 @@ INSERT INTO `categories` (`name`, `parentid`, `createdat`) VALUES
 ('Cable All in One', 40, CURRENT_TIMESTAMP),
 ('Smart Speaker', 40, CURRENT_TIMESTAMP),
 ('USB Cover', 40, CURRENT_TIMESTAMP);
+

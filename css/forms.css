@@ -106,8 +106,7 @@ input[type=file]{
     transform: translate(-50%, -50%);
     display: none;
 }
-.close_editCategory {
-    font-weight: 900;
+.close_editCategory { 
     font-size: 20px;
     background: var(--gray);
     margin: auto;

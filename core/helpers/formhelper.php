@@ -4,8 +4,12 @@ global $DatabaseHandler, $formhelper;
 
 class formhelper
 {
-    var $category_name_attr;
+    var $category_name_attr; 
     
+    public function __construct()
+    { 
+    }
+
     public function category_form_attr( $getid = '', $class = '' ) {
 
         $id = ( $getid == '' ) ? 'add_categoryform' : $getid; 
@@ -47,7 +51,7 @@ class formhelper
     } 
 
     public function category_image_attr( $value = '',  ){
-
+ 
         $default =  array(
             'type'         =>  "file",
             'label'        =>  "Category image",

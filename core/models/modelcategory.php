@@ -36,6 +36,7 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
     $message['success'] = false;
     $message['error'] = '';
     $db_result = false;
+    $clause_type = $where_clause = array();
 
     switch ( $action ) {
 
@@ -43,32 +44,56 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
         case 'edit_category':
             $name = (isset($_POST['categoryname'])) ?  trim($_POST['categoryname']) : '';
             $parentid = (isset($_POST['parentcategory'])) ?  trim($_POST['parentcategory']) : 0;
+            $edit_id = ( isset( $_REQUEST['categoryid'] ) && $_REQUEST['categoryid'] != '' ) ? intval( base64_decode( $_REQUEST['categoryid'] ) ) : 0;
 
             $message['parentCategoryOption'] = "";
             $message = array();   
+ 
+            if( $action == 'edit_category' ){
+                
+                /*  $where_clause = "name = ? AND categoryid <> ?";
+                $params = ['test', 102];
+                $search = $DatabaseHandler->selectData('categories', '*', $where_clause, $params); */
+                
+                /* $where_clauses = array(
+                    array( 'column' => 'name', 'operator' => '=', 'value' => $name, 'placeholder' => 'where_name', 'conjunction' => 'AND' ),
+                    array( 'column' => 'categoryid', 'operator' => '<>', 'value' => $edit_id, 'placeholder' => 'where_categoryid', 'conjunction' => 'AND' )
+                );                    
+                $types = array( 'name' => PDO::PARAM_STR, 'id' => PDO::PARAM_INT ); 
+                $search = selectData( 'categories', '*', $where_clauses, $types, '', 'name ASC', '' );*/
+                
+                /* SELECT * FROM categories WHERE name = 'test' AND category id <> 102 order by name Desc limit 20*/   
+ 
 
-            $where_clause = array(
-                'name' => $name
-            );
-            
-            $search = $DatabaseHandler->select("categories", '*', $where_clause);
-            $message['is_exist'] = count($search);
+                $where_clause = array(
+                    array( 'column' => 'name', 'type' => PDO::PARAM_STR, 'value' => $name, 'operator' => '=', 'conjunction' => 'AND' ),
+                    array( 'column' => 'categoryid', 'type' => PDO::PARAM_INT, 'value' => $edit_id, 'operator' => '<>',  ),
+                );
+                $search = $DatabaseHandler->selectOurnew( 'categories', '*', $where_clause, '', 'name Desc', '5' );
+ 
+            } else {
+                $search = $DatabaseHandler->select( "categories", '*', array( 'name' => $name ) );
+            }
+            $message['is_exist'] = ( is_array( $search ) ) ? count( $search ) : false;
             
             if ($message['is_exist'] < 1) {
                 $image_result =  $commonhelper->file_validation('categoryimage', $_SERVER['DOCUMENT_ROOT']."/project/media/categories/");
-                
-                if (in_array($image_result['success'], [true, 'true', 1])) {
-                    $image = isset($image_result['message']) ? array(trim($image_result['message'])) : '';
+                $message['is_image_upload'] =  $image_result['is_upload'];
+                if ( /* in_array($image_result['success'], [true, 'true', 1]) */ true ) {
+                    $image = isset($image_result['image']) ? array( $image_result['image'] ) : array();
+                    $image = json_encode( $image );
                     $data = array(
                         'name' => $name,
                         'parentid' => $parentid,
-                        'images' => json_encode( $image , true),
+                        'images' => $image,
                     );
                     
                     if( $action == 'edit_category' ){
-                        
-                        $edit_id = ( isset( $_REQUEST['categoryid'] ) && $_REQUEST['categoryid'] != '' ) ? intval( $_REQUEST['categoryid'] ) : 0;
+ 
+                        $old_categoryImages = ( isset( $_REQUEST['oldCategoryImages'] ) && $_REQUEST['oldCategoryImages'] != '' ) ? base64_decode( $_REQUEST['oldCategoryImages'] ) : json_encode(array());
+                        $data['images'] = ( $image_result['is_upload'] ) ? $image : $old_categoryImages; 
                         $db_result = $DatabaseHandler->update( 'categories', $data, array( 'categoryid' => $edit_id ) );
+
                     } else {
                         $db_result = $DatabaseHandler->insert( 'categories', $data );
                     }
@@ -78,7 +103,7 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
                     if ( in_array( $db_result, [ 1, true, '1' ] ) ) {
 
                         $message['success'] = true; 
-                        $search = $DatabaseHandler->select("categories", '*', $where_clause);
+                        $search = $DatabaseHandler->select("categories", '*', array( 'name' => $name ) );
                         if (isset($search[0]['categoryid'])) {
                             $message['parentCategoryOption'] = "<option name='parentid' value='{$search[0]['categoryid']}'> {$search[0]['name']} </option>";
                         }
@@ -90,7 +115,7 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
             } else { $error .= "$br Category $name is already exist "; } 
 
             $message['error'] = $error;
-            print_r(json_encode($message));
+            print_r( json_encode( $message ) );
             break;
         
         case 'remove_category' :
@@ -126,50 +151,15 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
             $images = isset($db_data[0]['images'] ) ? json_decode($db_data[0]['images'], true) : array();
             $categoryimage = ( is_array($images) && ($images) > 0 ) ? trim( $images[0] ) : '';
             $edit_categoryFieldData = array( 
-                array(
-                    'name' => 'category_formid',
-                    'id' => 'edit_categoryform',
-                ),
-                
-                array(
-                    'name' => 'categoryimage' , 
-                    'value' => $categoryimage,
-                ),
-                
-                array(
-                    'name' => 'categoryname' , 
-                    'value' => (isset($db_data[0]['name']) ? $db_data[0]['name'] : ''), 
-                ),
-    
-                array(
-                    'name' => 'parentcategory' , 
-                    'value' => (isset($db_data_for_parentid[0]['categoryid'])) ? ($db_data_for_parentid[0]['categoryid']) : 0, 
-                ),
-
-                array(
-                    'action' => 'create_field',
-                    'name' => 'categoryid',
-                    'type' => 'hidden',
-                    'value' => $edit_id,
-                ), 
-
-                array(
-                    'name' => 'submitButtton',
-                    'value' => 'Edit'
-                )
-            );
+                array( 'name' => 'category_formid', 'id' => 'edit_categoryform', ),
+                array( 'name' => 'categoryimage', 'value' => $categoryimage,),
+                array( 'name' => 'categoryname', 'value' => (isset($db_data[0]['name']) ? $db_data[0]['name'] : ''), ),
+                array( 'name' => 'parentcategory', 'value' => (isset($db_data_for_parentid[0]['categoryid'])) ? ($db_data_for_parentid[0]['categoryid']) : 0, ),
+                array( 'action' => 'create_field', 'name' => 'categoryid','type' => 'hidden','value' => base64_encode($edit_id), ),  
+                array( 'action' => 'create_field', 'name' => 'oldCategoryImages','type' => 'hidden','value' => base64_encode(json_encode(array($categoryimage))), ),  
+                array( 'name' => 'submitButtton', 'value' => 'Edit')
+            );  
             echo $form_view = ( $categories ) ? $categories->formview( "Edit Category", $edit_categoryFieldData ) : "categories file not in: ".__FILE__.' Line no '.__LINE__; 
-            break;
-
-        /* case 'edit_category': 
-            $message = array(
-                'success' => true,
-                'error' => '',
-                'message' => ''
-            );
-
-            echo "Id is : ".$id = ( isset( $_REQUEST['categoryid'] ) ) ? intval($_REQUEST['categoryid']) : 'else';
-            $message['id'] = $id; 
-            break; */
+            break; 
     }
 }
