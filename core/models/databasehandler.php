@@ -158,119 +158,7 @@ class DatabaseHandler {
         }
     }
 
-    public function select($table = '', $select_column = '', $where_clause = array(), $operator = '',  $groupby = '', $orderby = '', $limit = '' ) {
-        try {
-
-            if(!is_array($where_clause)){
-                throw new Exception( "By OES: Where clause must be array!" );
-            }
-            
-            $column = implode(',', array_keys($where_clause));
-            $where =    ( is_array( $where_clause ) && count( $where_clause ) > 0 ) ? "WHERE"   : ''; 
-
-            $condition = '';
-            foreach( $where_clause as $column => $value ){
-
-                if( $operator == '<>' ){ 
-                    $condition .= "$column <> :$column";
-                } else {
-                    $condition .= ' '.$column .' = '.' :'. $column . ' '.$operator.' ';
-                }
-            }
-
-            $query = "SELECT $select_column FROM $table $where $condition $groupby $orderby $limit";
-            $stmt = $this->conn->prepare($query);
-
-            foreach( $where_clause as $column => $value ){
-                $stmt->bindParam( ":$column", $value );
-            }
-            $stmt->execute();
-
-            return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch(PDOException $exception) {
-            echo "Fetch error: " . $exception->getMessage();
-        }
-    }
-    /* function selectData($table_name, $data = '*', $where_clause = '', $params = [], $groupby = '', $orderby = '', $limit = '') {
-        try {
-    
-            // Build base query
-            $query = "SELECT $data FROM $table_name";
-    
-            // Add where clause if provided
-            if (!empty($where_clause)) {
-                $query .= " WHERE $where_clause";
-            }
-    
-            // Add group by clause if provided
-            if (!empty($groupby)) {
-                $query .= " GROUP BY $groupby";
-            }
-    
-            // Add order by clause if provided
-            if (!empty($orderby)) {
-                $query .= " ORDER BY $      ";
-            }
-    
-            // Add limit if provided
-            if (!empty($limit)) {
-                $query .= " LIMIT $limit";
-            }
-    
-            // Prepare and execute the query
-            $stmt = $this->conn->prepare($query);
-            $stmt->execute($params);
-    
-            // Fetch data
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    
-            return $result;
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-        }
-    } */
-    
-    public function selectData( $table_name, $data = '*', $where_clauses = array(), $types = array(), $groupby = '', $orderby = '', $limit = '') {
-        try { 
-            $query = "SELECT $data FROM $table_name";
-    
-            if (!empty($where_clauses)) {
-                $conditions = array();
-                foreach ($where_clauses as $condition) {
-                    $conditions[] = "{$condition['column']} {$condition['operator']} :{$condition['placeholder']}";
-                } 
-                $query .= " WHERE " . implode(" ", array_map(function($condition, $i) use ($where_clauses) {
-                    return ($i > 0 ? $where_clauses[$i]['conjunction'] . ' ' : '') . $condition;
-                }, $conditions, array_keys($conditions)));
-            }
-     
-            if (!empty($groupby)) {
-                $query .= " GROUP BY $groupby";
-            }
-            if (!empty($orderby)) {
-                $query .= " ORDER BY $orderby";
-            }
-            if (!empty($limit)) {
-                $query .= " LIMIT $limit";
-            }
-            $stmt = $this->conn->prepare($query);
-    
-            foreach ($where_clauses as $condition) {
-                $type = isset ( $types[ $condition['placeholder'] ]) ? $types[ $condition['placeholder'] ] : PDO::PARAM_STR;
-                $stmt->bindValue(":{$condition['placeholder']}", $condition['value'], $type);
-            }
-     
-            $stmt->execute();
-            $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-            
-            return !empty( $result ) ? $result : false;
-            
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
-        }
-    }
-
-    public function selectOurnew($table = '', $select_column = '', $where_clause = array(),  $groupby = '', $orderby = '', $limit = '' ) {
+    public function select($table = '', $select_column = '', $where_clause = array(),  $groupby = '', $orderby = '', $limit = '', $offset = '' ) {
         try {
 
             if (empty($table)) {
@@ -281,10 +169,11 @@ class DatabaseHandler {
             $condition = '';
             $query = '';
              
+            $where_clause = ( is_array( $where_clause ) ) ? $where_clause : array();
             foreach( $where_clause as $data ){
 
                 $correctdata['column'] = ( isset( $data['column'] ) ) ? $data['column'] : '';
-                $correctdata['operator'] = ( isset( $data['operator'] ) ) ? $data['operator'] : '';
+                $correctdata['operator'] = ( isset( $data['operator'] ) && ! empty( $data['operator'] ) ) ? $data['operator'] : '=';
                 $correctdata['conjunction'] = ( isset( $data['conjunction'] ) ) ? $data['conjunction'] : '';
 
                 $condition .= " {$correctdata['column']} {$correctdata['operator']} :{$correctdata['column']} {$correctdata['conjunction']} ";
@@ -307,14 +196,17 @@ class DatabaseHandler {
             if( ! empty( $limit ) ){
                 $query .= " LIMIT $limit";
             }
- 
-           /*  echo  $query; */
+            if( ! empty( $offset ) ){
+                $query .= " OFFSET $offset";
+            }
+
+            /* echo  $query; */
             $stmt = $this->conn->prepare($query);
             
             foreach(  $where_clause as $setData ){
                 
                 if( !isset( $setData['column'] ) || !isset( $setData['value'] ) ){
-                    break;    
+                    break;
                 }
                 $setData['type'] = ( isset( $setData['type'] ) && !empty( $setData['type'] ) ) ? $setData['type'] : PDO::PARAM_STR;
                 $stmt->bindParam( ":{$setData['column']}", $setData['value'], $setData['type'] );
@@ -332,8 +224,6 @@ class DatabaseHandler {
         $this->conn = null;  
     } 
 }
-
-
 
 global $DatabaseHandler;
 $DatabaseHandler = new DatabaseHandler();

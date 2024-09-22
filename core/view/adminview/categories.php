@@ -13,6 +13,9 @@ if( file_exists( '../../classes/class.formcreator.php' ) ){
 if( file_exists( '../../models/databasehandler.php' ) ){
     require_once '../../models/databasehandler.php';
 }
+if( file_exists( '../../models/datatable.php' ) ){
+    require_once '../../models/datatable.php';
+}
 $formhelper = ( class_exists( 'formhelper' ) ) ? new formhelper() : false; 
 $formcreator = ( class_exists( 'formcreator' ) ) ? new formcreator() : false; 
 $categories = ( class_exists( 'categories' ) ) ? new categories() : false;  
@@ -101,38 +104,54 @@ class categories
         return $content;
     }
 
-    public function managecategories(){
+    public function managecategories( $current_page = 1, $record_limit = 5 ){
+
         global $databasehandler, $datatable, $categories;
         $categoryid = 0;
         $table_data = array();
- 
-        echo ' 
+        
+        $datatable        = ( class_exists( 'datatable' ) ) ? new datatable() : false;
+
+        echo '
+        <div class="oes_loader_center"> Loading . . . </div>
         <div class="editCategory_popup_container">
             <button class="close_editCategory"> X </button>
             <div class="manageCategories_form_popup"> Loading . . . </div>
-        </div>';            
+        </div>';
+
         $table_header = array ( 'th' => array(
+                '<input type="checkbox" class="" name="" value="">',
                 'Id', 'Image', 'Category Name', 'Parent Categorty', 'Created at', 'Updated at', 'Action' 
             )
         ); 
-        $data = $databasehandler->select( 'categories', '*');
+
+        
+        $current_page = ( is_numeric( $current_page ) && $current_page > 0 ) ? $current_page : 1;
+        $limit = ( $record_limit != '' ) ? intval( $record_limit ) : 10;
+        $offset = ( $current_page - 1 ) * $limit;
+
+        $data = $databasehandler->select( 'categories', '*', array(), '', 'categoryid ASC', $limit, $offset);
+        $total_records = $databasehandler->select( 'categories', 'COUNT(categoryid) AS "total_record"');
+        $total_records = isset( $total_records[0]['total_record'] ) ? $total_records[0]['total_record'] : 0;
+
         foreach( $data as $key => $value ){  
             $action = '';
 
             if( in_array($value['parentid'],['0', 0]) ) {
                 $parent = "Parent (0)";  
             } else{
-                $select = $databasehandler->select( 'categories', '*', array('categoryid' => $value['parentid']) );    
+                $select = $databasehandler->select( 'categories', '*', array( array( 'column' => 'categoryid', 'value' => $value['parentid'], 'type' => PDO::PARAM_STR ) ) );
                 $parent = '';
                 foreach( $select as $k => $v ){
                     $parent = isset($v['name']) ? $v['name']."(".$v['categoryid'].')' : ''; 
                 }
             } 
+
             $categoryimages = ( isset( $value['images'] ) && $value['images'] != '' ) ? json_decode( $value['images'], true ) : array();
             $categoryimage = ( is_array($categoryimages) && count($categoryimages) > 0 ) ? trim( $categoryimages[0] ) : '';
             $image_path = ( $categoryimage != '' ) ? "../media/categories/".$categoryimage :  '';
 
-
+            $select_current = '<input type="checkbox" class="" name="" value="">';
             $categoryid = ( isset($value['categoryid']) && !empty($value['categoryid']) ) ? $value['categoryid']: '-'; 
             $images = ( ! empty($image_path) ) ? "<div class='image_parent'><a href='$image_path' target='_blank' ><img src='$image_path' alt='Not Found' width='100'></a></div>": '-'; 
             $name = ( isset($value['name']) && !empty($value['name']) ) ? $value['name']: '-'; 
@@ -142,13 +161,37 @@ class categories
             $action .= "<button id='$categoryid' class='edit edit_category_$categoryid'> Edit<!-- <i class='fa-solid fa-pen-to-square'></i> --> </button> &nbsp; ";
             $action .= "<button id='$categoryid' class='remove remove_category_$categoryid'> Remove<!-- <i class='fa-solid fa-trash'></i> --> </button>";
 
-            $table_data[] = array( $categoryid, $images, $name, $parent, $createdat, $updatedat, $action);
+            $table_data[] = array( $select_current, $categoryid, $images, $name, $parent, $createdat, $updatedat, $action );
         }
 
-        echo ' <div class="manageCategories_message message_popup"> Message </div> ';
-        echo " <div><h1 align='center'> Manage Categories </h1><div> ";
-        $datatable->dataTableView( $table_header, $table_data, "category_tr_$categoryid" );
+        echo ' <div class="manageCategories_message message_popup"> Message </div> '; 
+        $total_pages = ceil( $total_records / $limit );
+        if ( isset($datatable) && is_object($datatable) ){
+            $datatable->dataTableView( $table_header, $table_data, "category_tr_$categoryid", $total_pages, $current_page );
+        } else{
+            echo '$datatable is not object, Please try to get object $datatable... ';
+        }
     }
 } 
+
+
+$error = "OES Error: ". __LINE__. __FILE__;
+if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'add_categories') { 
+    echo (isset($categories) && !empty($categories)) ? $categories->formview("Add Category") : $error;
+}
+ 
+if( isset( $_REQUEST['current_page'] ) ){
+
+    $page_no = ( isset( $_REQUEST['current_page'] ) && $_REQUEST['current_page'] > 0 ) ? $_REQUEST['current_page'] : 1;
+    $record_limit = ( isset( $_REQUEST['record_limit'] ) && $_REQUEST['record_limit'] > 0 ) ? intval( $_REQUEST['record_limit'] ) : 5;
+    $record_limit = ( is_numeric( $record_limit ) && $record_limit > 0 ) ? $record_limit : 5;
+    echo "Page no :".$page_no;
+    echo (isset($categories) && !empty($categories)) ? $categories->managecategories( $page_no, $record_limit ) : $error;
+
+} elseif ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] == 'manage_categories') { 
+    echo (isset($categories) && !empty($categories)) ? $categories->managecategories( 1, 5 ) : $error;
+} 
+
+
 
 ?>

@@ -30,7 +30,7 @@ $( document ).on('click', '[class*="remove_category_"]', function(){
     };
 
     if( id != null || id != '' ){
-        if( oes_remove_confirmation() ){ 
+        if( confirm( 'Are you sure, You want to remove this record ?' ) ){ 
             oes_loader( class_remove, true );
             ajax_form_submitor( url, callback, null, extra_data );
         }
@@ -72,3 +72,26 @@ $( document ).on( 'click', '[class*="edit_category_"]', function(){
 $( document ).on( 'click', '.close_editCategory', function(){
     $( '.editCategory_popup_container' ).fadeOut();
 });
+
+
+
+$( document ).on( 'click', '[class*="pageButton_"]', function(){
+    
+    var page = $( this ).attr( 'id' ); 
+    var record_limit = $( '.record_limit' ).val(); 
+    const url = '../core/view/adminview/categories.php'; 
+
+    const callback = function( data ) {
+        $( '.oes_loader_center' ).fadeOut();
+        $( 'section' ).html( data );
+    };  
+
+    var send_dataOnPHP = {
+        'current_page': page,
+        'record_limit': record_limit  
+    };
+    $( '.oes_loader_center' ).fadeIn();
+    oes_loader( '.oes_loader_center', true, '', '', '40px');
+    ajax_form_submitor( url, callback, null, send_dataOnPHP );   
+
+} );

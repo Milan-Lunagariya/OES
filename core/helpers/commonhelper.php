@@ -76,6 +76,19 @@ class commonhelper
         
     }
 
+    function set_imaage( $image_path = '', $anchor_path = '' ){
+        $content = '';
+        
+        $anchor_path = empty( $anchor_path ) ? $image_path : $anchor_path;
+
+        $content .= "<div class='image_parent'>
+            <a href='$anchor_path' class='oes_anchor_class' target='_blank' >
+                <img src='$image_path' alt='Not Found' width='100'>
+            </a>
+        </div>";
+
+        return $content;
+    }
 }
 
 $commonhelper = new commonhelper();

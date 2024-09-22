@@ -1,5 +1,8 @@
 <!-- Select function -->
 <?php
+
+use function PHPSTORM_META\type;
+
 function selectData($table_name, $data = '*', $where_clause = '', $params = [], $groupby = '', $orderby = '', $limit = '') {
     try {
         // Database connection (adjust DSN, username, and password as per your setup)
@@ -114,7 +117,7 @@ foreach( $data as $key => $value ){
     if( in_array($value['parentid'],['0', 0]) ) {
         $parent = "Parent (0)";  
     } else{
-        $select = $databasehandler->select( 'categories', '*', array('categoryid' => $value['parentid']) );    
+        $select = $databasehandler->select( 'categories', '*', array( array( 'column' => 'categoryid', 'value' => $value['parentid'], 'type' => PDO::PARAM_INT ) ) );    
         $parent = '';
         foreach( $select as $k => $v ){
             $parent = isset($v['name']) ? $v['name']."(".$v['categoryid'].')' : ''; 

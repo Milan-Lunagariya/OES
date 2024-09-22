@@ -12,12 +12,25 @@
 
 <body>
 
-    <?php 
-        require_once "core/helpers/menuhelper.php";  
-        require_once "core/classes/class.header.php";
-        require_once "core/classes/class.managecategory.php";
-        require_once "core/view/header.php";
-        require_once "core/view/main.php";
+    <?php  
+        global $commonhelper;
+        if( ! defined( 'MEDIA_PATH' ) ){
+            define( 'MEDIA_PATH', 'media' );
+        }
+        if( ! defined( 'IMAGES_PATH' ) ){
+            define( 'IMAGES_PATH', 'images' );
+        }
+
+        require_once 'core/helpers/commonhelper.php';
+        $commonhelper->oes_required_file( 'core/models/databasehandler.php' );
+        $commonhelper->oes_required_file( "core/helpers/menuhelper.php" );  
+        $commonhelper->oes_required_file( "core/classes/class.header.php" );
+        $commonhelper->oes_required_file( "core/classes/class.managecategory.php" );
+        $commonhelper->oes_required_file( "core/view/header.php" );
+        $commonhelper->oes_required_file( "core/view/main.php" );
+
+        
+        
     ?>
     
     

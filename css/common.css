@@ -1,6 +1,5 @@
 :root{
-    --black : #000000a8;
-    /* --red : rgb(235 68 68); */
+    --black : #000000a8; 
     --blue: #007bff;
     --indigo: #6610f2;
     --purple: #6f42c1;
@@ -23,10 +22,13 @@
     --light: #f8f9fa;
     --dark: #343a40;
     --success_bg: #c1ffd0;
+    --background: #F4F6F9;
 }
+ 
 .datatable {
-    background: var(--white);
+    background: var(--background);
     width: fit-content;
+    color: var(--dark);
     margin: auto;
     padding: 1em;
     border-radius: 10px;
@@ -34,7 +36,7 @@
 } 
 .datatable th {
     font-size: larger;
-    padding: 1em;
+    padding: 15px;
     background: var(--blue);
     color: var(--white);
 }
@@ -44,6 +46,7 @@
 }
 .datatable table{
     border: 1px solid var(--dark);
+    background-color: var(--white);
 }
 .datatable button.edit {
     background: var(--white);
@@ -102,8 +105,64 @@
     padding: 1em;
     background-color: var(--white);
     width: 700px;
-}
-
+} 
 .close_editCategory:hover{
     background-color: var(--dark);
+}
+.oes_anchor_class{
+    text-decoration: none; 
+}
+.floatLeft{
+    float: left;
+}
+.dataTableHeader, .datatablefooter {
+    padding: 2px 10px;
+    background: var(--background);
+    width: 100%;
+    display: inline-block;
+    font-size: large;
+}
+.dataTableHeader .showRecordsSelectPicker{
+    float: left;
+    width: 60%;
+}
+.dataTableHeader .searchRecord, 
+.dataTableHeader .showHideColumn{
+    float: left;
+    width: 20%; 
+}
+.dataTableHeader .datatable_field{
+    padding: 2px 10px;
+    border-radius: 10px;
+    border: 1px solid var(--dark);
+    background-color: var(--white);
+}
+.dataTableHeader .showHideColumn{
+    cursor: pointer;
+}
+.datatablefooter .showingContext {
+    float: left; 
+    width: fit-content;
+}
+.datatable_pagination{
+    float: right;
+}
+.oesDatatableActive{
+    background-color: red;
+}
+.record_limit{
+    cursor: pointer;
+}
+.oes_loader_center {
+    background: var(--dark);
+    color: white;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 22px;
+    z-index: 9999;
+    display: none;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px var(--blue);
 }

@@ -49,37 +49,23 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
             $message['parentCategoryOption'] = "";
             $message = array();   
  
-            if( $action == 'edit_category' ){
-                
-                /*  $where_clause = "name = ? AND categoryid <> ?";
-                $params = ['test', 102];
-                $search = $DatabaseHandler->selectData('categories', '*', $where_clause, $params); */
-                
-                /* $where_clauses = array(
-                    array( 'column' => 'name', 'operator' => '=', 'value' => $name, 'placeholder' => 'where_name', 'conjunction' => 'AND' ),
-                    array( 'column' => 'categoryid', 'operator' => '<>', 'value' => $edit_id, 'placeholder' => 'where_categoryid', 'conjunction' => 'AND' )
-                );                    
-                $types = array( 'name' => PDO::PARAM_STR, 'id' => PDO::PARAM_INT ); 
-                $search = selectData( 'categories', '*', $where_clauses, $types, '', 'name ASC', '' );*/
-                
-                /* SELECT * FROM categories WHERE name = 'test' AND category id <> 102 order by name Desc limit 20*/   
+            if( $action == 'edit_category' ){ 
  
-
-                $where_clause = array(
-                    array( 'column' => 'name', 'type' => PDO::PARAM_STR, 'value' => $name, 'operator' => '=', 'conjunction' => 'AND' ),
-                    array( 'column' => 'categoryid', 'type' => PDO::PARAM_INT, 'value' => $edit_id, 'operator' => '<>',  ),
+                $search = $DatabaseHandler->select( 'categories', 'name', array(
+                        array( 'column' => 'name', 'type' => PDO::PARAM_STR, 'value' => $name, 'operator' => '=', 'conjunction' => 'AND' ),
+                        array( 'column' => 'categoryid', 'type' => PDO::PARAM_INT, 'value' => $edit_id, 'operator' => '<>',  ),
+                    ), '', '', '5'
                 );
-                $search = $DatabaseHandler->selectOurnew( 'categories', '*', $where_clause, '', 'name Desc', '5' );
- 
+
             } else {
-                $search = $DatabaseHandler->select( "categories", '*', array( 'name' => $name ) );
+                $search = $DatabaseHandler->select( "categories", 'name',  array( array( 'column' => 'name', 'value' => $name ) ), '', '', '5' );
             }
             $message['is_exist'] = ( is_array( $search ) ) ? count( $search ) : false;
             
             if ($message['is_exist'] < 1) {
                 $image_result =  $commonhelper->file_validation('categoryimage', $_SERVER['DOCUMENT_ROOT']."/project/media/categories/");
-                $message['is_image_upload'] =  $image_result['is_upload'];
-                if ( /* in_array($image_result['success'], [true, 'true', 1]) */ true ) {
+                
+                if ( in_array($image_result['success'], [true, 'true', 1 ] ) || ($action == 'edit_category' && $image_result['is_upload'] == false) ) {
                     $image = isset($image_result['image']) ? array( $image_result['image'] ) : array();
                     $image = json_encode( $image );
                     $data = array(
@@ -103,7 +89,7 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
                     if ( in_array( $db_result, [ 1, true, '1' ] ) ) {
 
                         $message['success'] = true; 
-                        $search = $DatabaseHandler->select("categories", '*', array( 'name' => $name ) );
+                        $search = $DatabaseHandler->select( "categories", 'categoryid, name', array( array( 'column' => 'name', 'value' => $name ) ) );
                         if (isset($search[0]['categoryid'])) {
                             $message['parentCategoryOption'] = "<option name='parentid' value='{$search[0]['categoryid']}'> {$search[0]['name']} </option>";
                         }
@@ -144,9 +130,9 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
         case 'edit_categoryform' :
             echo $edit_id = (isset($_REQUEST['edit_id'])) ? intval($_REQUEST['edit_id']) : 0; 
 
-            $db_data = $DatabaseHandler->select("categories", '*', array( 'categoryid' => $edit_id ));
+            $db_data = $DatabaseHandler->select("categories", '*', array( array( 'column' => 'categoryid', 'value' => $edit_id, 'type' => PDO::PARAM_INT ) ) );
             $parentid = $db_data[0]['parentid'];
-            $db_data_for_parentid = $DatabaseHandler->select("categories", '*', array( 'categoryid' => $parentid )); 
+            $db_data_for_parentid = $DatabaseHandler->select( "categories", 'categoryid', array( array( 'column'=> 'categoryid', 'value' => $parentid, 'type' => PDO::PARAM_INT ) ) ); 
 
             $images = isset($db_data[0]['images'] ) ? json_decode($db_data[0]['images'], true) : array();
             $categoryimage = ( is_array($images) && ($images) > 0 ) ? trim( $images[0] ) : '';

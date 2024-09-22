@@ -5,7 +5,7 @@ window.red = 'rgb(235 68 68)';
 
 
 $(document).ready(function(){   
-
+    $( '.datatable tr:odd' ).css('background-color', 'aliceblue');
 });
 
 function show_message_popup( message = $('.give_with_selector').fadeIn().html('Data: '), show_delay_time = 2000 ){ 
@@ -112,12 +112,7 @@ function field_validataion(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', requir
     console.log( 'Field validation..' + regexp + " flag is " + flag + "Id " + id +" Value is " + value );
 
     return (flag);  
-}
-
-function oes_remove_confirmation(){
-    return (confirm( 'Are you sure, You want to remove this record ?' ));
-}
-
+} 
 function oes_loader( selector = '', show = true, stop_html = 'Success', css_value = '', loader_size = '' ){
 
     var selector_css = {};
@@ -138,7 +133,4 @@ function oes_loader( selector = '', show = true, stop_html = 'Success', css_valu
     }
 
     $( selector ).css( selector_css );
-}
-$( '#categoryname' ).on('click', function(){
-    alert('click the ...');
-})
+} 
