@@ -56,6 +56,7 @@ $( document ).on('submit', '#add_categoryform, #edit_categoryform', function(){
             $('#parentcategory').append(data.parentCategoryOption);
             if( is_editCategory ){
                 $( '.editCategory_popup_container' ).fadeOut();
+                console.log( 'After edit category check the crrent page: ' + current_page );
                 refreshCategory_DataTable( current_page, category_record_showLimit );// Please check after edited message delay time, I think issue
             }
         }else{

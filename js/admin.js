@@ -92,8 +92,8 @@ $( document ).on( 'change', '.category_record_showLimit', function(){
     limit = ( limit != null || limit != '' ) ? limit : 5;
 
     refreshCategory_DataTable( pageno, limit, '', function(){
-        $( '.category_record_showLimit' ).find( '[class="recordShow_option_' + limit +'"]' ).prop( 'selected', true );
-        $( '.category_record_showLimit' ).attr( 'value',limit );   
+        /* $( '.category_record_showLimit' ).find( '[class="recordShow_option_' + limit +'"]' ).prop( 'selected', true );
+        $( '.category_record_showLimit' ).attr( 'value',limit );    */
     } );
     console.log( 'Category record show limit is ' + limit );
 } );

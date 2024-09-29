@@ -165,6 +165,7 @@ class categories
         $total_pages = ceil( $total_records / $limit );
         $current_page = $current_page; 
  
+        $printTable .= ( isset( $current_page ) && $current_page > 0) ? "<input type='hidden' class='managecategory_currentpage' value='{$current_page}' >" : '';
         if ( isset($datatable) && method_exists( 'datatable', 'dataTableView' ) ){
             $printTable .= $datatable->dataTableView( $th_data, $td_data, $tr_class, $total_pages, $current_page );
         } else{
@@ -206,8 +207,7 @@ class categories
             $viewEntireTable .= '<div class="categoriesDataTableOnMC">';
             $viewEntireTable .= (method_exists( $this, 'categoriesTableData' )) ? $this->categoriesTableData(): 'Not find the categories table data...';
             $viewEntireTable .= '</div>';
-            
-            $viewEntireTable .= ( isset( $current_page ) && $current_page > 1) ? "<input type='hidden' class='managecategory_currentpage' value='{$current_page}' >" : '';
+             
             $viewEntireTable .= '<div class="oes_loader_center"> Loading . . . </div>
                 <div class="editCategory_popup_container">
                 <button class="close_editCategory"> X </button>
