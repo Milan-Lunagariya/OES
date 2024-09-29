@@ -71,27 +71,44 @@ $( document ).on( 'click', '[class*="edit_category_"]', function(){
 
 $( document ).on( 'click', '.close_editCategory', function(){
     $( '.editCategory_popup_container' ).fadeOut();
-});
-
-
+}); 
 
 $( document ).on( 'click', '[class*="pageButton_"]', function(){
     
     var page = $( this ).attr( 'id' ); 
-    var record_limit = $( '.record_limit' ).val(); 
-    const url = '../core/view/adminview/categories.php'; 
-
-    const callback = function( data ) {
-        $( '.oes_loader_center' ).fadeOut();
-        $( 'section' ).html( data );
-    };  
-
-    var send_dataOnPHP = {
-        'current_page': page,
-        'record_limit': record_limit  
-    };
-    $( '.oes_loader_center' ).fadeIn();
-    oes_loader( '.oes_loader_center', true, '', '', '40px');
-    ajax_form_submitor( url, callback, null, send_dataOnPHP );   
-
+    var category_record_showLimit = $( '.category_record_showLimit' ).attr( 'val' ); 
+    category_record_showLimit = ( category_record_showLimit != '' || category_record_showLimit != undefined || category_record_showLimit != null ) ? category_record_showLimit : 5;
+    try{
+        refreshCategory_DataTable( page, category_record_showLimit );
+    } catch( c ){
+        console.log( "oes function refreshCategory_DataTable is not find:" + c );
+    } 
 } );
+
+$( document ).on( 'change', '.category_record_showLimit', function(){
+    var limit = $( this ).val();
+    var pageno = $( 'managecategory_currentpage' ).val();  
+    pageno = ( pageno != null || pageno != '' ) ? pageno : 1;
+    limit = ( limit != null || limit != '' ) ? limit : 5;
+
+    refreshCategory_DataTable( pageno, limit, '', function(){
+        $( '.category_record_showLimit' ).find( '[class="recordShow_option_' + limit +'"]' ).prop( 'selected', true );
+        $( '.category_record_showLimit' ).attr( 'value',limit );   
+    } );
+    console.log( 'Category record show limit is ' + limit );
+} );
+
+$( document ).on( 'click', '.searchCategoriesButton', function(){
+    var searchWords = $( '.searchCategoriesOnMC' ).val();
+    var page = $( 'managecategory_currentpage' ).val(); 
+    var category_record_showLimit = $( '.category_record_showLimit' ).attr( 'val' ); 
+    category_record_showLimit = ( category_record_showLimit != '' || category_record_showLimit != undefined || category_record_showLimit != null ) ? category_record_showLimit : 5;
+    try{
+        refreshCategory_DataTable( page, category_record_showLimit, searchWords, function(){
+            $( '.searchCategoriesOnMC' ).val( searchWords );
+        } );
+        console.log( 'search: ' + search );
+    } catch( c ){
+        console.log( "oes function refreshCategory_DataTable is not find:" + c );
+    }
+} )

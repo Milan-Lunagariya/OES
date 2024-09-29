@@ -12,12 +12,11 @@ $commonhelper  = class_exists( "commonhelper" ) ? new commonhelper() : false;
 
 if( $commonhelper != false ){
     $commonhelper->oes_required_file( 'databasehandler.php' );
-    $commonhelper->oes_required_file( '../helpers/commonhelsper.php' );
-    $commonhelper->oes_required_file( '../helpers/commonhelsper.php' );
+    $commonhelper->oes_required_file( '../helpers/commonhelsper.php' ); 
     $commonhelper->oes_required_file( '../view/adminview/categories.php' );
     $commonhelper->oes_required_file( '../classes/class.formcreator.php' ); 
     $commonhelper->oes_required_file( '../helpers/formhelper.php' ); 
-} 
+}   
 /* require_once '../helpers/formhelper.php'; */
 
 global  $DatabaseHandler, $commonhelper, $media_categories_path, $categories;
@@ -28,8 +27,8 @@ $formhelper = ( class_exists( 'formhelper' ) ) ? new formhelper() : false;
 
 $action = ( isset( $_REQUEST['action'] ) && $_REQUEST['action'] != '') ? trim( $_REQUEST['action'] ) : false;
 
-if ( ! in_array( $action, [ false, '', 0 ] ) ) {
-
+if ( $action != false ) {
+    
     $message = array();
     $br = "<br> - ";
     $error = $imageName_withTime = '';
@@ -49,7 +48,7 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
             $message['parentCategoryOption'] = "";
             $message = array();   
  
-            if( $action == 'edit_category' ){ 
+            if ( $action == 'edit_category' ){
  
                 $search = $DatabaseHandler->select( 'categories', 'name', array(
                         array( 'column' => 'name', 'type' => PDO::PARAM_STR, 'value' => $name, 'operator' => '=', 'conjunction' => 'AND' ),
@@ -59,7 +58,7 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
 
             } else {
                 $search = $DatabaseHandler->select( "categories", 'name',  array( array( 'column' => 'name', 'value' => $name ) ), '', '', '5' );
-            }
+            } 
             $message['is_exist'] = ( is_array( $search ) ) ? count( $search ) : false;
             
             if ($message['is_exist'] < 1) {
@@ -90,6 +89,7 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
 
                         $message['success'] = true; 
                         $search = $DatabaseHandler->select( "categories", 'categoryid, name', array( array( 'column' => 'name', 'value' => $name ) ) );
+                        
                         if (isset($search[0]['categoryid'])) {
                             $message['parentCategoryOption'] = "<option name='parentid' value='{$search[0]['categoryid']}'> {$search[0]['name']} </option>";
                         }
@@ -107,7 +107,6 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
         case 'remove_category' :
             $message = array(
                 'success' => false,
-                'editform_popup' => '',
                 'error' => '', 
             );  
             $remove_id = (isset($_REQUEST['remove_id'])) ? intval($_REQUEST['remove_id']) : 0;
@@ -146,6 +145,21 @@ if ( ! in_array( $action, [ false, '', 0 ] ) ) {
                 array( 'name' => 'submitButtton', 'value' => 'Edit')
             );  
             echo $form_view = ( $categories ) ? $categories->formview( "Edit Category", $edit_categoryFieldData ) : "categories file not in: ".__FILE__.' Line no '.__LINE__; 
-            break; 
+            break;
+        
+        case 'loadCategoriesOnMC':
+            $page_no = ( isset( $_REQUEST['current_page'] ) && $_REQUEST['current_page'] > 0 ) ? $_REQUEST['current_page'] : 1;
+            $category_record_showLimit = ( isset( $_REQUEST['category_record_showLimit'] ) && $_REQUEST['category_record_showLimit'] > 0 ) ? intval( $_REQUEST['category_record_showLimit'] ) : 5;
+            $category_record_showLimit = ( is_numeric( $category_record_showLimit ) && $category_record_showLimit > 0 ) ? $category_record_showLimit : 5;
+            if( isset( $categories ) ){
+                $categories->current_page = $page_no; 
+                $categories->category_record_showLimit = $category_record_showLimit; 
+            } else {
+                echo "categories object not find: ".__FILE__.' >  '.__LINE__; 
+            }
+            break;
+
+        default:
+            echo 'Soory, Your action can not match!';
     }
 }

@@ -1,8 +1,8 @@
 <?php if( isset($_REQUEST['page']) ) : ?> 
 
     <script src="../js/jquery.js"></script>
-    <script src="../js/admin.js"></script>
     <script src="../js/common.js"></script>
+    <script src="../js/admin.js"></script>
 <?php
 
     

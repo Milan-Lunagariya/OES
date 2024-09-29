@@ -3,12 +3,12 @@
 $(document).ready(function(){
 
 
-    $('.menu_tablets_open_button').on('click', function(){  
-        $(".menu_tablets").show('slow');
+    $( document ).on('click', '.menu_tablets_open_button', function(){  
+        $(".menu_tablets").fadeIn();
     })
 
-    $('.close_button').on('click', function(){ 
-        $('.menu_tablets').hide('slow');
+    $( document ).on('click', '.close_button', function(){ 
+        $('.menu_tablets').fadeOut();
     })
     
 

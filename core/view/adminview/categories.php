@@ -1,38 +1,31 @@
 <?php 
  
-global $categories, $formcreator, $databasehandler, $datatable;
-if( class_exists( 'datatable' ) ){
-    $datatable = new datatable();
-}
-if( file_exists( '../../classes/class.formcreator.php' ) ){
-    require_once '../../classes/class.formcreator.php';
-}
-if( file_exists( '../../classes/class.formcreator.php' ) ){
-    require_once '../../helpers/formhelper.php';
-}
-if( file_exists( '../../models/databasehandler.php' ) ){
-    require_once '../../models/databasehandler.php';
-}
-if( file_exists( '../../models/datatable.php' ) ){
-    require_once '../../models/datatable.php';
-}
+global $categories, $formcreator, $databasehandler, $datatable, $oescommonsvg;
+
+/* if( defined( 'OESADMIN_CORE_PATH' ) && file_exists( OESADMIN_CORE_PATH.'/classes/class.formcreator.php' ) ){ require_once OESADMIN_CORE_PATH.'/classes/class.formcreator.php';}
+if( defined( 'OESADMIN_CORE_PATH' ) && file_exists( OESADMIN_CORE_PATH.'/classes/class.formcreator.php' ) ){ require_once OESADMIN_CORE_PATH.'/classes/class.formcreator.php'; }
+if( defined( 'OESADMIN_CORE_PATH' ) && file_exists( OESADMIN_CORE_PATH.'/models/databasehandler.php' ) ){ require_once OESADMIN_CORE_PATH.'/models/databasehandler.php'; }
+if( defined( 'OESADMIN_CORE_PATH' ) && file_exists( OESADMIN_CORE_PATH.'/models/datatable.php' ) ){ require_once OESADMIN_CORE_PATH.'/models/datatable.php'; }
+if( defined( 'OESADMIN_ASSETS_PATH' ) && file_exists( OESADMIN_ASSETS_PATH.'/svg/commonsvg.php' ) ){ require_once OESADMIN_ASSETS_PATH.'/svg/commonsvg.php'; }
+ */
 $formhelper = ( class_exists( 'formhelper' ) ) ? new formhelper() : false; 
 $formcreator = ( class_exists( 'formcreator' ) ) ? new formcreator() : false; 
 $categories = ( class_exists( 'categories' ) ) ? new categories() : false;  
-        
-        $commonhelper       = ( class_exists( 'commonhelper' ) ) ? new commonhelper() : false;
-        $databasehandler  = ( class_exists( 'databasehandler' ) ) ? new databasehandler() : false;
-        $datatable        = ( class_exists( 'datatable' ) ) ? new datatable() : false;
-        $formhelper       = ( class_exists( 'formhelper' ) ) ? new formhelper() : false;
-        $formcreator      = ( class_exists( 'formcreator' ) ) ? new formcreator() : false; 
-        $categories       = ( class_exists( 'categories' ) ) ? new categories() : false;
+$commonhelper = ( class_exists( 'commonhelper' ) ) ? new commonhelper() : false;
+$databasehandler  = ( class_exists( 'databasehandler' ) ) ? new databasehandler() : false;
+$datatable = ( class_exists( 'datatable' ) ) ? new datatable() : false;
 
 class categories
 {  
     var $is_editCategoryForm;
+    var $current_page;
+    var $category_record_showLimit;
+
     function __construct()
     {
         $this->is_editCategoryForm = false;
+        /* $this->current_page = 1;
+        $this->category_record_showLimit = 5; */
     }
 
     public function oes_test(...$var){
@@ -104,39 +97,41 @@ class categories
         return $content;
     }
 
-    public function managecategories( $current_page = 1, $record_limit = 5 ){
-
-        global $databasehandler, $datatable, $categories;
+    public function categoriesTableData(){
+        
+        
+        global $databasehandler, $datatable, $categories, $oescommonsvg;
         $categoryid = 0;
         $table_data = array();
+        $return_data = array();
         
-        $datatable        = ( class_exists( 'datatable' ) ) ? new datatable() : false;
+        if( file_exists('../../models/databasehandler.php') ){ require_once '../../models/databasehandler.php'; }
 
-        echo '
-        <div class="oes_loader_center"> Loading . . . </div>
-        <div class="editCategory_popup_container">
-            <button class="close_editCategory"> X </button>
-            <div class="manageCategories_form_popup"> Loading . . . </div>
-        </div>';
-
-        $table_header = array ( 'th' => array(
-                '<input type="checkbox" class="" name="" value="">',
-                'Id', 'Image', 'Category Name', 'Parent Categorty', 'Created at', 'Updated at', 'Action' 
-            )
-        ); 
-
+        $databasehandler  = ( class_exists( 'databasehandler' ) ) ? new databasehandler() : false;
+        $datatable = ( class_exists( 'datatable' ) ) ? new datatable() : false;
         
-        $current_page = ( is_numeric( $current_page ) && $current_page > 0 ) ? $current_page : 1;
-        $limit = ( $record_limit != '' ) ? intval( $record_limit ) : 10;
-        $offset = ( $current_page - 1 ) * $limit;
+        $current_page = ( is_numeric( $this->current_page ) && $this->current_page > 0 ) ? $this->current_page : 1;
+        $limit = ( $this->category_record_showLimit != '' ) ? intval( $this->category_record_showLimit ) : 5;
+        $offset = ( $current_page - 1 ) * $limit;  
 
         $data = $databasehandler->select( 'categories', '*', array(), '', 'categoryid ASC', $limit, $offset);
         $total_records = $databasehandler->select( 'categories', 'COUNT(categoryid) AS "total_record"');
         $total_records = isset( $total_records[0]['total_record'] ) ? $total_records[0]['total_record'] : 0;
 
-        foreach( $data as $key => $value ){  
-            $action = '';
+        $return_data[ 'th_data' ] = array ( 'th' => array(
+                '<input type="checkbox" class="" name="" value="">' => '50px',
+                'Id' => '50px', 
+                'Image' => '200px',
+                'Category Name' => '200px',
+                'Parent Categorty'=> '200px',
+                'Created at' => '200px',
+                'Updated at' => '200px',
+                'Action' => '150px' 
+            )
+        ); 
 
+        foreach( $data as $key => $value ){  
+            $action = ''; 
             if( in_array($value['parentid'],['0', 0]) ) {
                 $parent = "Parent (0)";  
             } else{
@@ -157,41 +152,100 @@ class categories
             $name = ( isset($value['name']) && !empty($value['name']) ) ? $value['name']: '-'; 
             $parent = ( isset($parent) && !empty($parent) ) ? $parent : 'Parent (0)'; 
             $createdat  = ( isset($value['createdat']) && !empty($value['createdat']) ) ? $value['createdat']: '-'; 
-            $updatedat = ( isset($value['updatedat']) && !empty($value['updatedat']) ) ? $value['updatedat']: '-'; 
-            $action .= "<button id='$categoryid' class='edit edit_category_$categoryid'> Edit<!-- <i class='fa-solid fa-pen-to-square'></i> --> </button> &nbsp; ";
-            $action .= "<button id='$categoryid' class='remove remove_category_$categoryid'> Remove<!-- <i class='fa-solid fa-trash'></i> --> </button>";
+            $updatedat = ( isset($value['updatedat']) && !empty($value['updatedat']) ) ? $value['updatedat']: '-';
+            $edit_icon = isset( $oescommonsvg['edit_icon'] ) ? $oescommonsvg['edit_icon'] : 'Edit';
+            $delete_icon = isset( $oescommonsvg['delete_icon'] ) ? $oescommonsvg['delete_icon'] : 'delete';
+            $action .= "<button id='$categoryid' class='edit data_modify_button edit_category_$categoryid'>$edit_icon</button>";
+            $action .= "<button id='$categoryid' class='remove data_modify_button remove_category_$categoryid' >$delete_icon</button>";
 
             $table_data[] = array( $select_current, $categoryid, $images, $name, $parent, $createdat, $updatedat, $action );
-        }
+        } 
 
-        echo ' <div class="manageCategories_message message_popup"> Message </div> '; 
-        $total_pages = ceil( $total_records / $limit );
-        if ( isset($datatable) && is_object($datatable) ){
-            $datatable->dataTableView( $table_header, $table_data, "category_tr_$categoryid", $total_pages, $current_page );
-        } else{
-            echo '$datatable is not object, Please try to get object $datatable... ';
-        }
+        $return_data[ 'td_data' ] = $table_data;
+        $return_data[ 'tr_class' ] = "category_tr_$categoryid";
+        $return_data[ 'total_pages' ] = ceil( $total_records / $limit );
+        $return_data[ 'current_page' ] = $current_page; 
+
+        return $return_data;
     }
-} 
+
+    public function managecategories( $paramDataTable = '' ){
+
+        global $datatable, $oescommonsvg;
+        $viewEntireTable = ''; 
+        $th_data = array();
+        $td_data = array();
+        $tr_class =  '';
+        $total_pages = array();
+        $current_page = 1;
+
+        $datatable = ( class_exists( 'datatable' ) ) ? new datatable() : false;
+        $showrecord_limit_array = array( 5, 10, 25, 50, 100 );
+        $viewEntireTable .= "<div class='datatable' > ";
+            $viewEntireTable .= '<div class="dataTableHeader" >
+                <div class="showRecordsSelectPicker">
+                    Show ';
+                    $viewEntireTable .= '<select class="datatable_field category_record_showLimit" name="" id="" value="5" >';
+                        foreach( $showrecord_limit_array as $limit ){
+                            $viewEntireTable .= "<option class='recordShow_option_$limit' value='{$limit}'>$limit</option>";
+                        }
+                    $viewEntireTable .= '</select>';
+
+                    $viewEntireTable .= ' records
+                </div>
+                <div class="searchRecord">
+                    <input type="search" name="" class="datatable_field searchCategoriesOnMC" placeholder="Search Record" id=""><button class="datatable_field searchCategoriesButton"> Search </button>
+                </div>
+                <button class="showHideColumn datatable_field"> Show/Hide Column </button>
+            </div>';
+            
+            /* $transference_tabledata = ( $paramDataTable != '' ) ? $paramDataTable : $this->categoriesTableData(); */
+            $transference_tabledata = $this->categoriesTableData( );
+
+            foreach( $transference_tabledata as $key => $value ){
+                if( $key == 'th_data'  ) { $th_data = $value; }
+                if( $key == 'td_data'  ) { $td_data = $value; }
+                if( $key == 'tr_class'  ) { $tr_class = $value; }
+                if( $key == 'total_pages'  ) { $total_pages = $value; }
+                if( $key == 'current_page'  ) { $current_page = $value; }
+            } 
+
+            if ( isset($datatable) && is_object($datatable) ){
+                $viewEntireTable .= $datatable->dataTableView( $th_data, $td_data, $tr_class, $total_pages, $current_page );
+            } else{
+                $viewEntireTable .= '$datatable is not object, Please try to get object $datatable... '.__FILE__.' > '. __LINE__;
+            }  
+
+            $viewEntireTable .= ( isset( $current_page ) && $current_page > 1) ? "<input type='hidden' class='managecategory_currentpage' value='{$current_page}' >" : '';
+            $viewEntireTable .= '<div class="oes_loader_center"> Loading . . . </div>
+                <div class="editCategory_popup_container">
+                <button class="close_editCategory"> X </button>
+                <div class="manageCategories_form_popup"> Loading . . . </div>
+            </div>';
+            $viewEntireTable .= '<div class="manageCategories_message message_popup"> Message </div> ';  
+        $viewEntireTable .= '<div>';
+        echo $viewEntireTable; 
+    }
+}
 
 
 $error = "OES Error: ". __LINE__. __FILE__;
 if (isset($_REQUEST['page']) && $_REQUEST['page'] == 'add_categories') { 
     echo (isset($categories) && !empty($categories)) ? $categories->formview("Add Category") : $error;
 }
+
+$paramDataTable = ''; 
  
-if( isset( $_REQUEST['current_page'] ) ){
+if( isset( $_REQUEST['page'] ) && $_REQUEST['page'] == 'manage_categories' ) {
 
     $page_no = ( isset( $_REQUEST['current_page'] ) && $_REQUEST['current_page'] > 0 ) ? $_REQUEST['current_page'] : 1;
-    $record_limit = ( isset( $_REQUEST['record_limit'] ) && $_REQUEST['record_limit'] > 0 ) ? intval( $_REQUEST['record_limit'] ) : 5;
-    $record_limit = ( is_numeric( $record_limit ) && $record_limit > 0 ) ? $record_limit : 5;
-    echo "Page no :".$page_no;
-    echo (isset($categories) && !empty($categories)) ? $categories->managecategories( $page_no, $record_limit ) : $error;
+    if( isset( $_REQUEST['current_page'] ) ) {
+        $category_record_showLimit = ( isset( $_REQUEST['category_record_showLimit'] ) && $_REQUEST['category_record_showLimit'] > 0 ) ? intval( $_REQUEST['category_record_showLimit'] ) : 5;
+        $category_record_showLimit = ( is_numeric( $category_record_showLimit ) && $category_record_showLimit > 0 ) ? $category_record_showLimit : 5;
+        $paramDataTable = (isset($categories) && !empty($categories)) ? $categories->categoriesTableData( $page_no, $category_record_showLimit ) : $error;
+    }
+    /* echo "Page no :".$page_no;
 
-} elseif ( isset( $_REQUEST['page'] ) && $_REQUEST['page'] == 'manage_categories') { 
-    echo (isset($categories) && !empty($categories)) ? $categories->managecategories( 1, 5 ) : $error;
+    echo (isset($categories) && !empty($categories)) ? $categories->managecategories( $paramDataTable ) : $error; */
 } 
-
-
-
 ?>

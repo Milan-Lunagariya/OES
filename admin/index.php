@@ -1,3 +1,26 @@
+<?php
+
+if( ! defined( 'OESADMIN_CORE_PATH') ) { define( 'OESADMIN_CORE_PATH', '../core' ); }
+if( ! defined( 'OESADMIN_LIBRARY_PATH') ) { define( 'OESADMIN_LIBRARY_PATH', '../library' ); }
+if( ! defined( 'OESADMIN_JS_PATH') ) { define( 'OESADMIN_JS_PATH', '../js' ); }
+if( ! defined( 'OESADMIN_CSS_PATH') ) { define( 'OESADMIN_CSS_PATH', '../css' ); }
+if( ! defined( 'OESADMIN_IMAGES_PATH') ) { define( 'OESADMIN_IMAGES_PATH', '../images' ); }
+if( ! defined( 'OESADMIN_MEDIA_PATH') ) { define( 'OESADMIN_MEDIA_PATH', '../media' ); }
+if( ! defined( 'OESADMIN_ASSETS_PATH') ) { define( 'OESADMIN_ASSETS_PATH', '../assets' ); }
+
+global $oesadmin_load_css, $oesadmin_load_js;
+$oesadmin_load_css = array( 
+  'common.css' => false,
+  'forms.css' => false,
+);
+$oesadmin_load_js = array( 
+  'jquery.js' => false,
+  'common.js' => false,
+  'admin_forms.js' => false,
+  'admin.js' => false,
+);
+
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,8 +49,11 @@
     <!-- summernote -->
     <link rel="stylesheet" href="plugins/summernote/summernote-bs4.min.css">
 
-    <?php if (file_exists("../library/common.php")) require_once "../library/common.php"; ?>
-    <?php if (file_exists("../library/admin.php")) require_once "../library/admin.php"; ?>
+    <?php
+      if( defined( 'OESADMIN_LIBRARY_PATH' ) && file_exists( OESADMIN_LIBRARY_PATH.'/oesautoload.php' ) ){
+        require_once OESADMIN_LIBRARY_PATH.'/oesautoload.php';
+      }
+    ?>
 
   </head> 
   <body class="hold-transition sidebar-mini layout-fixed">
@@ -925,44 +951,46 @@
         <!-- Main content -->
         <section class="content"> 
           <?php 
-          global $addcategories, $formcreator, $india_timezone, $commonhelper, $media_categories_path, $DatabaseHandler, $categorycontroller;  
+          global $addcategories, $formcreator, $india_timezone, $commonhelper, $media_categories_path, $DatabaseHandler, $categorycontroller, $oescommonsvg, $datatable, $formhelper, $formcreator, $oescommonsvg;    
+         
+          $media_categories_path = OESADMIN_MEDIA_PATH."/categories";
 
-          function oes_required_file($filename = "")
-          {
-            if (!empty($filename)) {
-              if (file_exists($filename)) {
-                require_once($filename);
-              }
-            }
-          } 
-          
-          $media_categories_path = "../media/categories";
-          
-            oes_required_file('../core/helpers/commonhelper.php'); 
-            oes_required_file('../core/models/databasehandler.php'); 
-            oes_required_file('../core/models/datatable.php'); 
-            oes_required_file('../core/helpers/formhelper.php');
-            oes_required_file('../core/classes/class.formcreator.php'); 
-            oes_required_file('../core/view/adminview/categories.php');    
-            oes_required_file('../core/models/modelcategory.php');    
+          if( defined( 'OESADMIN_CORE_PATH' ) && file_exists( OESADMIN_CORE_PATH.'/helpers/commonhelper.php' ) ){
+            require_once( OESADMIN_CORE_PATH.'/helpers/commonhelper.php' ); 
+             
+            if( !empty( $commonhelper ) && method_exists( 'commonhelper', 'oes_required_file' ) ){
+              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/models/databasehandler.php' ); 
+              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/models/datatable.php'); 
+              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/helpers/formhelper.php');
+              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/classes/class.formcreator.php'); 
+              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/view/adminview/categories.php');    
+              $commonhelper->oes_required_file( OESADMIN_ASSETS_PATH.'/svg/commonsvg.php' );
+              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/models/modelcategory.php');
+              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/view/adminview/categories.php');    
+            } 
+          }
             
-            $commonhelper        = ( class_exists( 'commonhelper' ) ) ? new commonhelper() : false;
-            $databasehandler     = ( class_exists( 'databasehandler' ) ) ? new databasehandler() : false;
-            $datatable           = ( class_exists( 'datatable' ) ) ? new datatable() : false;
-            $formhelper          = ( class_exists( 'formhelper' ) ) ? new formhelper() : false;
-            $formcreator         = ( class_exists( 'formcreator' ) ) ? new formcreator() : false; 
-            $categories          = ( class_exists( 'categories' ) ) ? new categories() : false; 
-              
-          ?>
-
-        <?php  
-
+          $commonhelper        = ( class_exists( 'commonhelper' ) ) ? new commonhelper() : false;
+          $databasehandler     = ( class_exists( 'databasehandler' ) ) ? new databasehandler() : false;
+          $datatable           = ( class_exists( 'datatable' ) ) ? new datatable() : false;
+          $formhelper          = ( class_exists( 'formhelper' ) ) ? new formhelper() : false;
+          $formcreator         = ( class_exists( 'formcreator' ) ) ? new formcreator() : false; 
+          $categories          = ( class_exists( 'categories' ) ) ? new categories() : false;  
+          
+          
+          if( isset( $_REQUEST ) ){
+            print_r( $_REQUEST );
+          }
+          
           if (isset($_REQUEST['page'])) {  
-            
             $error = '<h1>Somthing Went Wrong</h1>';
             if ($_REQUEST['page'] == 'dashboard') {
-            } 
-          } 
+            } elseif ( $_REQUEST['page'] == 'manage_categories' ) {
+              echo (isset($categories) && !empty($categories)) ? $categories->managecategories() : $error;
+            }
+          } else{
+            echo 'Outside the page '; 
+          }
           
         ?>
 

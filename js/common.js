@@ -133,4 +133,28 @@ function oes_loader( selector = '', show = true, stop_html = 'Success', css_valu
     }
 
     $( selector ).css( selector_css );
-} 
+}
+
+function refreshCategory_DataTable( page = 1, category_record_showLimit = 5, searchWords = '', callback_addfun = function(){} ){
+
+    page = ( page != '' ) ? page : 1;
+    category_record_showLimit = ( category_record_showLimit != '' ) ? category_record_showLimit : 5;
+
+    const url = '../core/models/modelcategory.php'; 
+    const callback = function( data ) {
+        $( '.oes_loader_center' ).fadeOut();
+        /* $( 'section' ).html( data ); */
+        callback_addfun();
+    };  
+
+    var send_dataOnPHP = {
+        'page': 'manage_categories',
+        'current_page': page,
+        'category_record_showLimit': category_record_showLimit, 
+        'searchCategoriesOnMC': searchWords,
+        'action': 'loadCategoriesOnMC'
+    };
+    $( '.oes_loader_center' ).fadeIn();
+    oes_loader( '.oes_loader_center', true, '', '', '40px' );
+    ajax_form_submitor( url, callback, null, send_dataOnPHP );
+}

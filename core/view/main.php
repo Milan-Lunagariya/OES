@@ -14,7 +14,12 @@ $databasehandler = class_exists( 'databasehandler' ) ? new databasehandler() : '
             foreach( $categories_dbdata as $key => $value_categories ){        
                 $images = isset( $value_categories['images'] ) ? json_decode( $value_categories['images'], true ) : false;
                 $categoryImage = isset( $images[0] ) ? $images[0] : ''; 
-                echo "<div style='float: left; padding: 10px;'>" . $commonhelper->set_imaage( MEDIA_PATH.'/categories/'.$categoryImage ) . "</div>";
+                if( defined( 'OESFRONT_MEDIA_PATH' ) ){
+                    echo "<div style='float: left; padding: 10px;'>" . $commonhelper->set_imaage( OESFRONT_MEDIA_PATH.'/categories/'.$categoryImage ) . "</div>";
+                } else { 
+                    echo 'Categories could not loaded. . .';
+                    break;
+                }
             } 
             $parent_category = array( "Mobiles", "Laptops", "Powerbank" ); 
             ?>
@@ -23,7 +28,7 @@ $databasehandler = class_exists( 'databasehandler' ) ? new databasehandler() : '
         <div class="HomeSliders">
             <div class="sliderPreviousArrow"> < </div>
             <div class="slider_container">
-                <img src="<?php echo IMAGES_PATH.'/HomeSliders/home_slider_1.png'; ?>" alt="Slider 1">
+                <img src="<?php echo OESFRONT_IMAGES_PATH.'/HomeSliders/home_slider_1.png'; ?>" alt="Slider 1">
             </div> 
             <div class="sliderNextArrow"> > </div>
         </div>

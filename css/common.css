@@ -23,6 +23,9 @@
     --dark: #343a40;
     --success_bg: #c1ffd0;
     --background: #F4F6F9;
+    --bg_green: #48ff4829;
+    --bg_red: #ff767624;
+    --bg_silver: #c0c0c04d;
 }
  
 .datatable {
@@ -39,6 +42,7 @@
     padding: 15px;
     background: var(--blue);
     color: var(--white);
+    text-align: center;
 }
 .datatable td {
     padding: 0.5em;
@@ -49,21 +53,14 @@
     background-color: var(--white);
 }
 .datatable button.edit {
-    background: var(--white);
+    background: var(--bg_green);
     color: var(--green);
 }
 .datatable button.remove {
-    background: var(--white);
+    background: var(--bg_red);
     color: var(--red);
 }
-.datatable button{
-    border: 2px;
-}
-.datatable button {
-    border: 1px solid var(--black);
-    border-radius: 5px;
-    font-weight: 600;
-}
+
 .image_parent {
     /* width: 150px;
     height: 110px;
@@ -93,6 +90,7 @@
     border: 1px solid var(--green);
     right: 5%;
     display: none;
+    z-index: 9999;
 }
 .message_error{
     color: var(--red);
@@ -124,18 +122,23 @@
 }
 .dataTableHeader .showRecordsSelectPicker{
     float: left;
-    width: 60%;
+    /* width: 60%; */
 }
 .dataTableHeader .searchRecord, 
 .dataTableHeader .showHideColumn{
-    float: left;
-    width: 20%; 
+    float: right;
+    /* width: 20%;  */
+    margin: 0px 5px;
 }
+
 .dataTableHeader .datatable_field{
     padding: 2px 10px;
-    border-radius: 10px;
+    border-radius: 0px;
     border: 1px solid var(--dark);
     background-color: var(--white);
+}
+button.searchCategoriesButton {
+    border-left: none !important;
 }
 .dataTableHeader .showHideColumn{
     cursor: pointer;
@@ -147,10 +150,7 @@
 .datatable_pagination{
     float: right;
 }
-.oesDatatableActive{
-    background-color: red;
-}
-.record_limit{
+.category_record_showLimit{
     cursor: pointer;
 }
 .oes_loader_center {
@@ -165,4 +165,43 @@
     display: none;
     border-radius: 10px;
     box-shadow: 0px 0px 10px var(--blue);
+}
+.datatable_pagination .firstRecord  {
+    border-left: 1px solid var(--black);
+}
+.datatable_pagination button {
+    background-color: var(--white);
+    border: 1px solid var(--black);
+    border-radius: 0px;
+    color: var(--black);
+    width: 40px;
+    border-left: 0px;
+}
+.oesDatatableActive{
+    background-color: var(--bg_silver) !important;
+}
+.data_modify_button{
+    margin: 10px;
+    border: none;
+} 
+select.datatable_field.category_record_showLimit {
+    background: var(--white);
+    border: 1px solid var(--dark);
+    border-radius: 3px;
+}
+.oesfrontLoginButton,
+.oesfrontShoopingCartButton{
+   /*  border: 1px solid var(--dark);
+    background-color: var(--background); */
+    cursor: pointer;
+    border-radius: 10px;
+}
+
+.oesfrontShoopingCartButton svg{
+    height: 30px !important;
+    width: 30px !important;
+}
+.oesfrontLoginButton svg{
+    height: 30px !important;
+    width: 30px !important;
 }

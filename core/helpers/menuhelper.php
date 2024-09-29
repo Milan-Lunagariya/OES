@@ -1,10 +1,13 @@
 <?php
-    global $nav_logo_help, $menu_top_help, $menu_header_help;
+    global $nav_logo_help, $menu_top_help, $menu_header_help, $oescommonsvg;
     
     function menu_top_help(){
+        global $oescommonsvg;
+        $user_icon = (! empty( $oescommonsvg && isset( $oescommonsvg['login_icon'] ) )) ? $oescommonsvg['login_icon'] : 'Login';
+        $shoppingCart_icon = (! empty( $oescommonsvg ) && $oescommonsvg['shoppingCart_icon']) ? $oescommonsvg['shoppingCart_icon'] : 'Cart';
         $menu_top = array(
-            'cart'   => '<i class="fa-solid fa-cart-shopping cart_icon"></i>',
-            'login'  => '<i class="fa-regular fa-user login_icon"></i>'
+            'login'  => "<div class='oesfrontShoopingCartButton' title='Add To cart'> $shoppingCart_icon </div>",
+            'cart'  => "<div class='oesfrontLoginButton' title='Login User'> $user_icon </div>"
         );
         return $menu_top;
     }
