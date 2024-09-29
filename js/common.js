@@ -143,7 +143,7 @@ function refreshCategory_DataTable( page = 1, category_record_showLimit = 5, sea
     const url = '../core/models/modelcategory.php'; 
     const callback = function( data ) {
         $( '.oes_loader_center' ).fadeOut();
-        /* $( 'section' ).html( data ); */
+        $( '.categoriesDataTableOnMC table' ).html( data );
         callback_addfun();
     };  
 

@@ -148,12 +148,13 @@ if ( $action != false ) {
             break;
         
         case 'loadCategoriesOnMC':
+            require_once '../models/datatable.php';
             $page_no = ( isset( $_REQUEST['current_page'] ) && $_REQUEST['current_page'] > 0 ) ? $_REQUEST['current_page'] : 1;
-            $category_record_showLimit = ( isset( $_REQUEST['category_record_showLimit'] ) && $_REQUEST['category_record_showLimit'] > 0 ) ? intval( $_REQUEST['category_record_showLimit'] ) : 5;
-            $category_record_showLimit = ( is_numeric( $category_record_showLimit ) && $category_record_showLimit > 0 ) ? $category_record_showLimit : 5;
-            if( isset( $categories ) ){
-                $categories->current_page = $page_no; 
-                $categories->category_record_showLimit = $category_record_showLimit; 
+            $limit = ( isset( $_REQUEST['category_record_showLimit'] ) && $_REQUEST['category_record_showLimit'] > 0 ) ? intval( $_REQUEST['category_record_showLimit'] ) : 5;
+            $limit = ( is_numeric( $limit ) && $limit > 0 ) ? $limit : 5;
+            
+            if( isset( $categories ) && method_exists( 'categories', 'categoriesTableData' ) ){
+                echo $categories->categoriesTableData( $page_no, $limit );
             } else {
                 echo "categories object not find: ".__FILE__.' >  '.__LINE__; 
             }

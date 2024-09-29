@@ -18,9 +18,7 @@ $datatable = ( class_exists( 'datatable' ) ) ? new datatable() : false;
 class categories
 {  
     var $is_editCategoryForm;
-    var $current_page;
-    var $category_record_showLimit;
-
+  
     function __construct()
     {
         $this->is_editCategoryForm = false;
@@ -97,28 +95,29 @@ class categories
         return $content;
     }
 
-    public function categoriesTableData(){
+    public function categoriesTableData( $current_page = 1, $category_record_showLimit = 5){
         
         
         global $databasehandler, $datatable, $categories, $oescommonsvg;
         $categoryid = 0;
         $table_data = array();
-        $return_data = array();
+        $printTable = '';
         
         if( file_exists('../../models/databasehandler.php') ){ require_once '../../models/databasehandler.php'; }
+        if( file_exists('../../models/datatable.php') ){ require_once '../../models/datatable.php'; }
 
         $databasehandler  = ( class_exists( 'databasehandler' ) ) ? new databasehandler() : false;
         $datatable = ( class_exists( 'datatable' ) ) ? new datatable() : false;
         
-        $current_page = ( is_numeric( $this->current_page ) && $this->current_page > 0 ) ? $this->current_page : 1;
-        $limit = ( $this->category_record_showLimit != '' ) ? intval( $this->category_record_showLimit ) : 5;
+        $current_page = ( is_numeric( $current_page ) && $current_page > 0 ) ? $current_page : 1;
+        $limit = ( $category_record_showLimit != '' ) ? intval( $category_record_showLimit ) : 5;
         $offset = ( $current_page - 1 ) * $limit;  
 
         $data = $databasehandler->select( 'categories', '*', array(), '', 'categoryid ASC', $limit, $offset);
         $total_records = $databasehandler->select( 'categories', 'COUNT(categoryid) AS "total_record"');
         $total_records = isset( $total_records[0]['total_record'] ) ? $total_records[0]['total_record'] : 0;
 
-        $return_data[ 'th_data' ] = array ( 'th' => array(
+        $th_data = array ( 'th' => array(
                 '<input type="checkbox" class="" name="" value="">' => '50px',
                 'Id' => '50px', 
                 'Image' => '200px',
@@ -161,15 +160,20 @@ class categories
             $table_data[] = array( $select_current, $categoryid, $images, $name, $parent, $createdat, $updatedat, $action );
         } 
 
-        $return_data[ 'td_data' ] = $table_data;
-        $return_data[ 'tr_class' ] = "category_tr_$categoryid";
-        $return_data[ 'total_pages' ] = ceil( $total_records / $limit );
-        $return_data[ 'current_page' ] = $current_page; 
-
-        return $return_data;
+        $td_data = $table_data;
+        $tr_class = "category_tr_$categoryid";
+        $total_pages = ceil( $total_records / $limit );
+        $current_page = $current_page; 
+ 
+        if ( isset($datatable) && method_exists( 'datatable', 'dataTableView' ) ){
+            $printTable .= $datatable->dataTableView( $th_data, $td_data, $tr_class, $total_pages, $current_page );
+        } else{
+            $printTable .= '$datatable is not object, Please try to get object $datatable... '.__FILE__.' > '. __LINE__;
+        }   
+        return $printTable;
     }
 
-    public function managecategories( $paramDataTable = '' ){
+    public function managecategories(){
 
         global $datatable, $oescommonsvg;
         $viewEntireTable = ''; 
@@ -199,23 +203,10 @@ class categories
                 <button class="showHideColumn datatable_field"> Show/Hide Column </button>
             </div>';
             
-            /* $transference_tabledata = ( $paramDataTable != '' ) ? $paramDataTable : $this->categoriesTableData(); */
-            $transference_tabledata = $this->categoriesTableData( );
-
-            foreach( $transference_tabledata as $key => $value ){
-                if( $key == 'th_data'  ) { $th_data = $value; }
-                if( $key == 'td_data'  ) { $td_data = $value; }
-                if( $key == 'tr_class'  ) { $tr_class = $value; }
-                if( $key == 'total_pages'  ) { $total_pages = $value; }
-                if( $key == 'current_page'  ) { $current_page = $value; }
-            } 
-
-            if ( isset($datatable) && is_object($datatable) ){
-                $viewEntireTable .= $datatable->dataTableView( $th_data, $td_data, $tr_class, $total_pages, $current_page );
-            } else{
-                $viewEntireTable .= '$datatable is not object, Please try to get object $datatable... '.__FILE__.' > '. __LINE__;
-            }  
-
+            $viewEntireTable .= '<div class="categoriesDataTableOnMC">';
+            $viewEntireTable .= (method_exists( $this, 'categoriesTableData' )) ? $this->categoriesTableData(): 'Not find the categories table data...';
+            $viewEntireTable .= '</div>';
+            
             $viewEntireTable .= ( isset( $current_page ) && $current_page > 1) ? "<input type='hidden' class='managecategory_currentpage' value='{$current_page}' >" : '';
             $viewEntireTable .= '<div class="oes_loader_center"> Loading . . . </div>
                 <div class="editCategory_popup_container">

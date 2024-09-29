@@ -19,8 +19,7 @@ class datatable
         global $databasehandler, $commonhelper; 
         $content =  '';
         
-        $content = "
-            <table border='2' align='center'>
+        $content = "<table border='2' align='center'>
             <tr>"; 
             
                 $th = isset( $th['th'] ) ? $th['th'] : array();
@@ -50,8 +49,8 @@ class datatable
                 $content .= "<tr><td align='center' colspan='$colspan'>Record not found !</td></tr>";
             }  
         
-            $content .= "</table>";
-            $content .= "<div class='datatablefooter' style='margin-top: 10px;'>
+        $content .= "</table>";
+        $content .= "<div class='datatablefooter' style='margin-top: 10px;'>
                 <div class='showingContext'>Showing 1 to 2 of 2 entries</div>
                 <div class='datatable_pagination'>"; 
  
