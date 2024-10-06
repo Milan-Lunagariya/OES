@@ -959,14 +959,14 @@ $oesadmin_load_js = array(
             require_once( OESADMIN_CORE_PATH.'/helpers/commonhelper.php' ); 
              
             if( !empty( $commonhelper ) && method_exists( 'commonhelper', 'oes_required_file' ) ){
-              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/models/databasehandler.php' ); 
-              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/models/datatable.php'); 
-              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/helpers/formhelper.php');
-              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/classes/class.formcreator.php'); 
-              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/view/adminview/categories.php');    
-              $commonhelper->oes_required_file( OESADMIN_ASSETS_PATH.'/svg/commonsvg.php' );
-              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/models/modelcategory.php');
-              $commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/view/adminview/categories.php');    
+				$commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/models/databasehandler.php' ); 
+				$commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/models/datatable.php'); 
+				$commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/helpers/formhelper.php');
+				$commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/classes/class.formcreator.php'); 
+				$commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/view/adminview/categories.php');    
+				$commonhelper->oes_required_file( OESADMIN_ASSETS_PATH.'/svg/commonsvg.php' );
+				$commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/models/modelcategory.php');
+				$commonhelper->oes_required_file( OESADMIN_CORE_PATH.'/view/adminview/categories.php');    
             } 
           }
             
@@ -976,20 +976,21 @@ $oesadmin_load_js = array(
           $formhelper          = ( class_exists( 'formhelper' ) ) ? new formhelper() : false;
           $formcreator         = ( class_exists( 'formcreator' ) ) ? new formcreator() : false; 
           $categories          = ( class_exists( 'categories' ) ) ? new categories() : false;  
-          
-          
-          if( isset( $_REQUEST ) ){
-            print_r( $_REQUEST );
-          }
-          
+                     
+		  $error = '<h1>Somthing Went Wrong on </h1>'.__FILE__.':'.__LINE__;
           if (isset($_REQUEST['page'])) {  
-            $error = '<h1>Somthing Went Wrong</h1>';
             if ($_REQUEST['page'] == 'dashboard') {
-            } elseif ( $_REQUEST['page'] == 'manage_categories' ) {
-              echo (isset($categories) && !empty($categories)) ? $categories->managecategories() : $error;
+
+            } elseif (isset($_REQUEST['page']) && $_REQUEST['page'] == 'add_categories') { 
+
+				echo (isset($categories) && !empty($categories)) ? $categories->formview("Add Category") : $error;
+              
+            }elseif ( $_REQUEST['page'] == 'manage_categories' ) {
+              
+				echo (isset($categories) && !empty($categories)) ? $categories->managecategories() : $error;
             }
           } else{
-            echo 'Outside the page '; 
+            	echo 'Outside the page '; 
           }
           
         ?>

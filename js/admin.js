@@ -76,24 +76,26 @@ $( document ).on( 'click', '.close_editCategory', function(){
 $( document ).on( 'click', '[class*="pageButton_"]', function(){
     
     var page = $( this ).attr( 'id' ); 
-    var category_record_showLimit = $( '.category_record_showLimit' ).attr( 'val' ); 
+    
+    var searchWords = $( '.searchCategoriesOnMC' ).val();
+    var category_record_showLimit = $( '.category_record_showLimit' ).attr( 'value' ); 
     category_record_showLimit = ( category_record_showLimit != '' || category_record_showLimit != undefined || category_record_showLimit != null ) ? category_record_showLimit : 5;
     try{
-        refreshCategory_DataTable( page, category_record_showLimit );
+        refreshCategory_DataTable( page, category_record_showLimit, searchWords );
     } catch( c ){
         console.log( "oes function refreshCategory_DataTable is not find:" + c );
     } 
 } );
 
 $( document ).on( 'change', '.category_record_showLimit', function(){
-    var limit = $( this ).val();
+    var limit = this.value;
+    var searchWords = $( '.searchCategoriesOnMC' ).val();
     var pageno = $( 'managecategory_currentpage' ).val();  
     pageno = ( pageno != null || pageno != '' ) ? pageno : 1;
     limit = ( limit != null || limit != '' ) ? limit : 5;
 
-    refreshCategory_DataTable( pageno, limit, '', function(){
-        /* $( '.category_record_showLimit' ).find( '[class="recordShow_option_' + limit +'"]' ).prop( 'selected', true );
-        $( '.category_record_showLimit' ).attr( 'value',limit );    */
+    refreshCategory_DataTable( pageno, limit, searchWords, function(){ 
+        $( '.category_record_showLimit' ).attr( 'value',limit );   
     } );
     console.log( 'Category record show limit is ' + limit );
 } );
@@ -101,7 +103,7 @@ $( document ).on( 'change', '.category_record_showLimit', function(){
 $( document ).on( 'click', '.searchCategoriesButton', function(){
     var searchWords = $( '.searchCategoriesOnMC' ).val();
     var page = $( 'managecategory_currentpage' ).val(); 
-    var category_record_showLimit = $( '.category_record_showLimit' ).attr( 'val' ); 
+    var category_record_showLimit = $( '.category_record_showLimit' ).attr( 'value' ); 
     category_record_showLimit = ( category_record_showLimit != '' || category_record_showLimit != undefined || category_record_showLimit != null ) ? category_record_showLimit : 5;
     try{
         refreshCategory_DataTable( page, category_record_showLimit, searchWords, function(){
@@ -112,3 +114,34 @@ $( document ).on( 'click', '.searchCategoriesButton', function(){
         console.log( "oes function refreshCategory_DataTable is not find:" + c );
     }
 } )
+$(document).on('click', 'td[class^="datatable_checked_td_"]', function(){  
+    var id = $( this ).attr( 'id' );
+    if( $( "." + id ).is(':checked') ){
+        $( "." + id ).prop( 'checked', false );
+    } else {
+        $( "." + id ).prop( 'checked', true ); 
+    }   
+});
+$( document ).on( 'click', '.datatable_th_0', function(){
+      
+    if( $( '.datatable_checked_all' ).is(':checked') ){
+        $( '.datatable_checked_all' ).prop( 'checked', false );
+    } else {
+        $( '.datatable_checked_all' ).prop( 'checked', true ); 
+    }
+    
+} );
+
+$( document ).on( 'click', '.apply_button', function(){
+    var selected_val = $( '.oes_bulk_option :selected' ).attr( 'value' );
+    var numberOfChecked = $('.datatable_checked_all :checked').filter( ':checked' ).length;
+
+    console.log( numberOfChecked );
+
+    if( selected_val == 'delete' ){
+        if( confirm( 'Are you sure, You want to apply Delete action on select entries ?' ) ){
+
+        }
+    }
+
+} );

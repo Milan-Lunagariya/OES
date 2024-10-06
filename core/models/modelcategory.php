@@ -149,12 +149,19 @@ if ( $action != false ) {
         
         case 'loadCategoriesOnMC':
             require_once '../models/datatable.php';
+            
             $page_no = ( isset( $_REQUEST['current_page'] ) && $_REQUEST['current_page'] > 0 ) ? $_REQUEST['current_page'] : 1;
+            
             $limit = ( isset( $_REQUEST['category_record_showLimit'] ) && $_REQUEST['category_record_showLimit'] > 0 ) ? intval( $_REQUEST['category_record_showLimit'] ) : 5;
             $limit = ( is_numeric( $limit ) && $limit > 0 ) ? $limit : 5;
+
+            $search = isset( $_REQUEST['searchCategoriesOnMC'] ) ? $_REQUEST['searchCategoriesOnMC'] : '';
+            if( method_exists( 'commonhelper', 'stripslashes_deep' ) ){
+                /* $search = $commonhelper->stripslashes_deep(); */ // Can not work properly...
+            }
             
             if( isset( $categories ) && method_exists( 'categories', 'categoriesTableData' ) ){
-                echo $categories->categoriesTableData( $page_no, $limit );
+                echo $categories->categoriesTableData( $page_no, $limit, $search );
             } else {
                 echo "categories object not find: ".__FILE__.' >  '.__LINE__; 
             }

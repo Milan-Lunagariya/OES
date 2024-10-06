@@ -158,7 +158,7 @@ class DatabaseHandler {
         }
     }
 
-    public function select($table = '', $select_column = '', $where_clause = array(),  $groupby = '', $orderby = '', $limit = '', $offset = '' ) {
+    public function select( $table = '', $select_column = '', $where_clause = array(),  $groupby = '', $orderby = '', $limit = '', $offset = '' ) {
         try {
 
             if (empty($table)) {
@@ -178,18 +178,18 @@ class DatabaseHandler {
 
                 $condition .= " {$correctdata['column']} {$correctdata['operator']} :{$correctdata['column']} {$correctdata['conjunction']} ";
             }
- 
-             $query .= "SELECT $select_column FROM $table";
-            
-            if( count( $where_clause ) > 0){
+  
+            $query .= "SELECT $select_column FROM $table"; 
+             
+            if( isset( $where_clause[0]['use'] ) && strtolower( $where_clause[0]['use'] ) == 'join' ){
+                $query .= " ON $condition";                
+            } elseif( count( $where_clause ) > 0 ) {
                 $query .= " WHERE $condition";
             }
+
             if( ! empty( $groupby ) ){
                 $query .= " GROUP BY $groupby";
-            }
-            if( ! empty( $groupby ) ){
-                $query .= " GROUP BY $groupby";
-            }
+            } 
             if( ! empty( $orderby ) ){
                 $query .= " ORDER BY $orderby";
             }
@@ -199,8 +199,8 @@ class DatabaseHandler {
             if( ! empty( $offset ) ){
                 $query .= " OFFSET $offset";
             }
-
-            /* echo  $query; */
+ 
+           /*  echo  $query; */
             $stmt = $this->conn->prepare($query);
             
             foreach(  $where_clause as $setData ){
@@ -210,10 +210,9 @@ class DatabaseHandler {
                 }
                 $setData['type'] = ( isset( $setData['type'] ) && !empty( $setData['type'] ) ) ? $setData['type'] : PDO::PARAM_STR;
                 $stmt->bindParam( ":{$setData['column']}", $setData['value'], $setData['type'] );
-                /* echo ":{$setData['column']} , {$setData['value']},  {$setData['type']}"; */
+                /* echo "<br><br>:{$setData['column']} = {$setData['value']},  {$setData['type']}<br><br>"; */
             } 
             $stmt->execute();
-
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch(PDOException $exception) {
             echo "Fetch error: " . $exception->getMessage(); 
