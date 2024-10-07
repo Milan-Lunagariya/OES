@@ -134,14 +134,46 @@ $( document ).on( 'click', '.datatable_th_0', function(){
 
 $( document ).on( 'click', '.apply_button', function(){
     var selected_val = $( '.oes_bulk_option :selected' ).attr( 'value' );
-    var numberOfChecked = $('.datatable_checked_all :checked').filter( ':checked' ).length;
+    var checked_length = $('.datatable_checked_all:checked').length;
 
-    console.log( numberOfChecked );
-
+    if( selected_val == '' ){
+        var message = $( '.manageCategories_message' ).fadeIn().html('Please select an bulk option to apply.');
+        show_message_popup(message, 5000, false);  
+        return  false;
+    }
+    if( checked_length < 1 ){ 
+        var message = $( '.manageCategories_message' ).fadeIn().html("Please checked at least 1 row of entries");
+        show_message_popup(message, 5000, false); 
+        return false;
+    } 
     if( selected_val == 'delete' ){
         if( confirm( 'Are you sure, You want to apply Delete action on select entries ?' ) ){
+          
+            var checked_ids = [];
+            $('.datatable_checked_all:checked').each( function(){
+                var id = $( this ).attr( 'id' );
+                id = ( id == '' || id == undefined ) ? 0 : id;
+                checked_ids.push( id );
+            } )
+            
 
+            const url = '../core/models/modelcategory.php'; 
+            const callback = function(data){     
+                oes_loader( '.oes_loader_center', false, '', { 'display': 'none' } );
+                oes_loader( '.manageCategories_form_popup', false, '', {'cursor': 'auto'} );
+                $( '.close_editCategory' ).fadeIn(); 
+            };  
+            var send_dataOnPHP = {
+                'action': 'bulk_deleteCategory',
+                'length' : checked_length,
+                'checked_ids': checked_ids
+            }; 
+            
+            
+            oes_loader( '.oes_loader_center', true, '', '', '40px' );
+            ajax_form_submitor( url, callback, null, send_dataOnPHP );    
+             
         }
-    }
+    } 
 
 } );

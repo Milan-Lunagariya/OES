@@ -2,13 +2,16 @@
 console.log(' Hello,common.js entred ');
 window.black = '#000000a8';
 window.red = 'rgb(235 68 68)';
-
+window.svg_icon_success = '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools --><svg width="50px" height="50px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#9cfe95"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#168b0e" stroke-width="3.2640000000000002"> <path fill-rule="evenodd" clip-rule="evenodd" d="M19.7071 6.29289C20.0976 6.68342 20.0976 7.31658 19.7071 7.70711L10.4142 17C9.63316 17.7811 8.36683 17.781 7.58579 17L3.29289 12.7071C2.90237 12.3166 2.90237 11.6834 3.29289 11.2929C3.68342 10.9024 4.31658 10.9024 4.70711 11.2929L9 15.5858L18.2929 6.29289C18.6834 5.90237 19.3166 5.90237 19.7071 6.29289Z" fill="#0F1729"/> </g><g id="SVGRepo_iconCarrier"> <path fill-rule="evenodd" clip-rule="evenodd" d="M19.7071 6.29289C20.0976 6.68342 20.0976 7.31658 19.7071 7.70711L10.4142 17C9.63316 17.7811 8.36683 17.781 7.58579 17L3.29289 12.7071C2.90237 12.3166 2.90237 11.6834 3.29289 11.2929C3.68342 10.9024 4.31658 10.9024 4.70711 11.2929L9 15.5858L18.2929 6.29289C18.6834 5.90237 19.3166 5.90237 19.7071 6.29289Z" fill="#0F1729"/> </g></svg>';
 
 $(document).ready(function(){   
     $( '.datatable tr:odd' ).css('background-color', 'aliceblue');
 });
 
-function show_message_popup( message = $('.give_with_selector').fadeIn().html('Data: '), show_delay_time = 2000 ){ 
+function show_message_popup( message = $('.give_with_selector').fadeIn().html('Data: '), show_delay_time = 2000, success = true ){ 
+    if( success == false ){
+        $( message ).addClass( 'message_error' );
+    }
     message.css('transform', 'scale(0.5)');
     setTimeout(function(){
         message.css({'transform':'scale(1)', 'transition': '1s'});
@@ -113,18 +116,20 @@ function field_validataion(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', requir
 
     return (flag);  
 } 
-function oes_loader( selector = '', show = true, stop_html = 'Success', css_value = '', loader_size = '' ){
+function oes_loader( selector = '', show = true, stop_html = window.svg_icon_success, css_value = '', loader_size = '' ){
 
+    stop_html= ( stop_html != '' ) ? stop_html : window.svg_icon_success;
     var selector_css = {};
     loader_size = ( loader_size != '' ) ? loader_size : '25px';
-
+    
     if( show == true ){ 
         selector_css['cursor'] = 'progress';
         $( selector ).prop( 'disabled', true );
         $( selector ).html( '<i class="fa fa-spinner fa-spin" style="font-size:'+loader_size+'"></i>' );
+        $( selector ).fadeIn();
     } else {         
         selector_css['cursor'] = 'pointer';
-        $( selector ).prop( 'disabled', false );
+        $( selector ).prop( 'disabled', false ); 
         $( selector ).html( stop_html );
     }
 

@@ -125,33 +125,49 @@ class DatabaseHandler {
         }
     }
 
-    public function delete( $table_name, $where_clause = array(), $operator = '' ){
+    public function delete( $table_name, $where_clause = array() ){
         try {
             global $commonhelper;
+            $using_in = false;
 
             $column = implode(',', array_keys($where_clause));
  
-            $where =    ( count( $where_clause ) > 0 ) ? "WHERE"   : '';
-            $operator = ( count( $where_clause ) < 2 ) ? $operator : '';
-
+            $where_clause = ( is_array( $where_clause ) ) ? $where_clause : array();
             $condition = '';
-            foreach( $where_clause as $column => $value ){
-                $condition .= ' '.$column .' = '.' :'. $column . ' '.$operator.' ';
-            }
-            
-            $query = "DELETE FROM $table_name $where $condition ";
-            $stmt = $this->conn->prepare( $query );
-            
-            foreach( $where_clause as $column => $value ){
-                $stmt->bindParam( ":$column", $value, is_int($value) ? PDO::PARAM_INT : PDO::PARAM_STR );
-            }
+            foreach( $where_clause as $data ){
 
-            $res_bool = $stmt->execute();
-            if( $res_bool ) {
-                return true;
-            } else{
-                return false;
+                $correctdata['column'] = ( isset( $data['column'] ) ) ? $data['column'] : '';
+                $correctdata['operator'] = ( isset( $data['operator'] ) && ! empty( $data['operator'] ) ) ? $data['operator'] : '='; 
+                $correctdata['conjunction'] = ( isset( $data['conjunction'] ) ) ? $data['conjunction'] : '';
+
+                if( strtoupper($correctdata['operator']) == 'IN' ){
+                    $condition .= " {$correctdata['column']} IN ( :{$correctdata['column']} ) {$correctdata['conjunction']} ";
+                } else {
+                    $condition .= " {$correctdata['column']} {$correctdata['operator']} :{$correctdata['column']} {$correctdata['conjunction']} ";
+                }
+            }
+ 
+            $query = "DELETE FROM $table_name";
+
+            if( count( $where_clause ) > 0 ) {
+                $query .= " WHERE $condition";
+            }
+            
+            /* echo $query; */
+            $stmt = $this->conn->prepare( $query ); 
+            
+            foreach(  $where_clause as $setData ){
+                
+                if( !isset( $setData['column'] ) || !isset( $setData['value'] ) ){
+                    break;
+                }
+                $setData['type'] = ( isset( $setData['type'] ) && !empty( $setData['type'] ) ) ? $setData['type'] : PDO::PARAM_STR;
+                
+                $stmt->bindValue( ":{$setData['column']}", "{$setData['value']}", PDO::PARAM_INT ); 
+                echo "<br>:{$setData['column']} = {$setData['value']} " ;
             } 
+            
+            return $stmt->execute();
 
         } catch(Exception $exception){
             echo "Delete error: " . $exception->getMessage();

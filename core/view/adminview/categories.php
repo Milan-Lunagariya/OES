@@ -157,7 +157,7 @@ class categories
                 $categoryimage = ( is_array($categoryimages) && count($categoryimages) > 0 ) ? trim( $categoryimages[0] ) : '';
                 $image_path = ( $categoryimage != '' ) ? "../media/categories/".$categoryimage :  '';
 
-                $select_current = "<input type='checkbox' id='' class='datatable_checked_all datatable_checked_td_{$categoryid}_0' name='' value=''>";
+                $select_current = "<input type='checkbox' class='datatable_checked_all datatable_checked_td_{$categoryid}_0' name='' id='{$categoryid}'  value=''>";
 
                 $images = ( ! empty($image_path) ) ? "<div class='image_parent'><a href='$image_path' target='_blank' ><img src='$image_path' alt='Not Found' width='100'></a></div>": '-'; 
                 $name = ( isset($value['name']) && !empty($value['name']) ) ? $value['name']: '-'; 

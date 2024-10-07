@@ -41,20 +41,20 @@ class datatable
                 foreach( $td as $td_key => $td_value ){
                     $td_value[1] = isset( $td_value[1] ) ? $td_value[1] : '';
                 
-                    $content .= "<tr class='".$classes['tr'].$td_value[1]."'>";
+                    $content .= "<tr class='".$classes['tr']."' id='{$td_value[1]}'>";
                 
                     if( is_array( $td_value ) && count( $td_value ) ){
 
                         foreach( $td_value as $td_meta_key => $td_meta_value ){
                             $class_td_checked = ''; 
-                            if( $td_meta_key == 0 ){
+                            if( $td_meta_key == 0 ) {
                                 $class_td_checked = "datatable_checked_td_{$td_value[1]}_0";
                             }  
-                            if( is_string($td_meta_value) || is_numeric($td_meta_value) ){
+                            if( is_string($td_meta_value) || is_numeric($td_meta_value) ) {
 
                                 $content .= "<td class='$class_td_checked ".$classes['td']." ' id='$class_td_checked' >$td_meta_value</td>" ;
                 
-                            } else if( is_array( $td_meta_value ) && count( $td_meta_value ) > 0 ){ 
+                            } else if( is_array( $td_meta_value ) && count( $td_meta_value ) > 0 ) { 
                                 
                                 foreach( $td_meta_value as $meta_of_key => $meta_of_value ){    
                                     $content .= "<td class='$class_td_checked ".$classes['td']."' id='$class_td_checked' >$meta_of_value</td>" ;

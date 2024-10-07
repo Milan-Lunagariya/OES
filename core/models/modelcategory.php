@@ -167,6 +167,32 @@ if ( $action != false ) {
             }
             break;
 
+        case 'bulk_deleteCategory':
+            $length = isset( $_REQUEST['length'] ) ? $_REQUEST['length'] : 0;
+            $ids = isset( $_REQUEST['checked_ids'] ) ? $_REQUEST['checked_ids'] : array(0);
+            $imploded_ids = is_array( $ids ) ? implode( ', ', $ids ) : $ids;
+            $in_ids = $imploded_ids;
+
+            $message['success'] = false;
+            $message['error'] = '';
+
+            if( $length > 0 ){ 
+            
+                $bulk_condition = array( 
+                    array( 'column' => 'categoryid', 'value' => $in_ids, 'operator' => 'IN', )
+                );
+
+                $result = $DatabaseHandler->delete( 'categories', $bulk_condition );
+
+                if( in_array( $result, array( 1, '1', true ) ) ){
+                    $message[ 'success' ] = true;
+                } else {
+                    $message[ 'error' ] .= $result; 
+                }
+            }
+            echo json_encode( $message );
+            break;
+
         default:
             echo 'Soory, Your action can not match!';
     }

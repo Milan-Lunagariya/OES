@@ -150,17 +150,17 @@ $i++;
 --
 
 INSERT INTO `categories` (`name`, `parentid`, `createdat`) VALUES
-('Test', 0, CURRENT_TIMESTAMP),
-('Test 12', 32, CURRENT_TIMESTAMP),
-('Test 13', 32, CURRENT_TIMESTAMP),
-('Test 14', 32, CURRENT_TIMESTAMP),
-('Test', 0, CURRENT_TIMESTAMP),
-('Test', 36, CURRENT_TIMESTAMP),
-('Test', 36, CURRENT_TIMESTAMP),
-('Test', 36, CURRENT_TIMESTAMP),
-('Test', 0, CURRENT_TIMESTAMP),
-('Test All in One', 40, CURRENT_TIMESTAMP),
-('Test Speaker', 40, CURRENT_TIMESTAMP),
+('Mobile', 0, CURRENT_TIMESTAMP),
+('iPhone 12', 32, CURRENT_TIMESTAMP),
+('iPhone 13', 32, CURRENT_TIMESTAMP),
+('IPhone 14', 32, CURRENT_TIMESTAMP),
+('Laptops', 0, CURRENT_TIMESTAMP),
+('HP', 36, CURRENT_TIMESTAMP),
+('Lenovo', 36, CURRENT_TIMESTAMP),
+('Mackbook', 36, CURRENT_TIMESTAMP),
+('Accessories', 0, CURRENT_TIMESTAMP),
+('Cable All in One', 40, CURRENT_TIMESTAMP),
+('Smart Speaker', 40, CURRENT_TIMESTAMP),
 ('USB Cover', 40, CURRENT_TIMESTAMP);
 
 
