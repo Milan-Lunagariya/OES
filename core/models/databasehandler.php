@@ -134,14 +134,18 @@ class DatabaseHandler {
  
             $where_clause = ( is_array( $where_clause ) ) ? $where_clause : array();
             $condition = '';
+            $in_key = '';
             foreach( $where_clause as $data ){
 
                 $correctdata['column'] = ( isset( $data['column'] ) ) ? $data['column'] : '';
                 $correctdata['operator'] = ( isset( $data['operator'] ) && ! empty( $data['operator'] ) ) ? $data['operator'] : '='; 
                 $correctdata['conjunction'] = ( isset( $data['conjunction'] ) ) ? $data['conjunction'] : '';
-
                 if( strtoupper($correctdata['operator']) == 'IN' ){
-                    $condition .= " {$correctdata['column']} IN ( :{$correctdata['column']} ) {$correctdata['conjunction']} ";
+                    
+                    foreach( $data['value'] as $key => $value){
+                        $in_key .= !empty( $in_key ) ? ", :key_$key" : ":key_$key";
+                    } 
+                    $condition .= " {$correctdata['column']} IN ( {$in_key} )  {$correctdata['conjunction']}";
                 } else {
                     $condition .= " {$correctdata['column']} {$correctdata['operator']} :{$correctdata['column']} {$correctdata['conjunction']} ";
                 }
@@ -162,11 +166,20 @@ class DatabaseHandler {
                     break;
                 }
                 $setData['type'] = ( isset( $setData['type'] ) && !empty( $setData['type'] ) ) ? $setData['type'] : PDO::PARAM_STR;
+               
+                if( isset( $setData['operator'] ) && strtoupper( $setData['operator'] ) == 'IN' ){ 
+                    
+                    foreach( $setData['value'] as $key => $value ){ 
+                        $stmt->bindValue( ":key_$key", $value, $setData['type'] ); 
+                    } 
+
+                } else {
+                    $stmt->bindValue( ":{$setData['column']}", "{$setData['value']}", $setData['type'] ); 
+                }
                 
-                $stmt->bindValue( ":{$setData['column']}", "{$setData['value']}", PDO::PARAM_INT ); 
-                echo "<br>:{$setData['column']} = {$setData['value']} " ;
+               /*  echo "<br>:{$setData['column']} = {$setData['value']} " ; */
             } 
-            
+            echo $query; 
             return $stmt->execute();
 
         } catch(Exception $exception){

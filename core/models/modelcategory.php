@@ -112,7 +112,7 @@ if ( $action != false ) {
             $remove_id = (isset($_REQUEST['remove_id'])) ? intval($_REQUEST['remove_id']) : 0;
             $message['remove_id'] = $remove_id; 
             if( !in_array($remove_id, [0, '0', null, '']) && is_numeric($remove_id)  ){
-                $remove = $DatabaseHandler->delete( 'categories', array( 'categoryid' => $remove_id ) );
+                $remove = $DatabaseHandler->delete( 'categories', array( array( 'column' => 'categoryid', 'value' => $remove_id ) ) );
                 $message['remove_result'] = $remove; 
                 if( in_array( $remove, [true, 'true',1, '1'] )  ){
                     $message['success'] = true;
@@ -169,17 +169,20 @@ if ( $action != false ) {
 
         case 'bulk_deleteCategory':
             $length = isset( $_REQUEST['length'] ) ? $_REQUEST['length'] : 0;
-            $ids = isset( $_REQUEST['checked_ids'] ) ? $_REQUEST['checked_ids'] : array(0);
-            $imploded_ids = is_array( $ids ) ? implode( ', ', $ids ) : $ids;
-            $in_ids = $imploded_ids;
+            $ids = isset( $_REQUEST['checked_ids'] ) ? $_REQUEST['checked_ids'] : array(0); 
+            $excluded_ids = explode( ',' , $ids);
+            $in_ids = $excluded_ids;
 
+            echo '<pre>';
+            print_r( $in_ids );
+            echo '</pre>';
             $message['success'] = false;
             $message['error'] = '';
 
             if( $length > 0 ){ 
             
                 $bulk_condition = array( 
-                    array( 'column' => 'categoryid', 'value' => $in_ids, 'operator' => 'IN', )
+                    array( 'column' => 'categoryid', 'value' => $in_ids, 'operator' => 'IN', 'type' => PDO::PARAM_INT )
                 );
 
                 $result = $DatabaseHandler->delete( 'categories', $bulk_condition );

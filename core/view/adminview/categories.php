@@ -181,7 +181,11 @@ class categories
             } else{
                 $printTable .= '$datatable is not object, Please try to get object $datatable... '.__FILE__.' > '. __LINE__;
             }   
-        }
+        } else{
+            $printTable .= '<hr>'; 
+            $printTable .= '<div align="center" style="color: red; font-size: 1.5em;"> Records not found! </div>'; 
+            $printTable .= '<hr>'; 
+        }   
         return $printTable;
     }
 
