@@ -53,7 +53,7 @@ class formcreator
 
 
 		$content .= '<div class="field_container">';
-		switch ($field_attr['type']) {
+		switch ( $field_attr['type'] ) {
 			
 			case 'text':
 			case 'hidden':
@@ -63,8 +63,11 @@ class formcreator
 			case 'email':
 				/* $field_attr = $commonhelper->stripslashes_deep($field_attr); */
 				/* Note : Here, your id key not use because id=name, Id should be ones not multiples. so only use id=name  */
-
+				$multiple = '';
 				if(isset($field_attr['type']) && strtolower($field_attr['type']) == 'file'){
+
+					$multiple =  (isset( $field_attr['multiple'] ) && in_array( $field_attr['multiple'], array( 1, '1', true ) ) )? ' multiple ' :  '';
+
 					if( isset($field_attr['value']) && $field_attr['value'] != '' ){
 						$image_path = '../media/categories/'.$field_attr['value'];
 						echo "<div class='image_parent'>
@@ -81,10 +84,10 @@ class formcreator
 				
 				$field_attr['name']  = ( ( isset($field_attr['name']) ) && ( gettype($field_attr['name']) == 'string' ) ) ? trim($field_attr['name']) : ''; 
 				 
-				$content .= ( $field_attr['type'] == 'submit' ) ? "<button id='".$field_attr['name']."'" : "<input id='".$field_attr['name']."'";
+				$content .= ( $field_attr['type'] == 'submit' ) ? "<button id='".$field_attr['name']."'" : "<input $multiple id='".$field_attr['name']."'";
 				foreach ($field_attr as $key => $value) {
 
-					if (in_array($key, ['id', 'label'])) {
+					if (in_array($key, array( 'id', 'label', 'multiple' ) )) {
 						continue;
 					}
 					 
@@ -126,6 +129,37 @@ class formcreator
 
 				$content .= '</select>';
 				break;
+
+			case 'textarea' :
+
+				$content = '';
+				if (isset($field_attr['label'])) {
+					$field_attr['label'] =  trim($field_attr['label']);
+					$content .= '<label for="' . $field_attr['name'] . '"> ' . $field_attr['label'] . ' </label> ';
+				}
+				
+				$content .= '<textarea';
+				foreach ($field_attr as $key => $value) {
+
+					if ( in_array( $key, array( 'type', 'label', 'value' ) ) ) {
+						continue;
+					}
+
+					$key = (gettype($key) == 'string') ? trim($key) : $key;
+					$value = (gettype($value) == 'string') ? trim($value) : $value;
+					$content .=  '  ' . $key . '= "' . $value . '"';
+				}
+				$content .= '>';
+
+
+				$content .= ( isset( $field_attr['value'] ) ) ? $field_attr['value'] : '';
+				$content .= '</textarea>';
+
+
+
+
+				break;
+
 			default:
 				$content .= 'Field is missing';
 				break;

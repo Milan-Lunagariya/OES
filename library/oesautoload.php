@@ -3,7 +3,7 @@
 
 if( isset( $_REQUEST['page'] ) && ! empty( $_REQUEST['page'] ) ) { 
     $page = $_REQUEST['page'];
-    if( in_array( $page, array( 'add_categories', 'manage_categories' ) ) ){
+    if( in_array( $page, array( 'add_categories', 'manage_categories', 'add_products', 'manage_products' ) ) ){
             
         global $oesadmin_load_css, $oesadmin_load_js;
         if( ! empty( $oesadmin_load_css ) ){

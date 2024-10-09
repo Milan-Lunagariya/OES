@@ -8,6 +8,9 @@ require_once '../helpers/commonhelper.php';  */
 if( file_exists( '../helpers/commonhelper.php' ) ){
     require_once '../helpers/commonhelper.php'; 
 }  
+if( file_exists( '../../assets/svg/commonsvg.php' ) ){
+    require_once '../../assets/svg/commonsvg.php';  
+}  
 $commonhelper  = class_exists( "commonhelper" ) ? new commonhelper() : false;
 
 if( $commonhelper != false ){
@@ -173,9 +176,6 @@ if ( $action != false ) {
             $excluded_ids = explode( ',' , $ids);
             $in_ids = $excluded_ids;
 
-            echo '<pre>';
-            print_r( $in_ids );
-            echo '</pre>';
             $message['success'] = false;
             $message['error'] = '';
 

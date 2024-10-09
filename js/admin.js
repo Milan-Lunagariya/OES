@@ -159,9 +159,32 @@ $( document ).on( 'click', '.apply_button', function(){
 
             const url = '../core/models/modelcategory.php'; 
             const callback = function(data){     
-                oes_loader( '.oes_loader_center', false, '', { 'display': 'none' } );
+                data = JSON.parse( data );
+                console.log( data );
+                if( data.success == true || data.success == 1 || data.success == '1' ){
+                    oes_loader( '.oes_loader_center', false, '', { 'display': 'none' } );
+                    
+                    var searchWords = $( '.searchCategoriesOnMC' ).val();
+                    var page = $( 'managecategory_currentpage' ).val(); 
+                    var category_record_showLimit = $( '.category_record_showLimit' ).attr( 'value' ); 
+                   
+                    try{
+                        refreshCategory_DataTable( page, category_record_showLimit, searchWords, function(){
+                        var message = $( '.manageCategories_message' ).fadeIn().html("Success - Checked categories Deleted");
+                        show_message_popup(message, 3000, true); 
+                        } );
+                        
+                        console.log( 'search: ' + search );
+                    } catch( c ){
+                        console.log( "oes function refreshCategory_DataTable is not find:" + c );
+                    }
+
+                } else{
+                    oes_loader( '.oes_loader_center', false, 'Somthing went wrong!, do page refresh and try again' ); 
+                }
                 oes_loader( '.manageCategories_form_popup', false, '', {'cursor': 'auto'} );
                 $( '.close_editCategory' ).fadeIn(); 
+   
             };  
             var send_dataOnPHP = {
                 'action': 'bulk_deleteCategory',

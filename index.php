@@ -22,6 +22,7 @@
   if( ! defined( 'OESFRONT_IMAGES_PATH') ) { define( 'OESFRONT_IMAGES_PATH', 'images' ); }
   if( ! defined( 'OESFRONT_MEDIA_PATH') ) { define( 'OESFRONT_MEDIA_PATH', 'media' ); }
   if( ! defined( 'OESFRONT_ASSETS_PATH') ) { define( 'OESFRONT_ASSETS_PATH', 'assets' ); }
+  if( ! defined( 'OESFRONT_BOOTSTRAP_PATH') ) { define( 'OESFRONT_BOOTSTRAP_PATH', 'bootstrap' ); }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -31,8 +32,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GadgetGalaxy</title>
 
+    <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">  
     <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
     
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <?php 
     if( defined( 'OESFRONT_LIBRARY_PATH' ) && file_exists( OESFRONT_LIBRARY_PATH.'/oesautoload.php' ) ){
         require_once OESFRONT_LIBRARY_PATH.'/oesautoload.php';
@@ -51,6 +56,13 @@
         if( ! defined( 'IMAGES_PATH' ) ){
             define( 'IMAGES_PATH', 'images' );
         } 
+        
+        global $home_slider_array;
+        $home_slider_array = array(
+            'home_slider_2.jpg',
+            'home_slider_3.jpg',
+            'home_slider_4.jpg',
+        );
 
         if( defined( 'OESFRONT_CORE_PATH' ) && file_exists( OESFRONT_CORE_PATH.'/helpers/commonhelper.php' ) ){
              

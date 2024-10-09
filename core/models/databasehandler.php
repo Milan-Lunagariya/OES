@@ -178,8 +178,7 @@ class DatabaseHandler {
                 }
                 
                /*  echo "<br>:{$setData['column']} = {$setData['value']} " ; */
-            } 
-            echo $query; 
+            }  
             return $stmt->execute();
 
         } catch(Exception $exception){

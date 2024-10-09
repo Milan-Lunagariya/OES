@@ -24,6 +24,21 @@ class formhelper
         return $default;
     } 
 
+    public function product_name_attr( $value = '' ) {
+         
+        $default =  array(
+            'type'         =>  "text",
+            'label'        =>  "Product Name",
+            'name'         =>  "productname",
+            'class'        =>  "form-control validate_field",
+            'placeholder'  =>  "Enter Product Name",
+            'title'        =>  "Enter Product Name",
+            'value'        =>  $value,
+            
+        );
+        return $default;
+    }
+
     public function category_name_attr( $value = '' ) {
          
         $default =  array(
@@ -38,7 +53,7 @@ class formhelper
         );
         return $default;
     }
-    public function submit_attr( $value ){
+    public function category_submit_attr( $value ){
 
         $value = ( $value == '' ) ? 'Add' : $value;
         $default =  array(
@@ -49,8 +64,20 @@ class formhelper
         );
         return $default;
     } 
+  
+    public function product_submit_attr( $value ){
 
-    public function category_image_attr( $value = '',  ){
+        $value = ( $value == '' ) ? 'Add' : $value;
+        $default =  array(
+            'type'         =>  "submit",
+            'class'        =>  "product_submit_button btn btn-info",
+            'value'        =>  $value,
+            'name'           =>  "product_form_submit",
+        );
+        return $default;
+    } 
+
+    public function category_image_attr( $value = '' ){
  
         $default =  array(
             'type'         =>  "file",
@@ -59,6 +86,22 @@ class formhelper
             'class'        =>  "validate_field", 
             'accept'       =>  "image/*", // Add setting Dynamic if enable then add  
             'title'        =>  "Select Category Image",
+            'value'        =>  $value,
+        );
+
+        return $default;
+    }
+
+    public function product_image_attr( $value = '' ){
+ 
+        $default =  array(
+            'type'         =>  "file",
+            'label'        =>  "Product image",
+            'name'         =>  "productimages[]",
+            'class'        =>  "validate_field", 
+            'accept'       =>  "image/*", // Add setting Dynamic if enable then add  
+            'title'        =>  "Select Product Image",
+            'multiple'     =>  true,
             'value'        =>  $value,
         );
 
@@ -103,6 +146,19 @@ class formhelper
 
         return $parent_category_attr;
     }
+
+    function product_description_attr( $value = '' ){
+        $description_attr = array(
+            'type' => 'textarea',
+            'name' => 'product_description',
+            'label' => 'Prodcut Description',
+            'title' => 'Write Product Description',
+            'class' => 'form-control',
+            'value' => $value, 
+        );
+        return $description_attr;
+    }
+
 }
 
 $formhelper = new formhelper()

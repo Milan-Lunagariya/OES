@@ -148,6 +148,7 @@ button.searchCategoriesButton svg{
 }
 .dataTableHeader .showHideColumn{
     cursor: pointer;
+    display: none;
 }
 .datatablefooter .showingContext {
     float: left; 

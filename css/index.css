@@ -30,13 +30,16 @@
         --success_bg: #c1ffd0; 
 }
 
+*{
 
-body {
-    background-color: var(--aliceblue);
     font-family: Arial, Helvetica, sans-serif;
     margin: 0px;
     padding: 0px;
+    color: var(--gray-dark);
     box-sizing: border-box;
+}
+body {
+    background-color: var(--aliceblue);
 }
 header.header_container {  
     height: 130px;
@@ -270,14 +273,4 @@ i.fa-solid.fa-cart-shopping.button.cart_icon {
     width: 80vw;
     background-color: var(--background);
 }
-.HomeSliders .sliderNextArrow, .sliderPreviousArrow {
-    float: left;
-    cursor: pointer;
-    height: 100%;
-    font-size: 20px;
-    font-weight: 900;
-    color: var(--dark);
-}
-.sliderNextArrow:hover, .sliderPreviousArrow:hover{
-    color: var(--black);
-}
+ 
