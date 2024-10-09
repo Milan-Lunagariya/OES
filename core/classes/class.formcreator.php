@@ -153,11 +153,30 @@ class formcreator
 
 
 				$content .= ( isset( $field_attr['value'] ) ) ? $field_attr['value'] : '';
-				$content .= '</textarea>';
+				$content .= '</textarea>'; 
+				break;
 
+			case 'number' :
 
+				$content = '';
+				if (isset($field_attr['label'])) {
+					$field_attr['label'] =  trim($field_attr['label']);
+					$content .= '<label for="' . $field_attr['name'] . '"> ' . $field_attr['label'] . ' </label> ';
+				}
+				
+				$content .= '<input';
+				foreach ($field_attr as $key => $value) {
 
+					if ( in_array( $key, array( 'label' ) ) ) {
+						continue;
+					}
 
+					$key = (gettype($key) == 'string') ? trim($key) : $key;
+					$value = (gettype($value) == 'string') ? trim($value) : $value;
+					$content .=  '  ' . $key . '= "' . $value . '"';
+				}
+				$content .= '>';
+ 
 				break;
 
 			default:

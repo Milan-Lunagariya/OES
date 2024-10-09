@@ -23,6 +23,19 @@ class formhelper
 
         return $default;
     } 
+    public function product_form_attr( $getid = '', $class = '' ) {
+
+        $id = ( $getid == '' ) ? 'add_productform' : $getid; 
+        
+        $default = array(
+            'id'         => $id,
+            'class'      => $class,
+            'method'     => 'POST',
+            'enctype'    => 'multipart/form-data',
+        );
+
+        return $default;
+    } 
 
     public function product_name_attr( $value = '' ) {
          
@@ -157,6 +170,34 @@ class formhelper
             'value' => $value, 
         );
         return $description_attr;
+    }
+   
+    function product_price_attr( $value = '' ){
+        $product_price_attr = array(
+            'type' => 'number',
+            'name' => 'product_price',
+            'label' => 'Prodcut Price',
+            'title' => 'Enter product Price',
+            'class' => 'form-control',
+            'min' => '0',
+            'max' => '99999',
+            'value' => $value, 
+        );
+        return $product_price_attr;
+    }
+
+    function product_stock_attr( $value = '' ){
+        $product_price_attr = array(
+            'type' => 'number',
+            'name' => 'product_stock',
+            'label' => 'Prodcut Stock',
+            'title' => 'Enter product stock',
+            'class' => 'form-control',
+            'min' => '0',
+            'max' => '99999',
+            'value' => $value, 
+        );
+        return $product_price_attr;
     }
 
 }

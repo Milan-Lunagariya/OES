@@ -74,16 +74,17 @@ class products
             $fields[] = $formcreator->field_create( $formhelper->product_image_attr( $productImage_value ) );  
             $fields[] = $formcreator->field_create( $formhelper->product_name_attr( $productname_value ) );   
             $fields[] = $formcreator->field_create( $formhelper->product_description_attr( $productname_value ) );   
+            $fields[] = $formcreator->field_create( $formhelper->product_price_attr( $productname_value ) );   
+            $fields[] = $formcreator->field_create( $formhelper->product_stock_attr( $productname_value ) );   
             $fields[] = $formcreator->field_create( $formhelper->product_submit_attr( $submitButtton_value ) );  
             
             foreach( $new_create_field as $new_field ){                        
                 $fields[] = $new_field; 
             } 
             
-            $category_form = $formcreator->form_create( $fields, $formhelper->category_form_attr( $formid ) );    
+            $category_form = $formcreator->form_create( $fields, $formhelper->product_form_attr( $formid ) );    
             $content .= $category_form;  
-        }
-            
+        } 
         return $content;
     }
 
