@@ -11,6 +11,8 @@ $(document).ready(function(){
 function show_message_popup( message = $('.give_with_selector').fadeIn().html('Data: '), show_delay_time = 2000, success = true ){ 
     if( success == false ){
         $( message ).addClass( 'message_error' );
+    }else {
+        $( message ).removeClass( 'message_error' );
     }
     message.css('transform', 'scale(0.5)');
     setTimeout(function(){
@@ -49,10 +51,10 @@ function ajax_form_submitor(url, callback , formdata_param, extra_data ){
             processData : false,
             success: callback
         })     
-    }, 2000)
+    }, 1000)
 } 
 
-function field_validataion(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', required = true) {
+function field_validation(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', required = true) {
 
     var error = ''; 
     var required_msg = 'Required this field.';
@@ -68,10 +70,14 @@ function field_validataion(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', requir
     }
     
     if( regexp != '' ){
-        if( !regexp.test(value) ){
+        console.log( "Reguler Expression" );
+        console.log( regexp.test(value) );
+        if( regexp.test(value) === false ){
             message = (typeof message == 'string' && message.trim() == '') ? invalid_msg : message; 
             flag = false;
             focus = true;
+        } else{
+            message = ( flag == true ) ? '' : message;             
         }
     }
     if( required == true || required == 1 ){
@@ -111,10 +117,10 @@ function field_validataion(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', requir
         
         $(id).css('border','1px solid '+ window.black);
     }
-    $(id).next('.formerror').fadeOut().fadeIn().text(error);
-    console.log( 'Field validation..' + regexp + " flag is " + flag + "Id " + id +" Value is " + value );
+    $(id).next('.formerror').fadeOut().fadeIn().text(error); 
 
-    return (flag);  
+    console.log( '\n id:' + id + '\n flag: ' + flag );
+    return (flag);
 } 
 function oes_loader( selector = '', show = true, stop_html = window.svg_icon_success, css_value = '', loader_size = '' ){
 
@@ -147,7 +153,7 @@ function refreshCategory_DataTable( page = 1, category_record_showLimit = 5, sea
 
     const url = '../core/models/modelcategory.php'; 
     const callback = function( data ) {
-        $( '.datatable tr:odd' ).css('background-color', 'red');
+        $( '.datatable tr:odd' ).css('background-color', 'aliceblue');
         $( '.oes_loader_center' ).fadeOut();
         $( '.categoriesDataTableOnMC' ).html( data );
         callback_addfun();
@@ -160,7 +166,105 @@ function refreshCategory_DataTable( page = 1, category_record_showLimit = 5, sea
         'searchCategoriesOnMC': searchWords,
         'action': 'loadCategoriesOnMC'
     };
+
     $( '.oes_loader_center' ).fadeIn();
     oes_loader( '.oes_loader_center', true, '', '', '40px' );
     ajax_form_submitor( url, callback, null, send_dataOnPHP );
 }
+
+function refreshAnyOne_DataTable_onCurrentPage( ajax_url = '../core/models/modelproducts.php',  send_dataOnPHP = {}, callback_addfun = function( data ){} ){
+   /* Note: This function use for refresh datatable any one on a current page. If you use in single page multiple datatable then you can't use this function because this function create for the controll only one datatable in current page. */
+  
+    const callback = function( data ) {
+        callback_addfun( data );
+        $( '.oes_loader_center' ).fadeOut();
+        $( '.datatable tr:odd' ).css('background-color', 'aliceblue');
+    };  
+
+    $( '.oes_loader_center' ).fadeIn();
+    oes_loader( '.oes_loader_center', true, '', '', '40px' );
+    ajax_form_submitor( ajax_url, callback, null, send_dataOnPHP );
+}
+
+function readymate_product_refresh( current_page = $( '[name="datatable_current_page"]' ).val(), add_callback = function( data ){} ){
+    var limit = $( '.product_record_showLimit :selected' ).attr( 'value' );
+    var ajax_url = '../core/models/modelproducts.php';  
+    var datatable_search = $( '.searchProductOnMC' ).val();
+    var datatable_action = 'refreshProductsTable';
+    
+    current_page = ( current_page != '' ) ? current_page : $( '[name="datatable_current_page"]' ).val();
+    current_page = ( current_page != undefined || current_page != '' ) ? current_page : 1;
+    limit = ( limit != undefined || limit != '' ) ? limit : 5; 
+
+    var send_dataOnPHP = {
+        'current_page': current_page, 
+        'limit': limit, 
+        'datatable_search': datatable_search, 
+        'action': datatable_action
+    };
+ 
+    refreshAnyOne_DataTable_onCurrentPage( ajax_url, send_dataOnPHP, function( data ){
+        console.log( 'Inside the success: refreshAnyOne_DataTable_onCurrentPage callback' );
+        $( '.datatable_change_table' ).html( data );
+        add_callback( data );
+    } ); 
+}
+
+function submissionValidateFields( obj_fields  ){
+    const errors = [];
+    let isValid = true;
+
+    Object.entries(obj_fields).forEach(([key, value]) => { 
+        if ( field_validation( `[name="${key}"]` ) === false ) {
+            isValid = false;
+            errors.push(key);
+        }
+    });
+
+    return { isValid, errors };
+}
+
+function datatable_applyButton_action( ajax_url, msg_selector, send_dataOnPHP_by_obj = {}, callback_by_obj = {} ){
+    var selected_val = $( '.oes_bulk_option :selected' ).attr( 'value' );
+    var checked_length = $('.datatable_checked_all:checked').length;
+    var message = '';
+        
+    if( selected_val == '' ){
+        message = $( msg_selector ).fadeIn().html( 'Please select an bulk option to apply.' );
+        show_message_popup(message, 5000, false);   
+        return  false;
+    }
+
+    if( checked_length < 1 ){
+        message = $( msg_selector ).fadeIn().html("Please checked at least 1 row of entries");
+        show_message_popup(message, 5000, false); 
+        return false;
+    } 
+
+    if( selected_val == 'delete' ){
+        if( confirm( 'Are you sure, You want to apply Delete action on checked entries ?' ) ){
+ 
+            const url = ajax_url; 
+            const callback = function( data ){      
+                try{
+                    callback_by_obj.delete( data );
+                } catch ( error ){
+                    console.log( 'Error: Fail the callback by object of delete check it, ' + error );
+                }
+            };   
+            oes_loader( '.oes_loader_center', true, '', '', '40px' );
+            ajax_form_submitor( url, callback, null, send_dataOnPHP_by_obj.delete );    
+             
+        }
+    } 
+}
+
+$( document ).on( 'submit', '.login_form', function(){
+    var validate_password = field_validation( '[name="LoginForm_password"]' );
+    var validate_name = field_validation( '[name="LoginForm_name"]' );
+    console.log( 'validate_name: ' + validate_name );
+    console.log( 'validate_password: ' + validate_password );
+    if( validate_name != true || validate_password != true ){
+        return false;
+    }
+});

@@ -14,7 +14,6 @@
     );
 
 
-
   if( ! defined( 'OESFRONT_CORE_PATH') ) { define( 'OESFRONT_CORE_PATH', 'core' ); }
   if( ! defined( 'OESFRONT_LIBRARY_PATH') ) { define( 'OESFRONT_LIBRARY_PATH', 'library' ); }
   if( ! defined( 'OESFRONT_JS_PATH') ) { define( 'OESFRONT_JS_PATH', 'js' ); }
@@ -33,14 +32,19 @@
     <title>GadgetGalaxy</title>
 
     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">  
-    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
-    
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+
+    <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script> 
+
     <?php 
     if( defined( 'OESFRONT_LIBRARY_PATH' ) && file_exists( OESFRONT_LIBRARY_PATH.'/oesautoload.php' ) ){
         require_once OESFRONT_LIBRARY_PATH.'/oesautoload.php';
+        load_front_cssJs();
     }
     ?>
     
@@ -86,14 +90,8 @@
         } else{
             echo 'Files Not loaded, Try again ! ';
         }
-
-        
         
     ?>
-    
-    
-    
-    
 </body>
 
 </html>

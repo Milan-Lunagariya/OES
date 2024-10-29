@@ -109,7 +109,7 @@ class DatabaseHandler {
      
             foreach ($data as $set_column => $set_value) { 
                 /* echo '<Br> Set value with column: '.  */ $stmt->bindValue( ":set_$set_column", $set_value ); 
-                /* echo " :set_$set_column , $set_value "; */
+                // echo "<br> :set_$set_column , $set_value ";
             }
 
             foreach ($where_clause as $where_column => $where_value) { 
@@ -117,7 +117,8 @@ class DatabaseHandler {
                 /* echo ":where_$where_column , $where_value"; */
             }  
             
-            return ($stmt->execute()) ? true : false;
+            $result = $stmt->execute(); 
+            return ($result) ? true : false;
     
         } catch (PDOException $exception) { 
             error_log("Update error: " . $exception->getMessage()); // Log the error
@@ -196,6 +197,7 @@ class DatabaseHandler {
             $WhereClause_data = array();
             $condition = '';
             $query = '';
+            $in_key = '';
              
             $where_clause = ( is_array( $where_clause ) ) ? $where_clause : array();
             foreach( $where_clause as $data ){
@@ -204,7 +206,15 @@ class DatabaseHandler {
                 $correctdata['operator'] = ( isset( $data['operator'] ) && ! empty( $data['operator'] ) ) ? $data['operator'] : '=';
                 $correctdata['conjunction'] = ( isset( $data['conjunction'] ) ) ? $data['conjunction'] : '';
 
-                $condition .= " {$correctdata['column']} {$correctdata['operator']} :{$correctdata['column']} {$correctdata['conjunction']} ";
+                if( strtoupper($correctdata['operator']) == 'IN' ){
+                    
+                    foreach( $data['value'] as $key => $value){
+                        $in_key .= !empty( $in_key ) ? ", :key_$key" : ":key_$key";
+                    } 
+                    $condition .= " {$correctdata['column']} IN ( {$in_key} )  {$correctdata['conjunction']}";
+                } else {
+                    $condition .= " {$correctdata['column']} {$correctdata['operator']} :{$correctdata['column']} {$correctdata['conjunction']} ";
+                }
             }
   
             $query .= "SELECT $select_column FROM $table"; 
@@ -213,7 +223,7 @@ class DatabaseHandler {
                 $query .= " ON $condition";                
             } elseif( count( $where_clause ) > 0 ) {
                 $query .= " WHERE $condition";
-            }
+            } 
 
             if( ! empty( $groupby ) ){
                 $query .= " GROUP BY $groupby";
@@ -228,18 +238,30 @@ class DatabaseHandler {
                 $query .= " OFFSET $offset";
             }
  
-           /*  echo  $query; */
+            /* echo '<br>-----------<br>';
+            echo  $query;
+            echo '<br>-----------<br>'; */
             $stmt = $this->conn->prepare($query);
-            
             foreach(  $where_clause as $setData ){
                 
                 if( !isset( $setData['column'] ) || !isset( $setData['value'] ) ){
                     break;
                 }
                 $setData['type'] = ( isset( $setData['type'] ) && !empty( $setData['type'] ) ) ? $setData['type'] : PDO::PARAM_STR;
-                $stmt->bindParam( ":{$setData['column']}", $setData['value'], $setData['type'] );
-                /* echo "<br><br>:{$setData['column']} = {$setData['value']},  {$setData['type']}<br><br>"; */
-            } 
+               
+                if( isset( $setData['operator'] ) && strtoupper( $setData['operator'] ) == 'IN' ){ 
+                    
+                    foreach( $setData['value'] as $key => $value ){ 
+                        $stmt->bindValue( ":key_$key", $value, $setData['type'] ); 
+                        /* echo "<br>:key_{$key} = {$value} " ; */
+                    } 
+
+                } else {
+                    $stmt->bindValue( ":{$setData['column']}", "{$setData['value']}", $setData['type'] ); 
+                    // echo "<br>:{$setData['column']} = {$setData['value']} <br>";
+                }
+                
+            }  
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
         } catch(PDOException $exception) {

@@ -31,8 +31,8 @@ if( isset( $_REQUEST['page'] ) && ! empty( $_REQUEST['page'] ) ) {
             }
         }
     }  
-} else {
-    
+}
+function load_front_cssJs(){ 
     global $oesfrontload_index_css, $oesfrontload_index_js;
     if( ! empty( $oesfrontload_index_css ) ){
         foreach( $oesfrontload_index_css as $filename => $loaded ){
@@ -58,8 +58,34 @@ if( isset( $_REQUEST['page'] ) && ! empty( $_REQUEST['page'] ) ) {
             }   
         }
     } 
+} 
 
-}
+function custom_load_front_cssJs( $load_css, $load_js ){  
+    if( ! empty( $load_css ) ){
+        foreach( $load_css as $filename => $loaded ){
+            if( $loaded == false || $loaded == 'false' ){
+                if( defined( 'OESCUSTOM_CSS_PATH' ) ){ 
+                    $extention = pathinfo( $filename, PATHINFO_EXTENSION );
+                    $id = str_replace( '.'.$extention, "-$extention", $filename );
+                    echo "<link rel='stylesheet' href='".OESCUSTOM_CSS_PATH.'/'.$filename."' >";
+                    $load_css[ $filename ] = true;
+                }
+            }   
+        }
+    } 
+    if( ! empty( $load_js ) ){
+        foreach( $load_js as $filename => $loaded ){
+             if( $loaded == false || $loaded == 'false' ){
+                if( defined( 'OESCUSTOM_JS_PATH' ) ){
+                    $extention = pathinfo( $filename, PATHINFO_EXTENSION );
+                    $id = str_replace( '.'.$extention, "-$extention", $filename );
+                    echo "<script src='".OESCUSTOM_JS_PATH.'/'.$filename."' ></script>";
+                    $load_js[ $filename ] = true;
+                }
+            }   
+        }
+    } 
+} 
 
 
 ?>

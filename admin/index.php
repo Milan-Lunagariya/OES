@@ -1,5 +1,13 @@
 <?php
 
+if( session_status() == PHP_SESSION_NONE ){
+    session_start();
+}
+/* unset( $_SESSION['user_id'] ); */
+if( ! isset( $_SESSION['user_id'] ) ){
+    header( 'Location: adminlogin.php' );
+}
+
 if (! defined('OESADMIN_CORE_PATH')) {
     define('OESADMIN_CORE_PATH', '../core');
 }
@@ -1009,7 +1017,9 @@ $oesadmin_load_js = array(
                         $commonhelper->oes_required_file(OESADMIN_CORE_PATH . '/models/modelcategory.php');
                         $commonhelper->oes_required_file(OESADMIN_CORE_PATH . '/view/adminview/categories.php');
                         $commonhelper->oes_required_file(OESADMIN_CORE_PATH . '/view/adminview/products.php');
+                        $commonhelper->oes_required_file(OESADMIN_CORE_PATH . '/view/adminview/products.php');
                     }
+                    /* require_once 'adminlogin.php'; */
                 }
 
                 $commonhelper        = (class_exists('commonhelper')) ? new commonhelper() : false;
@@ -1037,6 +1047,10 @@ $oesadmin_load_js = array(
                     } elseif( $_REQUEST['page'] == 'add_products' ){
                         
                         echo (isset($products) && !empty($products)) ? $products->formview("Add Product") : "Error: ". __FILE__ . ':' . __LINE__;
+
+                    } elseif( $_REQUEST['page'] == 'manage_products' ){
+                        
+                        echo (isset($products) && !empty($products)) ? $products->manageproducts() : "Error: ". __FILE__ . ':' . __LINE__;
 
                     }
 

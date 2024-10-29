@@ -93,7 +93,9 @@ input[type=file]{
     background-color: var(--gray);
     color: var(--light);
 }
-.editCategory_popup_container {
+.editCategory_popup_container,
+.editProduct_popup_container,
+.general_popup_container {
     background: silver;
     padding: 1em;
     /* border: 1px solid black; */
@@ -105,6 +107,8 @@ input[type=file]{
     left: 50%;
     transform: translate(-50%, -50%);
     display: none;
+    max-height: 80%;
+    overflow: auto;
 }
 .close_editCategory { 
     font-size: 20px;
@@ -117,4 +121,18 @@ input[type=file]{
     border: 0px solid var(--black);
     color: var(--white);
     display: none;
+}
+.close_editProduct_container{
+    width: fit-content;
+    float: right;
+    position: sticky;
+    top: 0px;
+}
+.close_editProduct{
+    background-color: lightslategrey;
+    float: right;
+    border: 1px solid black;
+    color: var(--light);
+    border-radius: 3px;
+    padding: 0px 10px;
 }

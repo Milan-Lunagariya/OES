@@ -172,9 +172,7 @@ class categories
                 $table_data[] = array( $select_current, $categoryid, $images, $name, $parent, $createdat, $updatedat, $action );
             } 
             $td_data = $table_data;
-            
-            $current_page = $current_page; 
-            
+                    
             $printTable .= ( isset( $current_page ) && $current_page > 0) ? "<input type='hidden' class='managecategory_currentpage' value='{$current_page}' >" : '';
             if ( isset($datatable) && method_exists( 'datatable', 'dataTableView' ) ){
                 $printTable .= $datatable->dataTableView( $th_data, $td_data, $classes, $current_page, $total_records, $limit );

@@ -43,6 +43,7 @@ class formhelper
             'type'         =>  "text",
             'label'        =>  "Product Name",
             'name'         =>  "productname",
+            'id'         =>  "productname",
             'class'        =>  "form-control validate_field",
             'placeholder'  =>  "Enter Product Name",
             'title'        =>  "Enter Product Name",
@@ -58,6 +59,7 @@ class formhelper
             'type'         =>  "text",
             'label'        =>  "Category Name",
             'name'         =>  "categoryname",
+            'id'         =>  "categoryname",
             'class'        =>  "form-control validate_field",
             'placeholder'  =>  "Category Name",
             'title'        =>  "Enter Category Name",
@@ -74,6 +76,7 @@ class formhelper
             'class'        =>  "btn btn-info",
             'value'        =>  $value,
             'name'           =>  "category_form_submit",
+            'id'           =>  "category_form_submit",
         );
         return $default;
     } 
@@ -86,6 +89,7 @@ class formhelper
             'class'        =>  "product_submit_button btn btn-info",
             'value'        =>  $value,
             'name'           =>  "product_form_submit",
+            'id'           =>  "product_form_submit",
         );
         return $default;
     } 
@@ -96,6 +100,7 @@ class formhelper
             'type'         =>  "file",
             'label'        =>  "Category image",
             'name'         =>  "categoryimage",
+            'id'         =>  "categoryimage",
             'class'        =>  "validate_field", 
             'accept'       =>  "image/*", // Add setting Dynamic if enable then add  
             'title'        =>  "Select Category Image",
@@ -112,10 +117,10 @@ class formhelper
             'label'        =>  "Product image",
             'name'         =>  "productimages[]",
             'class'        =>  "validate_field", 
+            'id'        =>  "productimages", 
             'accept'       =>  "image/*", // Add setting Dynamic if enable then add  
             'title'        =>  "Select Product Image",
-            'multiple'     =>  true,
-            'value'        =>  $value,
+            'multiple'     =>  true
         );
 
         return $default;
@@ -163,7 +168,8 @@ class formhelper
     function product_description_attr( $value = '' ){
         $description_attr = array(
             'type' => 'textarea',
-            'name' => 'product_description',
+            'name' => 'productdescription',
+            'id' => 'productdescription',
             'label' => 'Prodcut Description',
             'title' => 'Write Product Description',
             'class' => 'form-control',
@@ -175,11 +181,13 @@ class formhelper
     function product_price_attr( $value = '' ){
         $product_price_attr = array(
             'type' => 'number',
-            'name' => 'product_price',
+            'name' => 'productprice',
+            'id' => 'productprice',
             'label' => 'Prodcut Price',
             'title' => 'Enter product Price',
-            'class' => 'form-control',
+            'class' => 'form-control validate_field',
             'min' => '0',
+            'placeholder' => 'Enter product price',
             'max' => '99999',
             'value' => $value, 
         );
@@ -187,19 +195,76 @@ class formhelper
     }
 
     function product_stock_attr( $value = '' ){
-        $product_price_attr = array(
+        $product_stock_attr = array(
             'type' => 'number',
-            'name' => 'product_stock',
+            'name' => 'productstock',
+            'id' => 'productstock',
             'label' => 'Prodcut Stock',
             'title' => 'Enter product stock',
-            'class' => 'form-control',
+            'class' => 'form-control validate_field',
+            'placeholder' => 'Enter product stock',
             'min' => '0',
             'max' => '99999',
             'value' => $value, 
         );
-        return $product_price_attr;
+        return $product_stock_attr;
     }
 
+    function product_categorty_attr(){
+ 
+        $product_categorty_attr = array(
+            'type' => 'button',
+            'name' => 'categoryid',
+            'id' => 'categoryid',
+            'label' => 'Product parent category',
+            'title' => 'Please click and checked categories for product',
+            'class' => 'form-control popup_showCategory',
+            'value' => 'Select category for product'
+        );
+        return $product_categorty_attr;
+    }
+
+    function adminLoginForm_nameField_attr(){
+        $name = array( 
+            'label' => 'Name',
+            'type' => 'text',
+            'name' => 'LoginForm_name',
+            'class' => 'form-control adminloginform_name_field loginpage_field validate_field',
+            'id' => 'LoginForm_name',
+        );
+        return $name;
+    }
+    function adminLoginForm_passwordField_attr(){
+        $name = array( 
+            'label' => 'Password',
+            'type' => 'password',
+            'name' => 'LoginForm_password',
+            'class' => 'form-control adminloginform_password_field loginpage_field validate_field',
+            'id' => 'LoginForm_password',
+        );
+        return $name;
+    }
+    function adminLoginForm_submitField_attr(){
+        $name = array( 
+            'type' => 'submit',
+            'value' => 'Login',
+            'name' => 'LoginForm_sbmit',
+            'class' => 'form-control adminloginform_submit_field login_button loginpage_field validate_field',
+            'id' => 'LoginForm_submit',
+        );
+        return $name;
+    }
+    function adminLoginForm_rememberMeField_attr(){
+        $name = array( 
+            'type' => 'checkbox',
+            'label' => 'Remember Me',
+            'value' => '1',
+            'name' => 'login_rememberMe',
+            'class' => 'form-control rememberme_field',
+            'id' => 'login_rememberMe',
+        );
+        return $name;
+    }
 }
 
 $formhelper = new formhelper()

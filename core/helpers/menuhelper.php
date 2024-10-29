@@ -20,10 +20,10 @@
 
     function menu_header_help(){
         $menu_header = array(
-            'home'          => '<a href="#"> Home </a>',
-            'about_us'      => '<a href="#"> About Us </a>',
-            'contact_us'    => '<a href="#"> Contact us </a>',
-            'settings'      => '<a href="#"> Settings </a>',
+            'home'          => '<a href="index.php"> Home </a>',
+            'about_us'      => '<a href="index.php?page=aboutus"> About Us </a>',
+            'categories' => '<a href="index.php?page=categories"> Categories </a>',
+            'all_products' => '<a href="index.php?page=all_products"> Products </a>'
         );
         return $menu_header;
     }

@@ -14,23 +14,30 @@ class datatable
     function __construct()
     {
     }
-    function dataTableView( $th = array(), $td = array(),  $classes = array(), $current_page = 1, $total_records = '', $limit = '' )
+    function dataTableView( $th = array(), $td = array(),  $classes = array(), $current_page = 1, $total_records = '', $limit = '', $refreshTable_param = array() )
     {
         global $databasehandler, $commonhelper; 
         $content =  '';
         $class_td_checked = '';
         $classes['td'] = isset( $classes['td'] ) ? $classes['td'] : '';
         $classes['tr'] = isset( $classes['tr'] ) ? $classes['tr'] : '';
+        $classes['th'] = isset( $classes['th'] ) ? $classes['th'] : '';
         $td[0][1] = isset( $td[0][1] ) ? $td[0][1] : '';
+ 
+        $datatable_current_page = isset( $refreshTable_param['datatable_current_page'] ) ? $refreshTable_param['datatable_current_page'] : 1;
         
-        $content = "<table border='2' align='center'>
+        $content .= "<div class='datatabel_hidden_data' style='display: none !important; visibility: hidden !important;'> 
+            <input type='hidden'  name='datatable_current_page' value='{$datatable_current_page}' >
+        </div>";
+
+        $content .= "<table class='' border='2' align='center'>
         <tr>"; 
         
                 $th = isset( $th['th'] ) ? $th['th'] : array();
                 if( count($th) > 0 ){
                     $i = 0;
                     foreach( $th as $th_value => $width ){
-                        $content .= "<th class='oes_th datatable_th_$i' align='center' width='{$width}' >$th_value</th>";
+                        $content .= "<th class='oes_th datatable_th_$i {$classes['th']}' align='center' width='{$width}' >$th_value</th>";
                         $i++;
                     }
                 }

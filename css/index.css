@@ -260,17 +260,131 @@ i.fa-solid.fa-cart-shopping.button.cart_icon {
 }
 .homeMainPart {
     float: left;
-    width: 100vw;
-}
-.homeMainLeft, .homeMainRight{
-    float: left;
-    width: 10vw;
-    height: 100vh;
-    background-color: var(--background);
+    width: 100%;
 }
 .homeMainCenterSection{
     float: left;
-    width: 80vw;
+    width: 100%;
     background-color: var(--background);
+} 
+.oes_aboutusFront {
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+    text-align: center;
+    padding: 50px;
+    margin: 0;
 }
- 
+.oes_aboutusFront .container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+.oes_aboutusFront h1 {
+    font-size: 50px;
+    margin: 0;
+    color: #007bff;
+}
+.oes_aboutusFront label {
+    font-size: 18px;
+    margin-top: 20px;
+    display: block;
+}
+.oes_aboutusFront select {
+    font-size: 16px;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+.oes_aboutusFront p {
+    font-size: 20px;
+    margin: 20px 0;
+}
+.oesAllCategoriesFront {
+    padding: 50px;
+    background-color: #f8f9fa;
+}
+.oesAllCategoriesFront h1 {
+    color: #007bff;
+    margin-bottom: 30px;
+}
+.oesAllCategoriesFront .card {
+    margin: 15px 0;
+}
+.category-image {
+    height: 200px; /* Set a consistent height */
+    width: 100%; /* Set a consistent width */
+    object-fit: contain; /* Maintain aspect ratio without cropping */
+}
+
+/* Card shadow effect on hover */
+.transition-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.transition-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+/* Short description styling */
+.short-description p {
+    margin: 0; /* Remove margin for consistent height */
+}
+
+/* Button styling */
+.btn-primary {
+    background-color: #007bff;
+    border-color: #007bff;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+    border-color: #0056b3;
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .short-description {
+        height: 50px; /* Adjust for smaller screens */
+    }
+}
+
+.oesProductDetail .thumbnail-image {
+    width: 80px; /* Thumbnail width */
+    height: auto; /* Maintain aspect ratio */
+    margin-right: 10px;
+    cursor: pointer;
+    border: 2px solid transparent; /* Default border */
+    transition: border-color 0.3s; /* Transition for hover effect */
+}
+
+.oesProductDetail .thumbnail-image:hover {
+    border-color: #007bff; /* Highlight border color on hover */
+}
+
+.oesProductDetail .btn {
+    margin-top: 10px; /* Space between buttons */
+    width: 100%;
+    max-width: 200px;
+}
+
+.oesProductDetail .btn-success {
+    margin-left: 10px; /* Space between Add to Cart and Buy Now buttons */
+}
+
+.product_cart_buy_ButtonContainer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+.showall_productImageContainer{
+    width: 100%;
+    overflow: auto;
+}

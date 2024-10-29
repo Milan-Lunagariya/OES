@@ -27,7 +27,9 @@
     --bg_red: #ff767624;
     --bg_silver: #c0c0c04d;
 }
- 
+*{
+    box-sizing: border-box;
+}
 .datatable {
     background: var(--background);
     width: fit-content;
@@ -138,11 +140,11 @@
     border: 1px solid var(--dark);
     background-color: var(--white);
 }
-button.searchCategoriesButton {
+button.searchCategoriesButton, .searchProductButton {
     border-left: none !important;
     height: 33px;
 } 
-button.searchCategoriesButton svg{
+button.searchCategoriesButton, .searchProductButton svg{
     height: 25px !important;
     width: 25px !important;
 }
@@ -157,7 +159,8 @@ button.searchCategoriesButton svg{
 .datatable_pagination{
     float: right;
 }
-.category_record_showLimit{
+.category_record_showLimit,
+.product_record_showLimit{
     cursor: pointer;
 }
 .oes_loader_center {
@@ -191,7 +194,8 @@ button.searchCategoriesButton svg{
     margin: 10px;
     border: none;
 } 
-select.datatable_field.category_record_showLimit {
+select.datatable_field.category_record_showLimit,
+select.datatable_field.product_record_showLimit {
     background: var(--white);
     border: 1px solid var(--dark);
     border-radius: 3px;
@@ -226,4 +230,119 @@ select.datatable_field.category_record_showLimit {
 }
 .apply_button {
     background-color: var(--bg_silver);
+}
+.oes_closeButton{
+    width: fit-content;
+    background-color: lightslategrey;
+    float: right;
+    border: 1px solid black;
+    color: var(--light);
+    border-radius: 3px;
+    padding: 0px 10px;
+}
+
+.oes_closeButton_container{
+    width: 100%;
+    float: right;
+}
+.productCategory_ul li, 
+.productCategory_ul{
+    list-style: none;
+    font-family: monospace;
+}
+.productCategory_ul input{ 
+    margin: 0px 8px;
+    cursor: pointer;
+}
+.productCategory_ul label{
+    cursor: pointer;
+} 
+productProduct_popup
+.productCategory_popup{
+    min-width: 30%;
+    max-width: 50%;
+    height: 70%;
+    min-width: 60%;
+    overflow: auto;
+    border: 1px solid lightseagreen;
+    box-shadow: 0px 0px 5px white inset;
+    border-radius: 3px;
+}
+.adminloginform_title{
+    text-align: center;
+}
+.login_page_container h1{
+    color: var(--light);
+    width: fit-content;
+    margin: auto;
+}
+.login_bg_container img{
+    width: 100%;
+    position: fixed;
+    height: 100vh;
+    filter: blur(6px);
+    z-index: -1;
+}
+.login_page_container .form_container {
+    padding: 10px;
+    color: var(--black);
+    /* box-shadow: 0px 0px 4px inset white; */
+    width: fit-content;
+    border: 0px;
+    margin: 10px auto;
+    background: none;
+}
+.login_page_form_conatiner{
+    box-shadow: 0px 0px 5px inset white;
+    width: 90%;
+    position: fixed;
+    max-width: 500px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 1em;
+}
+.login_page_form_conatiner .loginpage_field{
+    width: 100%;
+    background: transparent;
+    padding: 10px;
+    box-shadow: 0px 0px 5px inset black;
+    border: 1px inset silver; 
+    color: lightgray;
+    font-family: monospace;
+}
+.login_page_form_conatiner label{
+    color: white;
+    font-family: system-ui;
+}
+.login_page_form_conatiner .login_button{
+    background-color: #007bff;
+}
+.login_page_form_conatiner .login_button {
+    background-color: #007bff;
+    border: 2px inset white;
+    font-family: monospace;
+    font-weight: bolder;
+    font-size: larger;
+    margin-top: 20px;
+    cursor: pointer;
+}
+.login_page_form_conatiner .rememberme_field {
+    outline: 1px solid lightgray;
+    padding: 10px;
+    transform: scale(1.3);
+    outline-style: inset;
+    margin: 0px 5px;
+}
+.login_page_form_conatiner .formerror{
+    color: #ff9ca6;
+}
+#edit_productform .productCategory_popup{
+    width: 100% !important;
+}
+::-webkit-scrollbar {
+    max-width: 10px;
+}
+::-webkit-scrollbar-thumb { 
+    background-image: linear-gradient( var(--gray), var(--bg_silver), var(--secondary), var(--gray) ); 
 }

@@ -20,44 +20,87 @@ class products
     public function oes_test(...$var){
         echo 'You are entred the products class of the products.php file.';
     }
-     
+    
+    function displayCategories($editProductCategories = array(), $parentId = 0, &$visited = array(), &$content = '') {
+        global $databasehandler;
+        
+        $where = ($parentId === 0) ? array() : array( array( 'column' => 'parentid', 'value' => $parentId, 'operator' => '=', 'type' => PDO::PARAM_INT ) );
+        $categories = $databasehandler->select('categories', '*', $where);
+    
+        if ( is_array( $categories ) && count( $categories ) > 0 ) {
+            $content .= '<ul class="productCategory_ul">';
+            foreach ($categories as $category) {
+
+                $category['categoryid'] = isset( $category['categoryid'] ) ? $category['categoryid'] : 0;
+                $category['name'] = isset( $category['name'] ) ? $category['name'] : 0;
+                 
+                if (!in_array($category['categoryid'], $visited)) {                     
+                    $visited[] = $category['categoryid'];
+                    $content .= '<li>';
+                    $checked_category = '';
+                    if( in_array( $category['categoryid'], $editProductCategories ) ){
+                        $checked_category = 'checked="checked"';
+                    }
+                    $content .= '<input name="productCategoryids[]" type="checkbox" '.$checked_category.' class="categoryProduct_checkbox" id="productCategories_checkbox_'.$category['categoryid'].'" value="'.$category['categoryid'].'" >'; 
+                    $content .= '<label for="productCategories_checkbox_'.$category['categoryid'].'">' . $category['name'] . '</label>';
+                    
+                    $this->displayCategories($editProductCategories, $category['categoryid'], $visited, $content);
+                    $content .= '</li>';
+                }
+            }
+            $content .= '</ul>';
+        }
+        return $content;
+    }
+    
     public function formview( $title = "Add Product", $field_extraAttr = array() ){
  
-        global $formcreator, $formhelper;
+        global $formcreator, $formhelper, $databasehandler;
         $formid = false;
+        $productdescription = '';
+        $productstock = '';
+        $productprice = '';
         $productImage_value =  false;
         $productname_value = false;
-        $submitButtton_value = false;
+        $submitButtton_value = 'Add Product';
         $new_create_field = array();
         $content = '<h1 class="title"> '.$title.' </h1>';
+        $editProductCategories = array();
 
-        $content .= '<div class="category_form_message message_popup"> Message </div>';
+        $content .= '<div class="product_form_message message_popup"> Message </div>'; 
 
+        /* echo '<pre> All Categories:';
+            print_r($allCategoies[0]['name']);
+        echo '</pre>'; */
+         
         if( method_exists( 'formcreator', 'field_create' ) && is_object( $formcreator ) ) {
  
-            /* if( count( $field_extraAttr ) > 0 ) {
+            if( count( $field_extraAttr ) > 0 ) {
                 foreach( $field_extraAttr as $attr ){
 
                     $attr['name'] = isset($attr['name']) ? $attr['name'] : false;
                     $attr['value'] = isset($attr['value']) ? $attr['value'] : false;
                     $attr['action'] = isset($attr['action']) ? $attr['action'] : false; 
 
-                    if( $attr['name'] == 'category_formid' ){
+                    if( $attr['name'] == 'product_formid' ){
                         $formid = isset( $attr['id'] ) ? $attr['id'] : '';
-                        if( $formid == 'edit_categoryform' ){
+                        if( $formid == 'edit_productform' ){
                             global $products;
-                            $products->is_editCategoryForm = true;
+                            $products->is_editProductForm = true; 
+                            $submitButtton_value = 'Edit Product';
                         }
                     } 
                     
-                    if( $attr['name'] == 'categoryimage' ){
-                        $categoryImage_value = $attr['value'];
-                    } else if ( $attr['name'] == 'categoryname' ){
-                        $categoryname_value = $attr['value'];
-                    } else if ( $attr['name'] == 'parentcategory' ){
-                        $parentcategory_value = $attr['value'];
-                    } else if ( $attr['name'] == 'submitButtton' ){
-                        $submitButtton_value = $attr['value'];
+                    if ( $attr['name'] == 'productname' ){
+                        $productname_value = $attr['value'];
+                    } else if ( $attr['name'] == 'productdescription' ){
+                        $productdescription = $attr['value'];
+                    } else if ( $attr['name'] == 'productstock' ){
+                        $productstock = $attr['value'];
+                    } else if ( $attr['name'] == 'productprice' ){
+                        $productprice = $attr['value'];
+                    } else if ( $attr['name'] == 'productcategoryids' ){
+                        $editProductCategories = $attr['value'];
                     } else if( $attr['action'] == 'create_field' ){
                         $field_attr = array();
                         foreach( $attr as $field_name => $field_value ){
@@ -69,29 +112,39 @@ class products
                         $new_create_field[]  = $formcreator->field_create( $field_attr );        
                     } 
                 }
-            } */
+            }
              
-            $fields[] = $formcreator->field_create( $formhelper->product_image_attr( $productImage_value ) );  
-            $fields[] = $formcreator->field_create( $formhelper->product_name_attr( $productname_value ) );   
-            $fields[] = $formcreator->field_create( $formhelper->product_description_attr( $productname_value ) );   
-            $fields[] = $formcreator->field_create( $formhelper->product_price_attr( $productname_value ) );   
-            $fields[] = $formcreator->field_create( $formhelper->product_stock_attr( $productname_value ) );   
+            $fields[] = $formcreator->field_create( $formhelper->product_image_attr( $productImage_value ) );
+            $fields[] = $formcreator->field_create( $formhelper->product_name_attr( $productname_value ) );
+            $fields[] = $formcreator->field_create( $formhelper->product_description_attr( $productdescription ) );
+            $fields[] = $formcreator->field_create( $formhelper->product_price_attr( $productprice ) );
+            $fields[] = $formcreator->field_create( $formhelper->product_stock_attr( $productstock ) );
+            $fields[] = $formcreator->field_create( $formhelper->product_categorty_attr(  ) );
+            
+            $categories_popup = '<div class="oes_loader_center"> Loading . . . </div>
+                    <div class="general_popup_container productCategory_popup">
+                        <div class="oes_closeButton_container">
+                            <button type="button" class="oes_closeButton" > Close </button>
+                            <div class="productCategories_container">'.$this->displayCategories( $editProductCategories ).'</div>
+                        </div>
+                    </div>';
+            $fields[] = $categories_popup;  
             $fields[] = $formcreator->field_create( $formhelper->product_submit_attr( $submitButtton_value ) );  
             
             foreach( $new_create_field as $new_field ){                        
                 $fields[] = $new_field; 
-            } 
+            }
             
-            $category_form = $formcreator->form_create( $fields, $formhelper->product_form_attr( $formid ) );    
-            $content .= $category_form;  
-        } 
+            $product_form = $formcreator->form_create( $fields, $formhelper->product_form_attr( $formid ) );
+            $content .= $product_form;  
+        }
         return $content;
     }
 
-    public function categoriesTableData( $current_page = 1, $category_record_showLimit = 5, $search = ''){
+    public function productTableData( $current_page = 1, $product_record_showLimit = 5, $search = ''){
         
         global $databasehandler, $datatable, $categories, $oescommonsvg;
-        $categoryid = 0;
+        $productid = 0;
         $table_data = array();
         $printTable = '';
         $classes = array();
@@ -103,86 +156,88 @@ class products
         $datatable = ( class_exists( 'datatable' ) ) ? new datatable() : false;
         
         $current_page = ( is_numeric( $current_page ) && $current_page > 0 ) ? $current_page : 1;
-        $limit = ( $category_record_showLimit != '' ) ? intval( $category_record_showLimit ) : 5;
+        $limit = ( $product_record_showLimit != '' ) ? intval( $product_record_showLimit ) : 5;
         $offset = ( $current_page - 1 ) * $limit;  
 
+        $search_condition = array();
         if( ! empty( $search ) ){
             $search = trim( $search );
             $search_condition = array( array( 'column' => 'name', 'operator' => 'LIKE', 'value' => "%{$search}%" ) );
             echo "<p >Search: <i>$search</i></p> "; 
-            $data = $databasehandler->select( 'categories', '*, COUNT(categoryid) OVER() AS total_record', $search_condition, '', 'categoryid DESC', $limit, $offset); 
-        } else { 
-            $data = $databasehandler->select( 'categories', '*, COUNT(categoryid) OVER() AS total_record', array(), '', 'categoryid DESC', $limit, $offset); 
-        }  
+            /* $data = $databasehandler->select( 'products', '*, COUNT(productid) OVER() AS total_record', $search_condition, '', 'productid DESC', $limit, $offset);  */
+        }
+        echo "offset : $offset";
+        $data = $databasehandler->select( 'products', '*, COUNT(productid) OVER() AS total_record', $search_condition, '', 'productid DESC', $limit, $offset); 
         $total_records = isset( $data[0]['total_record'] ) ? $data[0]['total_record'] : 100; 
         /* $total_records = isset( $total_records[0]['total_record'] ) ? $total_records[0]['total_record'] : 0; */
 
         $th_data = array ( 'th' => array(
                 '<input type="checkbox" class="datatable_checked_all" name="" value="1">' => '50px',
-                'Id' => '50px', 
-                'Image' => '200px',
-                'Category Name' => '200px',
-                'Parent Categorty'=> '200px',
-                'Created at' => '200px',
-                'Updated at' => '200px',
-                'Action' => '150px' 
+                'Id' => '50px',  
+                'Name'=> '200px', 
+                'Price'=> '100px',
+                'Stock'=> '100px',
+                'Created at' => '150px',
+                'Updated at' => '150px',
+                'Actions' => '150px' 
             )
         ); 
 
-        if( is_array( $data ) && count($data) > 0 ){
+        /* if( is_array( $data ) && count($data) > 0 ){ */
 
         
             foreach( $data as $key => $value ){  
                 $action = ''; 
-                $categoryid = ( isset($value['categoryid']) && !empty($value['categoryid']) ) ? $value['categoryid']: '-'; 
-
-                if( in_array($value['parentid'],['0', 0]) ) {
-                    $parent = "Parent (0)";  
-                } else{
-                    $select = $databasehandler->select( 'categories', '*', array( array( 'column' => 'categoryid', 'value' => $value['parentid'], 'type' => PDO::PARAM_STR ) ) );
-                    $parent = '';
-                    foreach( $select as $k => $v ){
-                        $parent = isset($v['name']) ? $v['name']."(".$v['categoryid'].')' : ''; 
-                    }
-                } 
-
-                $categoryimages = ( isset( $value['images'] ) && $value['images'] != '' ) ? json_decode( $value['images'], true ) : array();
-                $categoryimage = ( is_array($categoryimages) && count($categoryimages) > 0 ) ? trim( $categoryimages[0] ) : '';
-                $image_path = ( $categoryimage != '' ) ? "../media/categories/".$categoryimage :  '';
-
-                $select_current = "<input type='checkbox' class='datatable_checked_all datatable_checked_td_{$categoryid}_0' name='' id='{$categoryid}'  value=''>";
+                $productid = ( isset($value['productid']) && !empty($value['productid']) ) ? $value['productid']: '-'; 
+/* 
+                $productimages = ( isset( $value['images'] ) && $value['images'] != '' ) ? json_decode( $value['images'], true ) : array();
+                $productimages = ( is_array($productimages) && count($productimages) > 0 ) ? ( $productimages[0] ) : '';
+                $image_path = ( $productimages != '' ) ? "../media/categories/".$productimages :  '';
+ */
+                $select_current = "<input type='checkbox' class='datatable_checked_all datatable_checked_td_{$productid}_0' name='' id='{$productid}'  value=''>";
 
                 $images = ( ! empty($image_path) ) ? "<div class='image_parent'><a href='$image_path' target='_blank' ><img src='$image_path' alt='Not Found' width='100'></a></div>": '-'; 
-                $name = ( isset($value['name']) && !empty($value['name']) ) ? $value['name']: '-'; 
-                $parent = ( isset($parent) && !empty($parent) ) ? $parent : 'Parent (0)'; 
+                $images = ( isset($value['images']) && !empty($value['images']) ) ? $value['images']: '-';  
+                $name = ( isset($value['name']) && !empty($value['name']) ) ? $value['name']: '-';  
+                $description = ( isset($value['description']) && !empty($value['description']) ) ? $value['description']: '-';  
+                $price = ( isset($value['price']) && !empty($value['price']) ) ? $value['price']: '-';  
+                $stock = ( isset($value['stock']) && !empty($value['stock']) ) ? $value['stock']: '-';  
                 $createdat  = ( isset($value['createdat']) && !empty($value['createdat']) ) ? $value['createdat']: '-'; 
                 $updatedat = ( isset($value['updatedat']) && !empty($value['updatedat']) ) ? $value['updatedat']: '-';
+
                 $edit_icon = isset( $oescommonsvg['edit_icon'] ) ? $oescommonsvg['edit_icon'] : 'Edit';
                 $delete_icon = isset( $oescommonsvg['delete_icon'] ) ? $oescommonsvg['delete_icon'] : 'delete';
-                $action .= "<button id='$categoryid' class='edit data_modify_button edit_category_$categoryid'>$edit_icon</button>";
-                $action .= "<button id='$categoryid' class='remove data_modify_button remove_category_$categoryid' >$delete_icon</button>";
-
-                $table_data[] = array( $select_current, $categoryid, $images, $name, $parent, $createdat, $updatedat, $action );
+                $action .= "<button id='$productid' class='edit data_modify_button edit_product_$productid'>$edit_icon</button>";
+                $action .= "<button id='$productid' class='remove data_modify_button remove_product_$productid' >$delete_icon</button>";
+                
+                $table_data[] = array( $select_current, $productid, $name, $price, $stock, $createdat, $updatedat, $action );
             } 
-            $td_data = $table_data;
+            $td_data = $table_data; 
             
-            $current_page = $current_page; 
-            
-            $printTable .= ( isset( $current_page ) && $current_page > 0) ? "<input type='hidden' class='managecategory_currentpage' value='{$current_page}' >" : '';
+            $refreshTable_param = array(
+                'datatable_page_name' => 'manageProducts',
+                'datatable_current_page' => $current_page,
+                'datatable_limit' => $limit,
+                'datatable_search' => $search,
+                'datatable_action' => 'refreshProductsTable'
+            );
+
+            $printTable .= ( isset( $current_page ) && $current_page > 0) ? "<input type='hidden' class='manageproduct_currentpage' value='{$current_page}' >" : '';
             if ( isset($datatable) && method_exists( 'datatable', 'dataTableView' ) ){
-                $printTable .= $datatable->dataTableView( $th_data, $td_data, $classes, $current_page, $total_records, $limit );
+
+                $printTable .= $datatable->dataTableView( $th_data, $td_data, $classes, $current_page, $total_records, $limit, $refreshTable_param );
             } else{
                 $printTable .= '$datatable is not object, Please try to get object $datatable... '.__FILE__.' > '. __LINE__;
             }   
-        } else{
+      /*   } else{
             $printTable .= '<hr>'; 
             $printTable .= '<div align="center" style="color: red; font-size: 1.5em;"> Records not found! </div>'; 
             $printTable .= '<hr>'; 
-        }   
+        }    */
         return $printTable;
     }
 
-    public function managecategories(){
+    public function manageproducts(){
 
         global $datatable, $oescommonsvg;
         $viewEntireTable = ''; 
@@ -207,13 +262,14 @@ class products
 
                         }
                     
+                $viewEntireTable .= "<input type='hidden'  name='datatable_page' value='manageProduct' >";
                 $viewEntireTable .= "
                     </select>
                     <button class='apply_button oes_field'> Apply </button>
                 </div>";
                 $viewEntireTable .= '<div class="showRecordsSelectPicker">
                             Show ';
-                            $viewEntireTable .= '<select class="datatable_field category_record_showLimit" name="" id="" value="5" >';
+                            $viewEntireTable .= '<select class="datatable_field product_record_showLimit" name="product_record_showLimit" id="" value="5" >';
                                 foreach( $showrecord_limit_array as $limit ){
                                     $viewEntireTable .= "<option class='recordShow_option_$limit' value='{$limit}'>$limit</option>";
                                 }
@@ -223,22 +279,24 @@ class products
                             $viewEntireTable .= ' records
                         </div>
                         <div class="searchRecord">
-                            <input type="search" name="" class="datatable_field searchCategoriesOnMC" placeholder="Search category name" id=""><button class="datatable_field searchCategoriesButton"> '.$search_icon.' </button>
+                            <input type="search" name="" class="datatable_field searchProductOnMC" placeholder="Search product name" id=""><button class="datatable_field searchProductButton"> '.$search_icon.' </button>
                         </div>
                         <button class="showHideColumn datatable_field"> Show/Hide Column </button>
                     </div>';
                     
-                    $viewEntireTable .= '<div class="categoriesDataTableOnMC">';
-                    $viewEntireTable .= (method_exists( $this, 'categoriesTableData' )) ? $this->categoriesTableData(): 'Not find the categories table data...';
+                    $viewEntireTable .= '<div class="productDataTableOnMC datatable_change_table">';
+                    $viewEntireTable .= (method_exists( $this, 'productTableData' )) ? $this->productTableData(): 'Not find the product table data...';
                     $viewEntireTable .= '</div>';
                     
                     $viewEntireTable .= '<div class="oes_loader_center"> Loading . . . </div>
-                    <div class="editCategory_popup_container">
-                        <button class="close_editCategory"> X </button>
-                    <div class="manageCategories_form_popup"> Loading . . . </div>';
+                    <div class="editProduct_popup_container">
+                        <div class="close_editProduct_container">
+                            <button class="close_editProduct" > X </button>
+                        </div>
+                        <div class="manageProduct_form_popup"> Loading . . . </div>';
                         
             $viewEntireTable .= ' </div>';
-            $viewEntireTable .= '<div class="manageCategories_message message_popup"> Message </div> ';  
+            $viewEntireTable .= '<div class="manageproduct_message message_popup"> Message </div> ';  
         $viewEntireTable .= '<div>';
         echo $viewEntireTable; 
     }

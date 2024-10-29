@@ -137,7 +137,7 @@ if ( $action != false ) {
             $db_data_for_parentid = $DatabaseHandler->select( "categories", 'categoryid', array( array( 'column'=> 'categoryid', 'value' => $parentid, 'type' => PDO::PARAM_INT ) ) ); 
 
             $images = isset($db_data[0]['images'] ) ? json_decode($db_data[0]['images'], true) : array();
-            $categoryimage = ( is_array($images) && ($images) > 0 ) ? trim( $images[0] ) : '';
+            $categoryimage = ( is_array($images) && ($images) > 0 && isset( $images[0] ) ) ? $images[0] : '';
             $edit_categoryFieldData = array( 
                 array( 'name' => 'category_formid', 'id' => 'edit_categoryform', ),
                 array( 'name' => 'categoryimage', 'value' => $categoryimage,),

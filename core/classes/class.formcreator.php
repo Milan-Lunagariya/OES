@@ -30,13 +30,15 @@ class formcreator
 				$content .=  ' ' . $attr . '="' . $value . '"  ';
 			}
 			$content .= ' >';
-
+			
+			if( is_array( $fields ) && count( $fields ) > 0 ){
 				foreach ($fields as $field) {
 					if( isset($field) && ! in_array( trim( $field ), [ '' , false] ) ){
+						
 						$content .= $field;
 					}
 				}
-			
+			} 
 			$content .= '</form>';
 		$content .= '</div>';
 
@@ -57,10 +59,12 @@ class formcreator
 			
 			case 'text':
 			case 'hidden':
+			case 'password':
 			case 'text': 
 			case 'submit':
 			case 'file': 
 			case 'email':
+			case 'checkbox';
 				/* $field_attr = $commonhelper->stripslashes_deep($field_attr); */
 				/* Note : Here, your id key not use because id=name, Id should be ones not multiples. so only use id=name  */
 				$multiple = '';
@@ -76,7 +80,7 @@ class formcreator
 					}
 				}
 				
-				if (isset($field_attr['label'])) {
+				if (isset($field_attr['label']) && $field_attr['type'] != 'checkbox' ) {
 					$field_attr['label'] =  trim($field_attr['label']);
 					$content .= '<label for="' . $field_attr['name'] . '"> ' . $field_attr['label'] . ' </label> ';
 				}
@@ -84,10 +88,10 @@ class formcreator
 				
 				$field_attr['name']  = ( ( isset($field_attr['name']) ) && ( gettype($field_attr['name']) == 'string' ) ) ? trim($field_attr['name']) : ''; 
 				 
-				$content .= ( $field_attr['type'] == 'submit' ) ? "<button id='".$field_attr['name']."'" : "<input $multiple id='".$field_attr['name']."'";
+				$content .= ( $field_attr['type'] == 'submit' ) ? "<button id='".$field_attr['name']."'" : "<input $multiple ";
 				foreach ($field_attr as $key => $value) {
 
-					if (in_array($key, array( 'id', 'label', 'multiple' ) )) {
+					if (in_array($key, array( 'label', 'multiple' ) )) {
 						continue;
 					}
 					 
@@ -97,7 +101,14 @@ class formcreator
 					$content .= '  ' . $key . '= "' . $value . '"   ';
 				}
 
+				$field_attr['value'] = isset( $field_attr['value'] ) ? $field_attr['value'] : 'Submit';
 				$content .= ( $field_attr['type'] == 'submit' ) ? '> '. $field_attr['value'] .' </button>' : '/>'; 
+
+				if (isset($field_attr['label']) && $field_attr['type'] == 'checkbox' ) {
+					$field_attr['label'] =  trim($field_attr['label']);
+					$content .= '&nbsp; <label style="cursor: pointer;"  for="' . $field_attr['name'] . '"> ' . $field_attr['label'] . ' </label> ';
+				}
+
 				break;
 
 			case 'select':
@@ -131,8 +142,7 @@ class formcreator
 				break;
 
 			case 'textarea' :
-
-				$content = '';
+ 
 				if (isset($field_attr['label'])) {
 					$field_attr['label'] =  trim($field_attr['label']);
 					$content .= '<label for="' . $field_attr['name'] . '"> ' . $field_attr['label'] . ' </label> ';
@@ -157,8 +167,7 @@ class formcreator
 				break;
 
 			case 'number' :
-
-				$content = '';
+ 
 				if (isset($field_attr['label'])) {
 					$field_attr['label'] =  trim($field_attr['label']);
 					$content .= '<label for="' . $field_attr['name'] . '"> ' . $field_attr['label'] . ' </label> ';
@@ -176,6 +185,28 @@ class formcreator
 					$content .=  '  ' . $key . '= "' . $value . '"';
 				}
 				$content .= '>';
+ 
+				break;
+			case 'button' :
+ 
+				if (isset($field_attr['label'])) {
+					$field_attr['label'] =  trim($field_attr['label']);
+					$content .= '<label for="' . $field_attr['name'] . '"> ' . $field_attr['label'] . ' </label> ';
+				}
+				
+				$content .= '<button type="button"';
+				foreach ($field_attr as $key => $value) {
+
+					if ( in_array( $key, array( 'label', 'value' ) ) ) {
+						continue;
+					}
+
+					$key = (gettype($key) == 'string') ? trim($key) : $key;
+					$value = (gettype($value) == 'string') ? trim($value) : $value;
+					$content .=  '  ' . $key . '= "' . $value . '"';
+				}
+				$content .= '>'. $value;
+				$content .= '</button>';
  
 				break;
 
