@@ -1,27 +1,21 @@
 <?php
 
 use function PHPSTORM_META\type;
-
-/* require_once 'databasehandler.php';
-require_once '../helpers/commonhelper.php';  */
+ 
 
 if( file_exists( '../helpers/commonhelper.php' ) ){
     require_once '../helpers/commonhelper.php'; 
-}  
-if( file_exists( '../../assets/svg/commonsvg.php' ) ){
-    require_once '../../assets/svg/commonsvg.php';  
-}
+}   
 $commonhelper  = class_exists( "commonhelper" ) ? new commonhelper() : false;
 
 if( $commonhelper != false ){
+    $commonhelper->oes_required_file( '../assets/svg/commonsvg.php' );
     $commonhelper->oes_required_file( 'databasehandler.php' );
     $commonhelper->oes_required_file( '../helpers/commonhelsper.php' ); 
     $commonhelper->oes_required_file( '../view/adminview/products.php' );
     $commonhelper->oes_required_file( '../classes/class.formcreator.php' ); 
     $commonhelper->oes_required_file( '../helpers/formhelper.php' ); 
-}   
-/* require_once '../helpers/formhelper.php'; */
-
+}    
 global  $DatabaseHandler, $commonhelper, $media_categories_path, $categories, $products;
 $formcreator = ( class_exists( 'formcreator' ) ) ? new formcreator() : false;
 $categories = ( class_exists( 'categories' ) ) ? new categories() : false; 

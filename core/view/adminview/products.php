@@ -38,7 +38,7 @@ class products
                     $visited[] = $category['categoryid'];
                     $content .= '<li>';
                     $checked_category = '';
-                    if( in_array( $category['categoryid'], $editProductCategories ) ){
+                    if( is_array( $editProductCategories ) && in_array( $category['categoryid'], $editProductCategories ) ){
                         $checked_category = 'checked="checked"';
                     }
                     $content .= '<input name="productCategoryids[]" type="checkbox" '.$checked_category.' class="categoryProduct_checkbox" id="productCategories_checkbox_'.$category['categoryid'].'" value="'.$category['categoryid'].'" >'; 
@@ -68,10 +68,6 @@ class products
         $editProductCategories = array();
 
         $content .= '<div class="product_form_message message_popup"> Message </div>'; 
-
-        /* echo '<pre> All Categories:';
-            print_r($allCategoies[0]['name']);
-        echo '</pre>'; */
          
         if( method_exists( 'formcreator', 'field_create' ) && is_object( $formcreator ) ) {
  
@@ -165,8 +161,7 @@ class products
             $search_condition = array( array( 'column' => 'name', 'operator' => 'LIKE', 'value' => "%{$search}%" ) );
             echo "<p >Search: <i>$search</i></p> "; 
             /* $data = $databasehandler->select( 'products', '*, COUNT(productid) OVER() AS total_record', $search_condition, '', 'productid DESC', $limit, $offset);  */
-        }
-        echo "offset : $offset";
+        } 
         $data = $databasehandler->select( 'products', '*, COUNT(productid) OVER() AS total_record', $search_condition, '', 'productid DESC', $limit, $offset); 
         $total_records = isset( $data[0]['total_record'] ) ? $data[0]['total_record'] : 100; 
         /* $total_records = isset( $total_records[0]['total_record'] ) ? $total_records[0]['total_record'] : 0; */
@@ -175,6 +170,7 @@ class products
                 '<input type="checkbox" class="datatable_checked_all" name="" value="1">' => '50px',
                 'Id' => '50px',  
                 'Name'=> '200px', 
+                'Description' => '300px',
                 'Price'=> '100px',
                 'Stock'=> '100px',
                 'Created at' => '150px',
@@ -183,23 +179,25 @@ class products
             )
         ); 
 
-        /* if( is_array( $data ) && count($data) > 0 ){ */
+        if( is_array( $data ) && count($data) > 0 ){
 
         
             foreach( $data as $key => $value ){  
                 $action = ''; 
                 $productid = ( isset($value['productid']) && !empty($value['productid']) ) ? $value['productid']: '-'; 
-/* 
-                $productimages = ( isset( $value['images'] ) && $value['images'] != '' ) ? json_decode( $value['images'], true ) : array();
+
+                /* $productimages = ( isset( $value['images'] ) && $value['images'] != '' ) ? json_decode( $value['images'], true ) : array();
                 $productimages = ( is_array($productimages) && count($productimages) > 0 ) ? ( $productimages[0] ) : '';
-                $image_path = ( $productimages != '' ) ? "../media/categories/".$productimages :  '';
- */
+                $image_path = ( $productimages != '' ) ? "../media/categories/".$productimages :  ''; */
+
                 $select_current = "<input type='checkbox' class='datatable_checked_all datatable_checked_td_{$productid}_0' name='' id='{$productid}'  value=''>";
 
-                $images = ( ! empty($image_path) ) ? "<div class='image_parent'><a href='$image_path' target='_blank' ><img src='$image_path' alt='Not Found' width='100'></a></div>": '-'; 
-                $images = ( isset($value['images']) && !empty($value['images']) ) ? $value['images']: '-';  
+                // $images = ( ! empty($image_path) ) ? "<div class='image_parent'><a href='$image_path' target='_blank' ><img src='$image_path' alt='Not Found' width='100'></a></div>": '-'; 
+                // $images = ( isset($value['images']) && !empty($value['images']) ) ? $value['images']: '-';  
                 $name = ( isset($value['name']) && !empty($value['name']) ) ? $value['name']: '-';  
-                $description = ( isset($value['description']) && !empty($value['description']) ) ? $value['description']: '-';  
+                $description = ( isset($value['description']) && !empty($value['description']) ) ? $value['description']: '-'; 
+                $description_readmore_link = ( strlen( $description ) > 120 ) ? "<div class='manageProducts_descriptionReadmoreLink'> Read more... </div>" : '';
+                $description = "<div class='manageProducts_descriptionCotainer'>{$description} </div> {$description_readmore_link}";
                 $price = ( isset($value['price']) && !empty($value['price']) ) ? $value['price']: '-';  
                 $stock = ( isset($value['stock']) && !empty($value['stock']) ) ? $value['stock']: '-';  
                 $createdat  = ( isset($value['createdat']) && !empty($value['createdat']) ) ? $value['createdat']: '-'; 
@@ -210,7 +208,7 @@ class products
                 $action .= "<button id='$productid' class='edit data_modify_button edit_product_$productid'>$edit_icon</button>";
                 $action .= "<button id='$productid' class='remove data_modify_button remove_product_$productid' >$delete_icon</button>";
                 
-                $table_data[] = array( $select_current, $productid, $name, $price, $stock, $createdat, $updatedat, $action );
+                $table_data[] = array( $select_current, $productid, $name, $description, $price, $stock, $createdat, $updatedat, $action );
             } 
             $td_data = $table_data; 
             
@@ -229,15 +227,15 @@ class products
             } else{
                 $printTable .= '$datatable is not object, Please try to get object $datatable... '.__FILE__.' > '. __LINE__;
             }   
-      /*   } else{
+        } else{
             $printTable .= '<hr>'; 
             $printTable .= '<div align="center" style="color: red; font-size: 1.5em;"> Records not found! </div>'; 
             $printTable .= '<hr>'; 
-        }    */
+        }   
         return $printTable;
     }
 
-    public function manageproducts(){
+    public function manageproducts( $title = '' ){
 
         global $datatable, $oescommonsvg;
         $viewEntireTable = ''; 
@@ -251,6 +249,7 @@ class products
         $datatable = ( class_exists( 'datatable' ) ) ? new datatable() : false;
         $showrecord_limit_array = array( 5, 10, 25, 50, 100 );
         
+        $viewEntireTable = "<div class=''> <h2 class='title' align='center'> {$title} </h2> </div>";
         $viewEntireTable .= "<div class='datatable' > ";
             $viewEntireTable .= '<div class="dataTableHeader" >';
                 $viewEntireTable .= "<div class='oes_container_bulk_option' >

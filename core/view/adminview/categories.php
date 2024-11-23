@@ -1,13 +1,7 @@
 <?php 
  
 global $categories, $formcreator, $databasehandler, $datatable, $oescommonsvg;
-
-/* if( defined( 'OESADMIN_CORE_PATH' ) && file_exists( OESADMIN_CORE_PATH.'/classes/class.formcreator.php' ) ){ require_once OESADMIN_CORE_PATH.'/classes/class.formcreator.php';}
-if( defined( 'OESADMIN_CORE_PATH' ) && file_exists( OESADMIN_CORE_PATH.'/classes/class.formcreator.php' ) ){ require_once OESADMIN_CORE_PATH.'/classes/class.formcreator.php'; }
-if( defined( 'OESADMIN_CORE_PATH' ) && file_exists( OESADMIN_CORE_PATH.'/models/databasehandler.php' ) ){ require_once OESADMIN_CORE_PATH.'/models/databasehandler.php'; }
-if( defined( 'OESADMIN_CORE_PATH' ) && file_exists( OESADMIN_CORE_PATH.'/models/datatable.php' ) ){ require_once OESADMIN_CORE_PATH.'/models/datatable.php'; }
-if( defined( 'OESADMIN_ASSETS_PATH' ) && file_exists( OESADMIN_ASSETS_PATH.'/svg/commonsvg.php' ) ){ require_once OESADMIN_ASSETS_PATH.'/svg/commonsvg.php'; }
- */
+ 
 $formhelper = ( class_exists( 'formhelper' ) ) ? new formhelper() : false; 
 $formcreator = ( class_exists( 'formcreator' ) ) ? new formcreator() : false; 
 $categories = ( class_exists( 'categories' ) ) ? new categories() : false;  
@@ -21,9 +15,7 @@ class categories
   
     function __construct()
     {
-        $this->is_editCategoryForm = false;
-        /* $this->current_page = 1;
-        $this->category_record_showLimit = 5; */
+        $this->is_editCategoryForm = false; 
     }
 
     public function oes_test(...$var){
@@ -102,10 +94,7 @@ class categories
         $table_data = array();
         $printTable = '';
         $classes = array();
-        
-        if( file_exists('../../models/databasehandler.php') ){ require_once '../../models/databasehandler.php'; }
-        if( file_exists('../../models/datatable.php') ){ require_once '../../models/datatable.php'; }
-
+          
         $databasehandler  = ( class_exists( 'databasehandler' ) ) ? new databasehandler() : false;
         $datatable = ( class_exists( 'datatable' ) ) ? new datatable() : false;
         
@@ -122,7 +111,6 @@ class categories
             $data = $databasehandler->select( 'categories', '*, COUNT(categoryid) OVER() AS total_record', array(), '', 'categoryid DESC', $limit, $offset); 
         }  
         $total_records = isset( $data[0]['total_record'] ) ? $data[0]['total_record'] : 100; 
-        /* $total_records = isset( $total_records[0]['total_record'] ) ? $total_records[0]['total_record'] : 0; */
 
         $th_data = array ( 'th' => array(
                 '<input type="checkbox" class="datatable_checked_all" name="" value="1">' => '50px',
@@ -187,7 +175,7 @@ class categories
         return $printTable;
     }
 
-    public function managecategories(){
+    public function managecategories( $title = '' ){
 
         global $datatable, $oescommonsvg;
         $viewEntireTable = ''; 
@@ -201,6 +189,7 @@ class categories
         $datatable = ( class_exists( 'datatable' ) ) ? new datatable() : false;
         $showrecord_limit_array = array( 5, 10, 25, 50, 100 );
         
+        $viewEntireTable = "<div class=''> <h2 class='title' align='center'> {$title} </h2> </div>";
         $viewEntireTable .= "<div class='datatable' > ";
             $viewEntireTable .= '<div class="dataTableHeader" >';
                 $viewEntireTable .= "<div class='oes_container_bulk_option' >
@@ -228,7 +217,8 @@ class categories
                             $viewEntireTable .= ' records
                         </div>
                         <div class="searchRecord">
-                            <input type="search" name="" class="datatable_field searchCategoriesOnMC" placeholder="Search category name" id=""><button class="datatable_field searchCategoriesButton"> '.$search_icon.' </button>
+                            <input type="search" name="" class="datatable_field searchCategoriesOnMC" placeholder="Search category name" id="">
+                            <button class="datatable_field searchCategoriesButton"> '.$search_icon.' </button>
                         </div>
                         <button class="showHideColumn datatable_field"> Show/Hide Column </button>
                     </div>';
@@ -248,9 +238,6 @@ class categories
         echo $viewEntireTable; 
     }
 }
-
-
-$error = "OES Error: ". __LINE__. __FILE__;
 
 
 ?>

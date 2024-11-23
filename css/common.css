@@ -140,13 +140,19 @@
     border: 1px solid var(--dark);
     background-color: var(--white);
 }
-button.searchCategoriesButton, .searchProductButton {
+.searchCategoriesButton, .searchProductButton {
     border-left: none !important;
     height: 33px;
+    float: right;
 } 
-button.searchCategoriesButton, .searchProductButton svg{
-    height: 25px !important;
-    width: 25px !important;
+/* .searchCategoriesButton, */
+
+.searchCategoriesButton svg,
+.searchProductButton svg{
+    height: 100% !important;
+    width: 100% !important;
+    /* height: 25px !important;
+    width: 25px !important; */
 }
 .dataTableHeader .showHideColumn{
     cursor: pointer;
@@ -175,6 +181,9 @@ button.searchCategoriesButton, .searchProductButton svg{
     display: none;
     border-radius: 10px;
     box-shadow: 0px 0px 10px var(--blue);
+}
+.oes_loader_center svg {
+    stroke: var(--background);
 }
 .datatable_pagination .firstRecord  {
     border-left: 1px solid var(--black);
@@ -345,4 +354,105 @@ productProduct_popup
 }
 ::-webkit-scrollbar-thumb { 
     background-image: linear-gradient( var(--gray), var(--bg_silver), var(--secondary), var(--gray) ); 
+}
+
+.oes_adminPanel_container {
+    height: 100vh;
+}
+
+.oes_adminPanel_sidebar {
+    width:  20em; /* Fixed width for sidebar */
+    position: relative;
+    height: 100vh;
+}
+
+.oes_adminPanel_main { 
+    height: 100%;
+    overflow: auto; /* Scroll if content exceeds */
+    background: var(--background);
+}
+
+.oes_adminPanel_nav-link:hover {
+    background-color: #454d55; /* Background color on hover */
+}
+
+.oes_adminPanel_sidebar .oes_adminhomelink_container{
+    float: left;
+    width: 100%;
+    filter: drop-shadow(1px 0px 0px blue);
+    color: white;
+}
+.oes_adminPanel_sidebar .oes_adminhomelink_container svg{
+    float: left;
+    width: 24px;
+    margin: 0px 10px;
+    height: 25px;
+}
+.oes_adminPanel_sidebar .oes_adminhomelink_container a{
+    padding: 10px;
+    width: 100%;
+    margin: 10px 0px;
+    color: white;
+}
+.oes_adminPanel_sidebar .admininner_sidebarmenu_container{
+    float: left;
+    cursor: pointer;
+    width: 100%;
+}
+.oes_adminPanel_sidebar ul,
+.oes_adminPanel_sidebar li{
+    float: left;
+    width: 100%;
+    list-style: none;
+    padding-left: 0px;
+}
+
+.oes_adminPanel_sidebar .activeParentMeu{
+    background-color: var(--bg_silver);
+}
+.oes_adminPanel_sidebar .active{
+    border-left: 2px solid aliceblue;
+    box-shadow: 0px 0px 13px #8b8c9e inset;
+}
+.oes_adminPanel_sidebar ul li ul.showSubMenu{
+    display: block; 
+}
+.oes_adminPanel_sidebar ul li ul{
+    display: none;
+    padding: 10px;
+}
+.openCloseContainer {
+    position: absolute;
+    padding: 3px;
+    right: -32px;
+    top: 10px;
+    box-shadow: 0px 0px 6px inset black;
+    z-index: 9999;
+}
+.oes_loader{
+    color: red;
+    animation: oes_loader 800ms linear infinite; 
+    -webkit-animation: oes_loader 800ms linear infinitee;
+}
+
+@keyframes oes_loader{
+
+    0%{ 
+        transform: rotate(0deg);
+    } 
+    100%{
+        transform: rotate(360deg); 
+    }   
+
+} 
+.manageProducts_descriptionCotainer{
+    width: 100%;
+    height: 105px;
+    float: left;
+    overflow: hidden;
+}
+.manageProducts_descriptionReadmoreLink{
+    float: left;
+    cursor: pointer;
+    font-weight: 500;  
 }

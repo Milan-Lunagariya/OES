@@ -1,28 +1,22 @@
 <?php
 
-use function PHPSTORM_META\type;
-
-/* require_once 'databasehandler.php';
-require_once '../helpers/commonhelper.php';  */
+use function PHPSTORM_META\type; 
 
 if( file_exists( '../helpers/commonhelper.php' ) ){
     require_once '../helpers/commonhelper.php'; 
-}  
-if( file_exists( '../../assets/svg/commonsvg.php' ) ){
-    require_once '../../assets/svg/commonsvg.php';  
-}  
+}   
 $commonhelper  = class_exists( "commonhelper" ) ? new commonhelper() : false;
 
 if( $commonhelper != false ){
     $commonhelper->oes_required_file( 'databasehandler.php' );
+    $commonhelper->oes_required_file( '../assets/svg/commonsvg.php' );
     $commonhelper->oes_required_file( '../helpers/commonhelsper.php' ); 
     $commonhelper->oes_required_file( '../view/adminview/categories.php' );
     $commonhelper->oes_required_file( '../classes/class.formcreator.php' ); 
     $commonhelper->oes_required_file( '../helpers/formhelper.php' ); 
-}   
-/* require_once '../helpers/formhelper.php'; */
+}    
 
-global  $DatabaseHandler, $commonhelper, $media_categories_path, $categories;
+global  $DatabaseHandler, $commonhelper, $media_categories_path, $categories, $oescommonsvg;
 $formcreator = ( class_exists( 'formcreator' ) ) ? new formcreator() : false;
 $categories = ( class_exists( 'categories' ) ) ? new categories() : false; 
 $DatabaseHandler = ( class_exists( 'DatabaseHandler' ) ) ? new DatabaseHandler() : false; 
@@ -152,6 +146,7 @@ if ( $action != false ) {
         
         case 'loadCategoriesOnMC':
             require_once '../models/datatable.php';
+            global $oescommonsvg;
             
             $page_no = ( isset( $_REQUEST['current_page'] ) && $_REQUEST['current_page'] > 0 ) ? $_REQUEST['current_page'] : 1;
             

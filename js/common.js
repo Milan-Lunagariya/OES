@@ -54,6 +54,7 @@ function ajax_form_submitor(url, callback , formdata_param, extra_data ){
     }, 1000)
 } 
 
+
 function field_validation(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', required = true) {
 
     var error = ''; 
@@ -112,7 +113,8 @@ function field_validation(id, regexp = /^[A-Za-z0-9\s]+$/, message = '', require
 
     error = message;
     if( focus == true ) {
-        $(id).focus().css('border','1px solid ' + window.red);
+        /* $(id).focus().css('border','1px solid ' + window.red); */
+        $(id).css('border','1px solid ' + window.red);
     }else{
         
         $(id).css('border','1px solid '+ window.black);
@@ -131,7 +133,8 @@ function oes_loader( selector = '', show = true, stop_html = window.svg_icon_suc
     if( show == true ){ 
         selector_css['cursor'] = 'progress';
         $( selector ).prop( 'disabled', true );
-        $( selector ).html( '<i class="fa fa-spinner fa-spin" style="font-size:'+loader_size+'"></i>' );
+        /* $( selector ).html( '<i class="fa fa-spinner fa-spin" style="font-size:'+loader_size+'"></i> ' ); */
+        $( selector ).html( '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd"><!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools --><svg xmlns="http://www.w3.org/2000/svg" class="oes_loader" width="'+ loader_size +'" height="'+ loader_size +'" viewBox="0 0 24 24" fill="none" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g id="SVGRepo_bgCarrier" stroke-width="0"/><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="orange" stroke-width="3.408"> <path d="M21 12a9 9 0 11-6.219-8.56"/> </g><g id="SVGRepo_iconCarrier"> <path d="M21 12a9 9 0 11-6.219-8.56"/> </g></svg></svg>' );
         $( selector ).fadeIn();
     } else {         
         selector_css['cursor'] = 'pointer';

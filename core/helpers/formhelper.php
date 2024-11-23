@@ -7,7 +7,7 @@ class formhelper
     var $category_name_attr; 
     
     public function __construct()
-    { 
+    {
     }
 
     public function category_form_attr( $getid = '', $class = '' ) {

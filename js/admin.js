@@ -314,3 +314,34 @@ $( document ).on( 'click', '.popup_showCategory', function(){
     
     $( '.general_popup_container' ).fadeIn(); 
 } )
+
+$( document ).on( 'click', '.oes_adminPanel_sidebar .admininner_sidebarmenu_container', function( event ){
+    $( this ).next( '.admininner_sidebarmenu' ).fadeToggle(); 
+} )
+
+function openCloseAdminSidebar(){
+    
+    console.log( Math.abs( $( '.oes_adminPanel_sidebar' ).width()) < 1 );
+    if(  Math.abs( $( '.oes_adminPanel_sidebar' ).width()) < 1 ){
+        $( '.oes_adminPanel_sidebar' ).animate({ width: '20em' }, 500);
+        $( '.oes_adminPanel_sidebar nav' ).show()
+    } else {
+        $( '.oes_adminPanel_sidebar' ).animate({ width: '0px' }, 500);
+        $( '.oes_adminPanel_sidebar nav' ).hide()
+    }
+    console.log( 'call..' );
+}
+
+$( document ).on( 'click', '.manageProducts_descriptionReadmoreLink',function(){
+    
+    var description_container =  $( this ).parent().find( '.manageProducts_descriptionCotainer' );
+    
+    if( description_container.height() <= 110 ){
+        description_container.css( { 'height': '100%' } );
+        $( this ).html( 'Less' ); 
+    } else {
+        description_container.height( '105' );
+        $( this ).html( 'Read more...' ); 
+    }
+    console.log( description_container.height() );
+} )
