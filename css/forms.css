@@ -127,6 +127,7 @@ input[type=file]{
     float: right;
     position: sticky;
     top: 0px;
+    z-index: 9999;
 }
 .close_editProduct{
     background-color: lightslategrey;

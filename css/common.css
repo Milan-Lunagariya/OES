@@ -266,7 +266,7 @@ select.datatable_field.product_record_showLimit {
 .productCategory_ul label{
     cursor: pointer;
 } 
-productProduct_popup
+
 .productCategory_popup{
     min-width: 30%;
     max-width: 50%;
@@ -398,7 +398,7 @@ productProduct_popup
     float: left;
     cursor: pointer;
     width: 100%;
-}
+} 
 .oes_adminPanel_sidebar ul,
 .oes_adminPanel_sidebar li{
     float: left;
@@ -454,5 +454,20 @@ productProduct_popup
 .manageProducts_descriptionReadmoreLink{
     float: left;
     cursor: pointer;
-    font-weight: 500;  
+    font-weight: 500; 
 }
+.ManageProductImagesButton_container button{
+    background-color: var(--background);
+    border: 1px solid var(--secondary);
+    padding: 2px;
+    cursor: pointer;
+    border-radius: 3px;
+}
+
+.manageProduct_form_popup .form_container{
+    min-width: 400px;
+}
+.mangeProductImage_container {
+    display: grid;
+    grid-template-columns: 300px 300px 300px;
+} 

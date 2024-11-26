@@ -80,13 +80,13 @@ class formcreator
 					}
 				}
 				
+				$field_attr['name']  = ( ( isset($field_attr['name']) ) && ( gettype($field_attr['name']) == 'string' ) ) ? trim($field_attr['name']) : ''; 
 				if (isset($field_attr['label']) && $field_attr['type'] != 'checkbox' ) {
 					$field_attr['label'] =  trim($field_attr['label']);
 					$content .= '<label for="' . $field_attr['name'] . '"> ' . $field_attr['label'] . ' </label> ';
 				}
 
 				
-				$field_attr['name']  = ( ( isset($field_attr['name']) ) && ( gettype($field_attr['name']) == 'string' ) ) ? trim($field_attr['name']) : ''; 
 				 
 				$content .= ( $field_attr['type'] == 'submit' ) ? "<button id='".$field_attr['name']."'" : "<input $multiple ";
 				foreach ($field_attr as $key => $value) {

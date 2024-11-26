@@ -60,13 +60,12 @@ class products
         $productdescription = '';
         $productstock = '';
         $productprice = '';
-        $productImage_value =  false;
         $productname_value = false;
         $submitButtton_value = 'Add Product';
         $new_create_field = array();
-        $content = '<h1 class="title"> '.$title.' </h1>';
+        $content = '<h1 class="title"> '.$title.' </h1>'; 
         $editProductCategories = array();
-
+        $productImageField = $formcreator->field_create( $formhelper->product_ExtaraImage_attr() );
         $content .= '<div class="product_form_message message_popup"> Message </div>'; 
          
         if( method_exists( 'formcreator', 'field_create' ) && is_object( $formcreator ) ) {
@@ -83,7 +82,8 @@ class products
                         if( $formid == 'edit_productform' ){
                             global $products;
                             $products->is_editProductForm = true; 
-                            $submitButtton_value = 'Edit Product';
+                            $submitButtton_value = 'Edit Product'; 
+                            $productImageField = '';
                         }
                     } 
                     
@@ -109,8 +109,13 @@ class products
                     } 
                 }
             }
-             
-            $fields[] = $formcreator->field_create( $formhelper->product_image_attr( $productImage_value ) );
+
+            
+            foreach( $new_create_field as $new_field ){                        
+                $fields[] = $new_field; 
+            }
+
+            $fields[] = $productImageField ;
             $fields[] = $formcreator->field_create( $formhelper->product_name_attr( $productname_value ) );
             $fields[] = $formcreator->field_create( $formhelper->product_description_attr( $productdescription ) );
             $fields[] = $formcreator->field_create( $formhelper->product_price_attr( $productprice ) );
@@ -127,9 +132,7 @@ class products
             $fields[] = $categories_popup;  
             $fields[] = $formcreator->field_create( $formhelper->product_submit_attr( $submitButtton_value ) );  
             
-            foreach( $new_create_field as $new_field ){                        
-                $fields[] = $new_field; 
-            }
+          
             
             $product_form = $formcreator->form_create( $fields, $formhelper->product_form_attr( $formid ) );
             $content .= $product_form;  
@@ -169,7 +172,8 @@ class products
         $th_data = array ( 'th' => array(
                 '<input type="checkbox" class="datatable_checked_all" name="" value="1">' => '50px',
                 'Id' => '50px',  
-                'Name'=> '200px', 
+                'Name'=> '200px',
+                'Product Image'=> '100px',
                 'Description' => '300px',
                 'Price'=> '100px',
                 'Stock'=> '100px',
@@ -191,6 +195,9 @@ class products
                 $image_path = ( $productimages != '' ) ? "../media/categories/".$productimages :  ''; */
 
                 $select_current = "<input type='checkbox' class='datatable_checked_all datatable_checked_td_{$productid}_0' name='' id='{$productid}'  value=''>";
+                $productImageButton = "<div class='ManageProductImagesButton_container'>
+                    <button onclick='manageProductImages( $productid )'> Product Images </button>
+                </div>";
 
                 // $images = ( ! empty($image_path) ) ? "<div class='image_parent'><a href='$image_path' target='_blank' ><img src='$image_path' alt='Not Found' width='100'></a></div>": '-'; 
                 // $images = ( isset($value['images']) && !empty($value['images']) ) ? $value['images']: '-';  
@@ -208,7 +215,7 @@ class products
                 $action .= "<button id='$productid' class='edit data_modify_button edit_product_$productid'>$edit_icon</button>";
                 $action .= "<button id='$productid' class='remove data_modify_button remove_product_$productid' >$delete_icon</button>";
                 
-                $table_data[] = array( $select_current, $productid, $name, $description, $price, $stock, $createdat, $updatedat, $action );
+                $table_data[] = array( $select_current, $productid, $name, $productImageButton, $description, $price, $stock, $createdat, $updatedat, $action );
             } 
             $td_data = $table_data; 
             
@@ -252,8 +259,9 @@ class products
         $viewEntireTable = "<div class=''> <h2 class='title' align='center'> {$title} </h2> </div>";
         $viewEntireTable .= "<div class='datatable' > ";
             $viewEntireTable .= '<div class="dataTableHeader" >';
+            $viewEntireTable .= "<input type='hidden'  name='datatable_page' value='manageProduct' >";
                 $viewEntireTable .= "<div class='oes_container_bulk_option' >
-                    Bulk Option 
+                    <p class='floatLeft mr-2' > Bulk Option </p> 
                     <select class='oes_bulk_option oes_field'>";
                     
                         foreach( $bulk_option_arr as $value => $display ){
@@ -261,7 +269,6 @@ class products
 
                         }
                     
-                $viewEntireTable .= "<input type='hidden'  name='datatable_page' value='manageProduct' >";
                 $viewEntireTable .= "
                     </select>
                     <button class='apply_button oes_field'> Apply </button>
@@ -290,7 +297,7 @@ class products
                     $viewEntireTable .= '<div class="oes_loader_center"> Loading . . . </div>
                     <div class="editProduct_popup_container">
                         <div class="close_editProduct_container">
-                            <button class="close_editProduct" > X </button>
+                            <button class="close_editProduct" > X </button> 
                         </div>
                         <div class="manageProduct_form_popup"> Loading . . . </div>';
                         

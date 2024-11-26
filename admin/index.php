@@ -30,6 +30,13 @@ if (! defined('OESADMIN_ASSETS_PATH')) {
     define('OESADMIN_ASSETS_PATH', '../assets');
 }
 
+if( ! defined( 'OESSEPARATE_BOOTSTRAP_CSS_PATH' ) ){
+    define( 'OESSEPARATE_BOOTSTRAP_CSS_PATH' , '../bootstrap/css' );
+}
+if( ! defined( 'OESSEPARATE_BOOTSTRAP_JS_PATH' ) ){
+    define( 'OESSEPARATE_BOOTSTRAP_JS_PATH' , '../bootstrap/js' );
+}
+
 global $oesadmin_load_css, $oesadmin_load_js, $addcategories, $formcreator, $india_timezone, $commonhelper, $media_categories_path, $DatabaseHandler, $categorycontroller, $datatable, $formhelper, $formcreator, $oescommonsvg;
 
 $media_categories_path = OESADMIN_MEDIA_PATH . "/categories";
@@ -44,7 +51,7 @@ if (defined('OESADMIN_CORE_PATH') && file_exists(OESADMIN_CORE_PATH . '/helpers/
         $commonhelper->oes_required_file(OESADMIN_CORE_PATH . '/helpers/formhelper.php');
         $commonhelper->oes_required_file(OESADMIN_CORE_PATH . '/classes/class.formcreator.php');
         $commonhelper->oes_required_file(OESADMIN_CORE_PATH . '/view/adminview/categories.php');
-        $commonhelper->oes_required_file( OESADMIN_CORE_PATH. '/assets/svg/commonsvg.php');
+        $commonhelper->oes_required_file(OESADMIN_CORE_PATH. '/assets/svg/commonsvg.php');
         $commonhelper->oes_required_file(OESADMIN_CORE_PATH . '/models/modelcategory.php');
         $commonhelper->oes_required_file(OESADMIN_CORE_PATH . '/view/adminview/categories.php');
         $commonhelper->oes_required_file(OESADMIN_CORE_PATH . '/view/adminview/products.php');
@@ -68,9 +75,12 @@ $products          = (class_exists('products')) ? new products() : false;
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> -->
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>  -->
+    <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script> -->
+
+
+    
     <title>Admin | Electronic Shopping</title>
 
     <?php
@@ -82,11 +92,14 @@ $products          = (class_exists('products')) ? new products() : false;
         require_once OESADMIN_LIBRARY_PATH . '/oesautoload.php';
         custom_load_admin_css($oesadmin_load_css);
     }
+    
+    load_bootstrap_css( array( 'bootstrap.css', 'custom_bt.css' ) );
     ?>
 
 </head>
 
 <body>
+ 
     <div class="oes_adminPanel_container d-flex">
 
         <div class="oes_adminPanel_sidebar bg-dark text-white p-3">
@@ -200,6 +213,7 @@ $products          = (class_exists('products')) ? new products() : false;
         require_once OESADMIN_LIBRARY_PATH . '/oesautoload.php';
         custom_load_admin_js($oesadmin_load_js);
     }
+    load_bootstrap_js( array( 'bootstrap.bundle.js', 'custom_bt.js' ) );
     ?>
 </body>
 

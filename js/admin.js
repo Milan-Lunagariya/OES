@@ -345,3 +345,96 @@ $( document ).on( 'click', '.manageProducts_descriptionReadmoreLink',function(){
     }
     console.log( description_container.height() );
 } )
+
+function manageProductImages( productid ){
+
+    productid = ( productid != undefined || productid != '' ) ? productid : 0;
+    $( '.editProduct_popup_container' ).fadeIn();
+    $( '.close_editProduct_container' ).hide();
+
+    const url = '../core/models/modelproducts.php';
+    const callback = function( data ){
+        $( '.close_editProduct_container' ).fadeIn();
+        oes_loader( '.manageProduct_form_popup', false, '', '', '40px');
+        $( '.manageProduct_form_popup' ).fadeIn().html( data )
+        console.log( data );
+    };  
+    const extra_data = {
+        'action': 'manageProductImages',
+        'productid': productid
+    }
+    
+    oes_loader( '.manageProduct_form_popup', true, '', { 'cursor': 'auto !imporant' }, '40px');
+    ajax_form_submitor(url, callback , this, extra_data ) 
+}
+
+function deleteProductImage( _this ){
+    var productImage = $( _this ).attr( 'data-image-value' );
+    var productid = $( _this ).attr( 'data-productid' );
+    productid = ( productid != undefined || productid != '' ) ? productid : 0;
+    console.log( productImage );
+
+    if( confirm( "Do you want to delete this Product image permanently delete ?" ) ){
+        const url = '../core/models/modelproducts.php';
+        const callback = function( data ){
+            oes_loader( _this, false );
+            console.log( data );
+            data = JSON.parse( data );
+
+            if( data.success == '1' && data.success == true && data.success == 1 ){
+                var message = $( '.manageproduct_message' ).fadeIn().html( "Success: Product Image Deleted" );
+                show_message_popup(message, 3000, true); 
+                $( _this ).closest( '.productImageCartContainer' ).html( '' ).fadeOut();
+                console.log( $( _this ) );
+            } else {
+                data.error = ( data.error != undefined || data.error != null ) ? data.error: "Somthing Went Wrong!";
+                var message = $( '.manageproduct_message' ).html( data.error );
+                show_message_popup(message, 3000, false); 
+            } 
+        };  
+        const extra_data = {
+            'action': 'deleteProductImage',
+            'productid': productid,
+            'productImage': productImage
+        }
+        
+        oes_loader( _this, true );
+        ajax_form_submitor(url, callback , this, extra_data ) 
+    } 
+}
+
+$( document ).on( 'submit', '#editProductImages', function(){ 
+    var productid = $( this ).attr( 'data-productid' );
+    productid = ( productid != undefined || productid != '' ) ? productid : 0;
+    console.log( "Product id: " + productid );
+   
+    const url = '../core/models/modelproducts.php';
+    const callback = function( data ){
+        oes_loader( ".productSaveButton", false, 'Save' );
+        console.log( data );
+        data = JSON.parse( data );
+
+        if( data.success == '1' && data.success == true && data.success == 1 ){
+            var message = $( '.manageproduct_message' ).fadeIn().html( "Success: Product Images Updated Successfully." );
+            show_message_popup(message, 3000, true); 
+            manageProductImages( productid );
+        } else {
+            data.error = ( data.error != undefined || data.error != '' ) ? data.error: "Somthing Went Wrong!";
+            data.moreImageError = ( data.moreImageError != undefined || data.moreImageError != '' ) ? data.moreImageError: "";
+            data.replaceImageError = ( data.replaceImageError != undefined || data.replaceImageError != '' ) ? data.replaceImageError: "";
+            var all_error = data.error + " " + data.moreImageError + " " + data.replaceImageError;
+            var message = $( '.manageproduct_message' ).fadeIn().html( all_error );
+            show_message_popup(message, 10000, false); 
+        } 
+    };  
+    const extra_data = {
+        'action': 'editProductImages',
+        'productid': productid
+    }
+
+    oes_loader( ".productSaveButton", true );
+    ajax_form_submitor(url, callback , this, extra_data )
+    
+    return false;
+
+})

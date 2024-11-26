@@ -30,7 +30,7 @@ class datatable
             <input type='hidden'  name='datatable_current_page' value='{$datatable_current_page}' >
         </div>";
 
-        $content .= "<table class='' border='2' align='center'>
+        $content .= "<table class='table-bordered' align='center'>
         <tr>"; 
         
                 $th = isset( $th['th'] ) ? $th['th'] : array();

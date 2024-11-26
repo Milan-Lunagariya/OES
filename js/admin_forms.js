@@ -115,7 +115,7 @@ $( document ).on( 'submit', '#add_productform, #edit_productform', function(){
         console.log( 'Product forms submission data:  ' + data );  
         data = JSON.parse( data );
         var created_message, success_message = '', success_selector = ''; 
-        var button_value = ( is_editproduct ) ? 'Edit' : 'Add';
+        var button_value = ( is_editproduct ) ? 'Edit Product' : 'Add Product';
         oes_loader( '#product_form_submit', false, button_value );  
 
         success_selector = (is_editproduct) ? ".manageproduct_message" : ".product_form_message";            

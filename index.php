@@ -1,27 +1,28 @@
 <?php
 
-    global  $oesfrontload_index_css, $oesfrontload_index_js;
-    $oesfrontload_index_css = array(
-        'common.css' => false,
-        'forms.css' => false,
-        'index.css' => false,
-        'tablets_view.css' => false,
-    );
-    $oesfrontload_index_js = array(
-        'jquery.js' => false,
-        'common.js' => false,
-        'index.js' => false, 
-    );
+global  $oesfrontload_index_css, $oesfrontload_index_js;
+$oesfrontload_index_css = array(
+    'common.css' => false,
+    'forms.css' => false,
+    'index.css' => false,
+    'tablets_view.css' => false,
+);
+$oesfrontload_index_js = array(
+    'jquery.js' => false,
+    'common.js' => false,
+    'index.js' => false, 
+);
 
 
-  if( ! defined( 'OESFRONT_CORE_PATH') ) { define( 'OESFRONT_CORE_PATH', 'core' ); }
-  if( ! defined( 'OESFRONT_LIBRARY_PATH') ) { define( 'OESFRONT_LIBRARY_PATH', 'library' ); }
-  if( ! defined( 'OESFRONT_JS_PATH') ) { define( 'OESFRONT_JS_PATH', 'js' ); }
-  if( ! defined( 'OESFRONT_CSS_PATH') ) { define( 'OESFRONT_CSS_PATH', 'css' ); }
-  if( ! defined( 'OESFRONT_IMAGES_PATH') ) { define( 'OESFRONT_IMAGES_PATH', 'images' ); }
-  if( ! defined( 'OESFRONT_MEDIA_PATH') ) { define( 'OESFRONT_MEDIA_PATH', 'media' ); }
-  if( ! defined( 'OESFRONT_ASSETS_PATH') ) { define( 'OESFRONT_ASSETS_PATH', 'assets' ); }
-  if( ! defined( 'OESFRONT_BOOTSTRAP_PATH') ) { define( 'OESFRONT_BOOTSTRAP_PATH', 'bootstrap' ); }
+if( ! defined( 'OESFRONT_CORE_PATH') ) { define( 'OESFRONT_CORE_PATH', 'core' ); }
+if( ! defined( 'OESFRONT_LIBRARY_PATH') ) { define( 'OESFRONT_LIBRARY_PATH', 'library' ); }
+if( ! defined( 'OESFRONT_JS_PATH') ) { define( 'OESFRONT_JS_PATH', 'js' ); }
+if( ! defined( 'OESFRONT_CSS_PATH') ) { define( 'OESFRONT_CSS_PATH', 'css' ); }
+if( ! defined( 'OESFRONT_IMAGES_PATH') ) { define( 'OESFRONT_IMAGES_PATH', 'images' ); }
+if( ! defined( 'OESFRONT_MEDIA_PATH') ) { define( 'OESFRONT_MEDIA_PATH', 'media' ); }
+if( ! defined( 'OESFRONT_ASSETS_PATH') ) { define( 'OESFRONT_ASSETS_PATH', 'assets' ); } 
+if( ! defined( 'OESSEPARATE_BOOTSTRAP_CSS_PATH' ) ){ define( 'OESSEPARATE_BOOTSTRAP_CSS_PATH' , '/bootstrap/css' ); }
+if( ! defined( 'OESSEPARATE_BOOTSTRAP_JS_PATH' ) ){ define( 'OESSEPARATE_BOOTSTRAP_JS_PATH' , '/bootstrap/js' ); }
 ?>
 <!DOCTYPE html>
 <html lang="en">

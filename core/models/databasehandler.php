@@ -69,7 +69,7 @@ class DatabaseHandler {
         }
     }
 
-    public function update($table = "", $data = array(), $where_clause = array(), $operator = '', $groupby = '', $orderby = '', $limit = '') {
+    public function update($table = "", $data = array(), $where_clause = array(), $operator = '=', $groupby = '', $orderby = '', $limit = '') {
         try {
             global $commonhelper;
     

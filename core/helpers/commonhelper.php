@@ -25,26 +25,29 @@ class commonhelper
         
         if ($files) {  
             $fileCount = is_array($files['name']) ? count($files['name']) : 1;
-     
             if ($fileCount > $maximumFile) {
                 $result['message'] .= "$br You can only upload a maximum of $maximumFile files.";
                 return $result;  
             }
-    
+            
             $valid = true;   
             for ($i = 0; $i < $fileCount; $i++) {
                 $fileName = is_array($files['name']) ? $files['name'][$i] : $files['name'];
-                if( $i == 0 && empty( $fileName ) ){
-                    $result['message'] .= $blank_msg; 
-                    return $result;
+                // if( $i == 0 && empty( $fileName ) ){
+                //     $result['message'] .= "1:".$blank_msg; 
+                //     return $result; 
+                // }
+                if( empty( $fileName ) ){
+                    continue; 
                 }
                 $fileSize = is_array($files['size']) ? $files['size'][$i] : $files['size'];
                 $fileExtension = strtolower(trim(pathinfo($fileName, PATHINFO_EXTENSION)));
     
-                if (!in_array($fileExtension, $allowExt)) {
+                if ( !in_array( $fileExtension, $allowExt ) ) {
                     $result['message'] .= "$br File is Invalid: $fileExtension type is not allowed for: $fileName"; 
                     $valid = false;  
-                } elseif ($fileSize > $maxSize) {
+                    sleep(1);
+                } elseif ( $fileSize > $maxSize ) {
                     $result['message'] .= "$br Please ensure the file size is $maxSize KB or less for: $fileName"; 
                     $valid = false;  
                 }
@@ -69,10 +72,10 @@ class commonhelper
                     } else { 
                         $result['message'] .= "$br Error moving uploaded file: $fileName"; 
                     }
-                }
+                }   
             }
         } else { 
-            $result['message'] .= $blank_msg; 
+            $result['message'] .= "2".$blank_msg; 
         }
     
         return $result;

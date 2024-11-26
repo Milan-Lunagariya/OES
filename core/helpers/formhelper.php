@@ -110,7 +110,8 @@ class formhelper
         return $default;
     }
 
-    public function product_image_attr( $value = '' ){
+
+    public function product_ExtaraImage_attr(){
  
         $default =  array(
             'type'         =>  "file",
